@@ -32,43 +32,73 @@ function richTextToPlain(value: any) {
 export default function Hero({ section }: HeroProps) {
   const v = section.values || {};
 
-  const titleRaw = resolveValue(v, ["Title", "Main heading", "Main Heading", "title", "main_heading"]);
-  const descRaw = resolveValue(v, ["Description", "description", "Subtitle", "Subheading", "Below main heading", "Below Main heading"]);
-  const ctaText = resolveValue(v, ["CTA Text", "CTA", "Call To Action"]);
-  const ctaLink = resolveValue(v, ["CTA Link", "CTA Link URL", "CTA_Link"]);
-  const image = resolveValue(v, ["Image", "image", "Hero Image"]);
+  // ════════════════════════════════════════════════════════════════════════════════
+  // CASCADE PRIORITY SYSTEM: CMS > PLACEHOLDER > HARDCODED DEFAULT
+  // ════════════════════════════════════════════════════════════════════════════════
+  const getFieldValue = (keyAliases: string[], placeholder?: string): string => {
+    // Priority 1: Try to find CMS value with case-insensitive key matching
+    for (const alias of keyAliases) {
+      const foundKey = Object.keys(v).find((k) => k.toLowerCase() === alias.toLowerCase());
+      if (foundKey) {
+        const value = v[foundKey];
+        if (value !== undefined && value !== null) {
+          const text = richTextToPlain(value);
+          if (text.trim()) return text; // ✅ CMS value found and not empty
+        }
+      }
+    }
+    // Priority 2: Use placeholder if provided
+    if (placeholder) return placeholder;
+    // Priority 3: Return empty string
+    return "";
+  };
 
-  const title = richTextToPlain(titleRaw);
-  const description = richTextToPlain(descRaw);
+  // Track which CMS keys are explicitly used so we can auto-render remaining ones
+  const usedKeys = new Set<string>();
+  const trackKey = (keyAliases: string[]) => {
+    for (const alias of keyAliases) {
+      const foundKey = Object.keys(v).find((k) => k.toLowerCase() === alias.toLowerCase());
+      if (foundKey) usedKeys.add(foundKey);
+    }
+  };
 
-  // Stats: prefer CMS-provided values (from Manage Content items). Fall back
-  // to the previous hardcoded labels for backward compatibility.
-  const statUniversities =
-    resolveValue(v, [
-      "500 Universities",
-      "500 universities",
-      "500 Universities +",
-      "500 Universities + Partnerships",
-      "500 UNIVERSITIES",
-    ]) || "500 Universities +";
+  // ──────────────────────────────────────────────────────────────────────────────────
+  // HERO CORE FIELDS using cascading priority
+  // ──────────────────────────────────────────────────────────────────────────────────
+  const titleAliases = ["Title", "Main heading", "Main Heading", "title", "main_heading"];
+  const title = getFieldValue(titleAliases);
+  trackKey(titleAliases);
 
-  const statPrograms =
-    resolveValue(v, [
-      "2000 programs",
-      "2000+ programs",
-      "2000 +Programs",
-      "2000+ Programs",
-      "2000+PROGRAMS",
-    ]) || "2000 +Programs";
+  const descAliases = ["Description", "description", "Subtitle", "Subheading", "Below main heading", "Below Main heading"];
+  const description = getFieldValue(descAliases);
+  trackKey(descAliases);
 
-  const statStudents =
-    resolveValue(v, [
-      "50K Students",
-      "50K+ Students",
-      "50K+ Students Enrolled",
-      "50K+ Students Enrolled",
-      "50K+ STUDENTS",
-    ]) || "50K+ Students";
+  const privacyAliases = ["Above main heading pill", "Above main heading", "Privacy pill", "Your Privacy Matters"];
+  const privacyText = getFieldValue(privacyAliases, "Your Privacy Matters — No Spam Calls Guaranteed");
+  trackKey(privacyAliases);
+
+  // ──────────────────────────────────────────────────────────────────────────────────
+  // STATS with cascading priority
+  // ──────────────────────────────────────────────────────────────────────────────────
+  const uniAliases = ["500 Universities", "500 universities", "500 Universities +", "500 Universities + Partnerships", "500 UNIVERSITIES"];
+  const statUniversities = getFieldValue(uniAliases, "500 Universities +");
+  trackKey(uniAliases);
+
+  const progAliases = ["2000 programs", "2000+ programs", "2000 +Programs", "2000+ Programs", "2000+PROGRAMS"];
+  const statPrograms = getFieldValue(progAliases, "2000 +Programs");
+  trackKey(progAliases);
+
+  const studAliases = ["50K Students", "50K+ Students", "50K+ Students Enrolled", "50K+ STUDENTS"];
+  const statStudents = getFieldValue(studAliases, "50K+ Students");
+  trackKey(studAliases);
+
+  const trustedAliases = ["Trusted by 2.5 Lakh+ Students", "Trusted by", "Trusted Text", "trusted_text"];
+  const trustedText = getFieldValue(trustedAliases, "");
+  if (trustedText) trackKey(trustedAliases);
+
+  const onlineCourseAliases = ["Online Courses", "online_courses", "Online courses", "online courses"];
+  const onlineCourseText = getFieldValue(onlineCourseAliases, "");
+  if (onlineCourseText) trackKey(onlineCourseAliases);
 
   return (
     <section className="relative w-full bg-white text-gray-900 overflow-visible">
@@ -80,12 +110,9 @@ export default function Hero({ section }: HeroProps) {
             <div className="w-full lg:w-1/2 text-left relative">
               {/* Privacy matters pill - text based (match CMS field if present) */}
               {(() => {
-                const privacyText = resolveValue(v, [
-                  "Above main heading pill",
-                  "Above main heading",
-                  "Privacy pill",
-                  "Your Privacy Matters",
-                ]) || "Your Privacy Matters — No Spam Calls Guaranteed";
+                const privacyAliases = ["Above main heading pill", "Above main heading", "Privacy pill", "Your Privacy Matters", "privacy_pill"];
+                const privacyText = getFieldValue(privacyAliases, "Your Privacy Matters — No Spam Calls Guaranteed");
+                trackKey(privacyAliases);
 
                 return (
                   <div
@@ -216,9 +243,9 @@ export default function Hero({ section }: HeroProps) {
               </div>
 
               {/* Trusted badge */}
-              {resolveValue(v, ["Trusted by 2.5 Lakh+ Students"]) && (
+              {trustedText && (
                 <div className="mt-6 lg:mt-8 text-sm text-gray-600" style={{ color: "#6A7282", fontWeight: "500", fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.5" }}>
-                  {resolveValue(v, ["Trusted by 2.5 Lakh+ Students"]) }
+                  {trustedText}
                 </div>
               )}
 
@@ -264,24 +291,128 @@ export default function Hero({ section }: HeroProps) {
                 }}
               />
 
-              {/* Small top-right badge - Online Course Box - responsive */}
-              <img
-                src="/Container%20(41).png"
-                alt="online course"
-                className="absolute"
-                style={{
-                  width: "clamp(140px, 25vw, 208px)",
-                  height: "auto",
-                  aspectRatio: "208/88",
-                  borderRadius: "8px",
-                
-                  zIndex: "20",
-                  top: "clamp(30px, 8vw, 80px)",
-                  right: "clamp(-30px, -5vw, -50px)"
-                }}
-              />
+              {/* Small top-right badge - Online Course Box - CMS driven - responsive */}
+              {onlineCourseText && (
+                <div
+                  className="absolute rounded-lg"
+                  style={{
+                    width: "auto",
+                    height: "auto",
+                    padding: "clamp(8px, 1.5vw, 12px)",
+                    backgroundColor: "white",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "flex-start",
+                    gap: "clamp(10px, 1.5vw, 14px)",
+                    borderRadius: "8px",
+                    zIndex: "20",
+                    top: "clamp(30px, 8vw, 80px)",
+                    right: "clamp(-30px, -5vw, -50px)",
+                    border: "1px solid #E5E7EB",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  {/* Icon - circular badge */}
+                  <div
+                    style={{
+                      width: "56px",
+                      height: "56px",
+                      minWidth: "56px",
+                      minHeight: "56px",
+                      borderRadius: "9999px",
+                      backgroundColor: "rgba(124, 58, 237, 0.05)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <img
+                      src="/Container%20(51).png"
+                      alt="online course icon"
+                      style={{
+                        width: "52px",
+                        height: "52px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
+
+                  {/* Text content - stacked vertically */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    {/* Label */}
+                    <div
+                      style={{
+                        fontFamily: "Inter",
+                        fontSize: "15px",
+                        fontWeight: 400,
+                        lineHeight: "24px",
+                        letterSpacing: "0px",
+                        color: "#9CA3AF",
+                      }}
+                    >
+                      Online Courses
+                    </div>
+                    {/* CMS Value */}
+                    <div
+                      style={{
+                        fontFamily: "Inter",
+                        fontSize: "20px",
+                        fontWeight: 700,
+                        lineHeight: "28px",
+                        letterSpacing: "0px",
+                        color: "#161C2D",
+                      }}
+                    >
+                      {onlineCourseText}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+          {/* AUTO-RENDER NEW CMS FIELDS (Dynamic Section) */}
+          {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+          {(() => {
+            // Collect all CMS fields NOT explicitly used
+            const usedKeysLower = Array.from(usedKeys).map((k) => k.toLowerCase());
+            const promoAliases = ["promo", "Promo", "PROMO", "promoText", "promo_text"].map((s) => String(s).toLowerCase());
+            const dynamicFields = Object.entries(v).filter(([k, val]) => {
+              if (usedKeysLower.includes(k.toLowerCase())) return false; // Skip used fields
+              if (promoAliases.includes(k.toLowerCase())) return false; // Skip promo field (rendered in Navbar)
+              if (val === undefined || val === null) return false;
+              const text = typeof val === "string" ? val : JSON.stringify(val);
+              return text.trim().length > 0; // Only render non-empty
+            });
+
+            if (dynamicFields.length === 0) return null; // No new fields to render
+
+            return (
+              <div className="mt-12 lg:mt-16 w-full">
+                  {dynamicFields.map(([fieldKey, fieldValue]) => {
+                    const displayText = typeof fieldValue === "string" 
+                      ? fieldValue 
+                      : richTextToPlain(fieldValue);
+
+                    return (
+                      <div key={fieldKey}>
+                        {displayText}
+                      </div>
+                    );
+                  })}
+                </div>
+            );
+          })()}
         </div>
       </div>
     </section>
@@ -315,6 +446,10 @@ export const usedFields = [
   "Above main heading",
   "Privacy pill",
   "Your Privacy Matters",
+  "Online Courses",
+  "online_courses",
+  "Online courses",
+  "online courses",
   // Common stat keys from CMS to avoid leftover rendering
   "500 universities",
   "500 Universities",
@@ -330,4 +465,10 @@ export const usedFields = [
   "Use of it",
   "Saksham",
   "Dahiya",
+  // Promo field (rendered in Navbar) - avoid showing as leftover under the hero
+  "Promo",
+  "promo",
+  "PROMO",
+  "promoText",
+  "promo_text",
 ];

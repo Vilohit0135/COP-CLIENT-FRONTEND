@@ -27,6 +27,10 @@ const explorePrograms = [
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [promoText, setPromoText] = useState<string | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [marqueeVars, setMarqueeVars] = useState<{distance: string; duration: string}>({distance: '0px', duration: '14s'});
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -38,17 +42,86 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    // fetch promo from CMS page content
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
+    const url = apiBase ? `${apiBase}/api/public/page-content/home-page` : "/api/public/page-content/home-page";
+    let cancelled = false;
+    fetch(url)
+      .then((r) => r.json())
+      .then((json) => {
+        if (cancelled) return;
+        const items = Array.isArray(json?.content) ? json.content : [];
+        for (const it of items) {
+          const vals = it.values || {};
+          const promo = vals.Promo || vals.promo || vals.PROMO || vals.promoText || vals.promo_text;
+          if (promo) {
+            setPromoText(String(promo));
+            return;
+          }
+        }
+      })
+      .catch(() => {})
+    return () => { cancelled = true };
+  }, []);
+
+  useEffect(() => {
+    if (!promoText) return;
+    function recalc() {
+      const contentEl = contentRef.current;
+      const trackEl = trackRef.current;
+      if (!contentEl || !trackEl) return;
+      const width = contentEl.getBoundingClientRect().width || 0;
+      // read computed gap on track (px)
+      const trackStyle = getComputedStyle(trackEl);
+      const gapPx = parseFloat(trackStyle.getPropertyValue('gap')) || 0;
+      // total translation distance: content width + gap between the two blocks
+      const distancePx = Math.round(width + gapPx);
+      // speed in px per second
+      const speed = 80; // adjust for desired pace
+      const duration = Math.max(8, Math.round((distancePx / speed))) + 's';
+      setMarqueeVars({ distance: `${distancePx}px`, duration });
+    }
+    recalc();
+    window.addEventListener('resize', recalc);
+    return () => window.removeEventListener('resize', recalc);
+  }, [promoText]);
+
   return (
-    <header className="sticky top-0 z-50 bg-white">
+    <header className="sticky top-0 z-50">
       <div className="bg-[#7C3AED] text-white text-sm py-2 px-6">
-        <div className="flex items-center justify-around max-w-[1440px] mx-auto">
-          <span>Extra 40% off sale styles*<strong>Use code</strong></span>
-          <span>Extra 40% off sale styles*<strong>Use code</strong></span>
-          <span>Extra 40% off sale styles*<strong>Use code</strong></span>
+        <div className="max-w-[1440px] mx-auto overflow-hidden" style={{ position: "relative" }}>
+          {promoText ? (
+            <div style={{ overflow: "hidden" }}>
+              <style>{`
+                .promo-wrapper{overflow:hidden;width:100%;}
+                .promo-track{display:flex;align-items:center;gap:24rem}
+                .promo-content{display:flex;gap:24rem;align-items:center;min-width:100%;padding:0}
+                .promo-item{display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
+                @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
+                .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
+              `}</style>
+
+              <div className="promo-wrapper">
+                <div ref={trackRef} className="promo-track promo-animate" style={{ ['--marquee-distance' as any]: marqueeVars.distance, ['--marquee-duration' as any]: marqueeVars.duration } as React.CSSProperties}>
+                  <div ref={contentRef} className="promo-content" aria-hidden={false}>
+                    <div className="promo-item item-1">{promoText}</div>
+                    <div className="promo-item item-2">{promoText}</div>
+                    <div className="promo-item item-3">{promoText}</div>
+                  </div>
+                  <div className="promo-content" aria-hidden={true}>
+                    <div className="promo-item item-1">{promoText}</div>
+                    <div className="promo-item item-2">{promoText}</div>
+                    <div className="promo-item item-3">{promoText}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      <div className="px-3 py-2.5 bg-white">
+      <div className="px-3 py-2.5 bg-transparent">
       <div
         className="w-full max-w-[1280px] mx-auto flex items-center justify-between px-4 h-[70px] text-white"
         style={{
@@ -128,12 +201,16 @@ export default function Navbar() {
               Compare
             </button>
 
-            <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow" style={{ fontFamily: "'Nunito', sans-serif" }}>
+            <Link
+              href="/talk-to-experts"
+              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow"
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
               Talk to Expert
-            </button>
+            </Link>
 
             <Link
               href="#"

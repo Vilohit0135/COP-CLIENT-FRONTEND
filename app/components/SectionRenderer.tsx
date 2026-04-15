@@ -1,5 +1,6 @@
 import { SectionContent } from "@/app/lib/types";
-import sectionRegistry from "./sections";
+import sectionRegistry from "./pages/sections";
+import { GLOBAL_USED_FIELDS } from "@/app/lib/globalUsedFields";
 
 interface SectionRendererProps {
   sections: SectionContent[];
@@ -41,6 +42,9 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
 
   const deduped = Object.values(grouped).map(pickBest);
 
+  // Sort sections by sectionIndex to ensure correct rendering order
+  const sorted = deduped.sort((a, b) => (a.sectionIndex ?? 0) - (b.sectionIndex ?? 0));
+
   const extractTextFromDoc = (node: any): string => {
     if (!node) return "";
     if (typeof node === "string") return node;
@@ -77,7 +81,7 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
 
   return (
     <>
-      {deduped.map((section) => {
+      {sorted.map((section) => {
         const entry = sectionRegistry[section.sectionApiId];
 
         if (!entry) {
@@ -95,13 +99,25 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
         }
 
         const Component = entry.Component;
-        const used = (entry.usedFields || []).map((s) => String(s).toLowerCase());
+        // Normalize entry.usedFields into an array of strings safely so runtime
+        // errors don't occur if a module exported a non-array by mistake.
+        const normalizeToArray = (v: any): string[] => {
+          if (!v) return [];
+          if (Array.isArray(v)) return v.map((s) => String(s));
+          if (typeof v === "string") return [v];
+          if (typeof v === "object") return Object.keys(v).map((k) => String(k));
+          return [String(v)];
+        };
+
+        const sectionUsed = normalizeToArray(entry.usedFields).map((s) => String(s).toLowerCase());
+        const globalUsed = normalizeToArray(GLOBAL_USED_FIELDS).map((s) => String(s).toLowerCase());
+        const usedSet = new Set([...sectionUsed, ...globalUsed]);
         const vals = section.values || {};
         const leftoverKeys = Object.keys(vals).filter((k) => {
           const v = vals[k];
           if (v === undefined || v === null) return false;
           if (typeof v === "string" && v.trim() === "") return false;
-          return !used.includes(k.toLowerCase());
+          return !usedSet.has(k.toLowerCase());
         });
 
         // By default we do NOT render a generic leftover block — this avoids
