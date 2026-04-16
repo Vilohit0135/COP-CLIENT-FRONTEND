@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "encrypted-tbn0.gstatic.com" },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/admin/:path*",
+        destination: "http://localhost:3001/admin/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
