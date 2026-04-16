@@ -88,14 +88,14 @@ export default function Section4({ section }: Section4Props) {
   // Each field value is 4 lines: title, specialty, experience, studentsGuided
   const COUNSELOR_DEFS = [
     { name: "Dr. Priya Sharma", cmsKey: "Dr. Priya sharma", image: "/Image (Dr. Priya Sharma).png", rating: 4.9, reviewCount: 1250 },
-    { name: "Rahul Mehta",      cmsKey: "Rahul Mehta",      image: "/Image (Rahul Mehta).png",      rating: 4.9, reviewCount: 1250 },
-    { name: "Anita Desai",      cmsKey: "Anita Desai",      image: "/Image (Anita Desai).png",      rating: 5.0, reviewCount: 1250 },
+    { name: "Rahul Mehta", cmsKey: "Rahul Mehta", image: "/Image (Rahul Mehta).png", rating: 4.9, reviewCount: 1250 },
+    { name: "Anita Desai", cmsKey: "Anita Desai", image: "/Image (Anita Desai).png", rating: 5.0, reviewCount: 1250 },
   ];
 
   const FALLBACK_LINES = [
     ["Senior Education Counselor", "MBA & Management Programs", "12 years experience", "3500+ students guided"],
-    ["Career Guidance Expert",     "Tech & Data Science",       "10 years experience", "2800+ students guided"],
-    ["Study Abroad Specialist",    "International Programs",    "15 years experience", "4200+ students guided"],
+    ["Career Guidance Expert", "Tech & Data Science", "10 years experience", "2800+ students guided"],
+    ["Study Abroad Specialist", "International Programs", "15 years experience", "4200+ students guided"],
   ];
 
   const counselors: Counselor[] = COUNSELOR_DEFS.map((def, idx) => {
@@ -109,10 +109,10 @@ export default function Section4({ section }: Section4Props) {
       image: def.image,
       rating: def.rating,
       reviewCount: def.reviewCount,
-      title:         lines[0] || fb[0],
-      specialty:     lines[1] || fb[1],
-      expertise:     lines[1] || fb[1],
-      experience:    lines[2] || fb[2],
+      title: lines[0] || fb[0],
+      specialty: lines[1] || fb[1],
+      expertise: lines[1] || fb[1],
+      experience: lines[2] || fb[2],
       studentsGuided: lines[3] || fb[3],
     };
   });
@@ -211,7 +211,7 @@ export default function Section4({ section }: Section4Props) {
                   <span>{counselor.rating.toFixed(1)} / {counselor.reviewCount} reviews</span>
                 </div>
               </div>
-              
+
 
               {/* Content Section */}
               <div className="p-4">
@@ -310,24 +310,7 @@ export default function Section4({ section }: Section4Props) {
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="flex justify-center">
-          <Link
-            href="/counsellors"
-            className="text-white font-semibold flex items-center justify-center"
-            style={{
-              width: "240px",
-              height: "56px",
-              borderRadius: "14px",
-              background: "linear-gradient(135deg, #4F39F6 0%, #9810FA 100%)",
-              boxShadow: "0 4px 4px rgba(0,0,0,0.25)",
-              fontFamily: "Inter",
-              fontSize: "16px",
-            }}
-          >
-            {buttonText}
-          </Link>
-        </div>
+
       </div>
     </section>
   );

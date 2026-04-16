@@ -31,7 +31,7 @@ export default function Section7({ section }: Section7Props) {
     "Subheading",
     "Description",
   ],
-  "From help you to prepare to admissions, you'll get the everything done. Totally. We're here changing.");
+    "From help you to prepare to admissions, you'll get the everything done. Totally. We're here changing.");
 
   // 7 boxes (each with heading + content). Icons are images in /public named Container (56).png .. Container (62).png
   const boxFields = [
@@ -73,8 +73,8 @@ export default function Section7({ section }: Section7Props) {
   ];
 
   return (
-    <section className="py-16 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-16 bg-white">
+      <div className="max-w-[1380px] mx-auto px-4 md:px-6">
         {/* Top: Image left, Heading + 2x2 grid right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-6">
           {/* Left: Image */}
