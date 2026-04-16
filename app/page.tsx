@@ -1,65 +1,142 @@
-import Image from "next/image";
+import { getPageContent } from "@/app/lib/api";
+import { PageResponse } from "@/app/lib/types";
+import SectionRenderer from "@/app/components/SectionRenderer";
+import Homepage from "@/app/components/pages/homepage";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+function mergeWithPlaceholders(data: PageResponse) {
+  const sections = data.page?.sections || [];
+  const content = data.content || [];
+
+  return sections
+    .map((section, idx) => {
+      // find matching saved item for this section
+      const item = content.find((it) => {
+        if (it.sectionApiId && section.apiIdentifier) return it.sectionApiId === section.apiIdentifier;
+        return typeof it.sectionIndex === "number" && it.sectionIndex === idx;
+      });
+
+      // Only keep values that are declared on this page's section schema.
+      const merged: Record<string, any> = {};
+      for (const field of section.fields) {
+        const name = field.name;
+
+        if (
+          item &&
+          item.values &&
+          Object.prototype.hasOwnProperty.call(item.values, name) &&
+          item.values[name] !== undefined &&
+          item.values[name] !== null &&
+          item.values[name] !== ""
+        ) {
+          // Use saved value when present
+          merged[name] = item.values[name];
+        } else {
+          // No saved value: fall back to the model placeholder so editors/public preview see something
+          merged[name] = field.placeholder || "";
+        }
+      }
+
+      return {
+        _id: item?._id || `__placeholder_${section.apiIdentifier || idx}`,
+        pageSlug: data.page?.slug,
+        sectionApiId: section.apiIdentifier,
+        sectionIndex: idx,
+        itemIndex: item?.itemIndex ?? 0,
+        values: merged,
+      };
+    })
+    .filter(Boolean) as any[];
+}
+
+export default async function Home() {
+  let data: PageResponse | null = null;
+
+  try {
+    data = await getPageContent("home-page");
+  } catch (err) {
+    console.error("Failed to load homepage:", err);
+  }
+
+  if (!data?.content?.length) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center text-gray-400">
+        No content available
+      </div>
+    );
+  }
+
+  let sections = mergeWithPlaceholders(data);
+
+  // Ensure Expert Counselors section is present. If the CMS/page schema
+  // doesn't include it, insert a placeholder immediately after Section 3
+  // (the "find your perfect program" block) when possible.
+  const section3ApiIds = [
+    "find_your_perfect_program",
+    "perfect_program",
+    "find-your-perfect-program",
+    "FindYourPerfectProgram",
+    "findYourPerfectProgram",
+  ];
+
+  const expertApiId = "expert_counselors";
+  const expertAliases = ["expert_counselors", "expert-counselors", "expertCounselors", "ExpertCounselors"];
+
+  const hasExpert = sections.some((s) => expertAliases.includes(String(s.sectionApiId)));
+  if (!hasExpert) {
+    // Find index of the page section schema that corresponds to Section 3
+    const pageSections = data.page?.sections || [];
+    const findIdx = pageSections.findIndex((ps) => section3ApiIds.includes(String(ps.apiIdentifier)));
+
+    // Place the expert counselors section before Section 3 to shift it upwards.
+    // If Section 3 is not present, insert at the top.
+    const insertAt = findIdx >= 0 ? findIdx : 0;
+
+    const placeholder = {
+      _id: `__placeholder_${expertApiId}`,
+      pageSlug: data.page?.slug,
+      sectionApiId: expertApiId,
+      sectionIndex: insertAt,
+      itemIndex: 0,
+      values: {},
+    } as any;
+
+    sections.splice(insertAt, 0, placeholder);
+
+    // Re-number sectionIndex to match the array order so SectionRenderer sorts predictably
+    sections.forEach((s, idx) => {
+      s.sectionIndex = idx;
+    });
+  }
+
+  // Ensure Best ROI section appears before Choose Us section
+  const bestRoiAliases = ["best_roi", "best-roi", "best_roi_programs", "bestRoiPrograms", "section_6", "section6"];
+  const chooseUsAliases = ["choose_us", "choose-us", "chooseUs", "why_choose_us", "section_7", "section7"];
+
+  const bestRoiIdx = sections.findIndex((s) => {
+    const id = String(s.sectionApiId || "").toLowerCase();
+    return bestRoiAliases.some(alias => id === alias.toLowerCase());
+  });
+  const chooseUsIdx = sections.findIndex((s) => {
+    const id = String(s.sectionApiId || "").toLowerCase();
+    return chooseUsAliases.some(alias => id === alias.toLowerCase());
+  });
+
+  // If both exist and Choose Us comes before Best ROI, reorder them
+  if (bestRoiIdx > -1 && chooseUsIdx > -1 && chooseUsIdx < bestRoiIdx) {
+    // Extract the Choose Us section
+    const chooseUsSection = sections.splice(chooseUsIdx, 1)[0];
+    
+    // After removing choose_us, best_roi index shifts down by 1
+    const newBestRoiIdx = bestRoiIdx - 1;
+    
+    // Insert Choose Us after Best ROI
+    sections.splice(newBestRoiIdx + 1, 0, chooseUsSection);
+
+    // Re-number sectionIndex to match the new array order
+    sections.forEach((s, idx) => {
+      s.sectionIndex = idx;
+    });
+  }
+
+  return <Homepage sections={sections} />;
 }

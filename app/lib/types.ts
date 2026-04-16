@@ -1,0 +1,184 @@
+export interface SectionContent {
+  _id: string;
+  pageSlug: string;
+  sectionApiId: string;
+  sectionIndex: number;
+  itemIndex: number;
+  values: Record<string, any>;
+}
+
+export interface PageData {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  isPublished: boolean;
+  sections: {
+    sectionIndex: number;
+    title: string;
+    apiIdentifier: string;
+    description?: string;
+    fields: {
+      name: string;
+      label?: string;
+      type: string;
+      placeholder?: string;
+      options?: string[];
+      required?: boolean;
+    }[];
+  }[];
+}
+
+export interface PageResponse {
+  page: PageData;
+  content: SectionContent[];
+}
+
+export interface Provider {
+  _id: string;
+  name: string;
+  slug: string;
+  logo?: string;
+  coverImage?: string;
+  galleryImages?: string[];
+  galleryDescription?: any;
+  shortExcerpt?: string;
+  contentBlocks?: any[];
+  isFeatured?: boolean;
+  bestROI?: boolean;
+  trending?: boolean;
+  isActive?: "active" | "inactive";
+  averageRating?: number;
+  aboutContent?: any;
+  admissionProcess?: any;
+  financialAid?: any;
+  examinationPattern?: any;
+  careerServices?: any;
+  additionalContent?: any;
+  scholarshipDescription?: any;
+  scholarships?: {
+    category: string;
+    scholarshipCredit: string;
+    eligibility: string;
+    _id?: string;
+  }[];
+  approvalsDescription?: any;
+  approvals?: {
+    name: string;
+    logo: string;
+    _id?: string;
+  }[];
+  rankingsDescription?: any;
+  rankings?: {
+    title: string;
+    description: string;
+    _id?: string;
+  }[];
+  factsDescription?: any;
+  facts?: {
+    icon: string;
+    text: any;
+    _id?: string;
+  }[];
+  placementPartnersDescription?: any;
+  placementPartners?: {
+    name: string;
+    logo: string;
+    _id?: string;
+  }[];
+  sampleCertificateDescription?: any;
+  sampleCertificateImage?: string;
+  admissionOpen?: {
+    isOpen: boolean;
+    year?: string;
+    text: string;
+    description?: any;
+  };
+  faq?: {
+    question: string;
+    answer: string;
+    _id?: string;
+  }[];
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string;
+  canonicalUrl?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  
+  // UI Helpers (Not in DB)
+  location?: string;
+  highlights?: string[];
+}
+
+export interface DegreeType {
+  _id: string;
+  name: string;
+  slug: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Course {
+  _id: string;
+  name: string;
+  slug: string;
+  degreeTypeId: string | DegreeType;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Specialization {
+  _id: string;
+  name: string;
+  slug: string;
+  courseId: string | Course;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProviderCourse {
+  _id: string;
+  providerId: string | Provider;
+  degreeTypeId: string | DegreeType;
+  courseId: string | Course;
+  specializationId?: string | Specialization;
+  title: string;
+  slug: string;
+  shortDescription?: string;
+  thumbnail?: string;
+  fees: number;
+  discountedFees?: number;
+  duration?: string;
+  mode?: string;
+  eligibility?: string;
+  seatsAvailable?: number;
+  brochureUrl?: string;
+  feesBreakdown?: { label: string; amount: number }[];
+  weeklyEffort?: number;
+  examPattern?: string;
+  employerAcceptance?: "High" | "Medium" | "Low";
+  difficultyLevel?: "Beginner" | "Intermediate" | "Advanced";
+  bestROI?: boolean;
+  trending?: boolean;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Review {
+  _id: string;
+  providerId: string;
+  studentId: string | any;
+  rating: number;
+  content: string;
+  pros?: string[];
+  cons?: string[];
+  isActive: boolean;
+  createdAt: string;
+}
+
