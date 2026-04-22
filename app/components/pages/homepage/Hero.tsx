@@ -164,41 +164,48 @@ export default function Hero({ section }: HeroProps) {
                   fontFamily: "'edupath-streethemes', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                   marginTop: "0.5rem"
                 }}>
-                  {title.split(" ").map((word: string, idx: number) => {
-                    const isOnline = word === "Online";
-                    const isFrom = word === "From";
-                    return (
-                      <span key={idx}>
-                        {isOnline ? (
-                          <span style={{
-                            display: "inline-block",
-                            margin: "0 clamp(2px, 0.5vw, 6px)",
-                            transform: "skewY(-5deg)",
-                            background: "linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)",
-                            padding: "0"
-                          }}>
-                            <span style={{
-                              display: "inline-block",
-                              padding: "clamp(4px, 1vw, 8px) clamp(10px, 2vw, 16px)",
-                              color: "white",
-                              transform: "skewY(5deg)",
-                              fontStyle: "italic",
-                              fontWeight: 700
-                            }}>
-                              {word}
+                  {(() => {
+                    const words = title.split(/\s+/);
+                    return words.map((word: string, idx: number) => {
+                      const isSecondWord = idx === 1; // always highlight the second word
+                      const isFrom = word.toLowerCase() === "from";
+                      return (
+                        <span key={idx}>
+                          {isSecondWord ? (
+                            <span
+                              style={{
+                                display: "inline-block",
+                                margin: "0 clamp(2px, 0.5vw, 6px)",
+                                transform: "skewY(-5deg)",
+                                background: "linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)",
+                                padding: "0",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  padding: "clamp(4px, 1vw, 8px) clamp(10px, 2vw, 16px)",
+                                  color: "white",
+                                  transform: "skewY(5deg)",
+                                  fontStyle: "italic",
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {word}
+                              </span>
                             </span>
-                          </span>
-                        ) : isFrom ? (
-                          <>
-                            <br />
+                          ) : isFrom ? (
+                            <>
+                              <br />
+                              <span>{word} </span>
+                            </>
+                          ) : (
                             <span>{word} </span>
-                          </>
-                        ) : (
-                          <span>{word} </span>
-                        )}
-                      </span>
-                    );
-                  })}
+                          )}
+                        </span>
+                      );
+                    });
+                  })()}
                 </h1>
               )}
 
@@ -218,7 +225,7 @@ export default function Hero({ section }: HeroProps) {
               {/* Stats row - larger icons aligned to text */}
               <div className="mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-10 items-center flex-wrap">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <img src="/Container%20(47).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
+                  <img src="/Container (47).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
                   <div>
                       <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statUniversities}</div>
                       <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Partnerships</div>
@@ -226,7 +233,7 @@ export default function Hero({ section }: HeroProps) {
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <img src="/Container%20(48).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
+                  <img src="/Container (48).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
                   <div>
                     <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statPrograms}</div>
                     <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Available</div>
@@ -234,7 +241,7 @@ export default function Hero({ section }: HeroProps) {
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <img src="/Container%20(49).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
+                  <img src="/Container (49).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
                   <div>
                     <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statStudents}</div>
                     <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Enrolled</div>
@@ -255,13 +262,13 @@ export default function Hero({ section }: HeroProps) {
                   <img src="/Stats.png" alt="100% Secure" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Container%20(43).png" alt="4.8 Rating" className="w-full h-full object-contain" />
+                  <img src="/Container (43).png" alt="4.8 Rating" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Container%20(44).png" alt="Certifications" className="w-full h-full object-contain" />
+                  <img src="/Container (44).png" alt="Certifications" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Container%20(45).png" alt="Counselling" className="w-full h-full object-contain" />
+                  <img src="/Container (45).png" alt="Counselling" className="w-full h-full object-contain" />
                 </div>
               </div>
             </div>
@@ -328,7 +335,7 @@ export default function Hero({ section }: HeroProps) {
                     }}
                   >
                     <img
-                      src="/Container%20(51).png"
+                      src="/Container (51).png"
                       alt="online course icon"
                       style={{
                         width: "52px",

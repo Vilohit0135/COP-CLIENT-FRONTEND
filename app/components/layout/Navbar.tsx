@@ -133,7 +133,7 @@ export default function Navbar() {
       >
 
           <Link href="/" className="flex items-center gap-1 flex-shrink-0">
-            <img src="/Container%20(40).png" alt="CollegeProgram logo" style={{ width: 75, height: 75, display: "block", borderRadius: 14, flexShrink: 0 }} />
+            <img src="/Container (40).png" alt="CollegeProgram logo" style={{ width: 75, height: 75, display: "block", borderRadius: 14, flexShrink: 0 }} />
             <span className="font-black text-[20px] leading-[28px]" style={{ letterSpacing: "-0.55px", fontFamily: "'Nunito', sans-serif" }}>CollegeProgram</span>
           </Link>
 
