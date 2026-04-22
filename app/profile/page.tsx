@@ -1,4 +1,5 @@
 import ProfilePage from "@/app/components/pages/profile/ProfilePage";
+import ProtectedRoute from "@/app/components/ProtectedRoute";
 
 export const metadata = {
   title: "My Profile | CollegeProgram",
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function ProfileRoute() {
-  return <ProfilePage />;
+  return (
+    <ProtectedRoute>
+      <ProfilePage />
+    </ProtectedRoute>
+  );
 }

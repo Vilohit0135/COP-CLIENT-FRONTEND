@@ -2,21 +2,23 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 // ── Dummy data ────────────────────────────────────────────────────────────────
 const dummyUser = {
-  firstName: "Rajesh",
-  lastName: "Kumar",
-  idNo: "121213435353664",
-  dateOfBirth: "May 15, 1995",
-  email: "Rajesh.kumar@example.com",
-  phone: "+91 98765 43210",
-  city: "Mumbai",
-  state: "Maharashtra",
-  country: "India",
-  currentEducation: "Bachelor's in Commerce",
-  occupation: "Marketing Manager",
-  company: "Tech Solutions Pvt Ltd",
+  firstName: "-",
+  lastName: "-",
+  idNo: "-",
+  dateOfBirth: "-",
+  email: "-",
+  phone: "-",
+  city: "-",
+  state: "-",
+  country: "-",
+  currentEducation: "-",
+  occupation: "-",
+  company: "-",
 };
 
 type UserData = typeof dummyUser;
@@ -137,18 +139,109 @@ function TrashIcon({ className }: { className?: string }) {
   );
 }
 
+function LogoutIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+    </svg>
+  );
+}
+
 // ── Sidebar nav items ─────────────────────────────────────────────────────────
 type NavKey = "profile" | "shortlisted" | "settings";
 
 const navItems: { key: NavKey; label: string; icon: React.ReactNode }[] = [
-  { key: "profile",     label: "My Profile",               icon: <UserIcon className="w-4 h-4" /> },
-  { key: "shortlisted", label: "Shortlisted Universities",  icon: <BookmarkIcon className="w-4 h-4" /> },
-  { key: "settings",    label: "Settings",                  icon: <SettingsIcon className="w-4 h-4" /> },
+  { key: "profile", label: "My Profile", icon: <UserIcon className="w-4 h-4" /> },
+  { key: "shortlisted", label: "Shortlisted Universities", icon: <BookmarkIcon className="w-4 h-4" /> },
+  { key: "settings", label: "Settings", icon: <SettingsIcon className="w-4 h-4" /> },
 ];
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function ProfilePage() {
   const [activeNav, setActiveNav] = useState<NavKey>("profile");
+
+  const [userData, setUserData] = useState<UserData>(dummyUser);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('studentToken');
+        if (!token) return;
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserData({
+            ...dummyUser, // fallback for missing fields
+            firstName: data.firstName || (data.name ? data.name.split(' ')[0] : dummyUser.firstName),
+            lastName: data.lastName || (data.name ? data.name.split(' ').slice(1).join(' ') : dummyUser.lastName),
+            email: data.email || dummyUser.email,
+            phone: data.phone || dummyUser.phone,
+            dateOfBirth: data.dateOfBirth || dummyUser.dateOfBirth,
+            city: data.city || dummyUser.city,
+            state: data.state || dummyUser.state,
+            country: data.country || dummyUser.country,
+            currentEducation: data.currentEducation || dummyUser.currentEducation,
+            occupation: data.occupation || dummyUser.occupation,
+            company: data.currentCompanyOrUniversity || dummyUser.company,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleUpdateProfile = async (updates: Partial<UserData>) => {
+    const token = localStorage.getItem('studentToken');
+    if (!token) return false;
+
+    // Map local 'company' to API 'currentCompanyOrUniversity'
+    // @ts-ignore
+    const apiPayload: any = { ...updates };
+    if (apiPayload.company !== undefined) {
+      apiPayload.currentCompanyOrUniversity = apiPayload.company;
+      delete apiPayload.company;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(apiPayload)
+      });
+      if (response.ok) {
+        setUserData(prev => ({
+          ...prev,
+          ...updates,
+        }));
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('studentToken');
+    toast.success("Logged out successfully", { position: 'bottom-right' });
+    router.push('/login');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-10 px-4">
@@ -162,25 +255,34 @@ export default function ProfilePage() {
               <UserIcon className="w-10 h-10 text-white" />
             </div>
             <h2 className="font-bold text-lg leading-tight">
-              {dummyUser.firstName} {dummyUser.lastName}
+              {userData.firstName} {userData.lastName}
             </h2>
-            <p className="text-xs text-white/70 mt-1">{dummyUser.occupation}</p>
+            <p className="text-xs text-white/70 mt-1">{userData.occupation}</p>
 
             <nav className="w-full mt-5 flex flex-col gap-1">
               {navItems.map((item) => (
                 <button
                   key={item.key}
                   onClick={() => setActiveNav(item.key)}
-                  className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                    activeNav === item.key
-                      ? "bg-white text-[#6C3FC5]"
-                      : "text-white/80 hover:bg-white/10"
-                  }`}
+                  className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${activeNav === item.key
+                    ? "bg-white text-[#6C3FC5]"
+                    : "text-white/80 hover:bg-white/10"
+                    }`}
                 >
                   {item.icon}
                   {item.label}
                 </button>
               ))}
+
+              <hr className="border-white/20 my-2" />
+
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-red-200 hover:bg-red-500/20 hover:text-white"
+              >
+                <LogoutIcon className="w-4 h-4" />
+                Logout
+              </button>
             </nav>
           </div>
 
@@ -201,9 +303,9 @@ export default function ProfilePage() {
 
         {/* ── Main Content ───────────────────────────────────────────────── */}
         <main className="flex-1">
-          {activeNav === "profile"     && <PersonalInfoPanel />}
+          {activeNav === "profile" && <PersonalInfoPanel userData={userData} onUpdate={handleUpdateProfile} />}
           {activeNav === "shortlisted" && <ShortlistedPanel />}
-          {activeNav === "settings"    && <SettingsPanel />}
+          {activeNav === "settings" && <SettingsPanel userData={userData} />}
         </main>
       </div>
     </div>
@@ -211,26 +313,50 @@ export default function ProfilePage() {
 }
 
 // ── Personal Information Panel ────────────────────────────────────────────────
-function PersonalInfoPanel() {
+function PersonalInfoPanel({ userData, onUpdate }: { userData: UserData, onUpdate: (data: Partial<UserData>) => Promise<boolean> }) {
   const [editMode, setEditMode] = useState(false);
-  const [saved,    setSaved]    = useState<UserData>({ ...dummyUser });
-  const [form,     setForm]     = useState<UserData>({ ...dummyUser });
+  const [form, setForm] = useState<UserData>({ ...userData });
+  const [isSaving, setIsSaving] = useState(false);
+
+  React.useEffect(() => {
+    setForm({ ...userData });
+  }, [userData]);
 
   function handleChange(field: keyof UserData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSave() {
-    setSaved({ ...form });
-    setEditMode(false);
+  async function handleSave() {
+    const changes: Partial<UserData> = {};
+    let hasChanges = false;
+    (Object.keys(form) as (keyof UserData)[]).forEach(k => {
+      if (form[k] !== userData[k]) {
+        changes[k] = form[k];
+        hasChanges = true;
+      }
+    });
+
+    if (hasChanges) {
+      setIsSaving(true);
+      const success = await onUpdate(changes);
+      setIsSaving(false);
+      if (success) {
+        toast.success("Profile updated successfully!", { position: 'bottom-right' });
+        setEditMode(false);
+      } else {
+        toast.error("Failed to update profile.", { position: 'bottom-right' });
+      }
+    } else {
+      setEditMode(false);
+    }
   }
 
   function handleCancel() {
-    setForm({ ...saved });
+    setForm({ ...userData });
     setEditMode(false);
   }
 
-  const data = editMode ? form : saved;
+  const data = editMode ? form : userData;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
@@ -242,10 +368,11 @@ function PersonalInfoPanel() {
           <div className="flex items-center gap-2">
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+              disabled={isSaving}
+              className="flex items-center gap-2 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors disabled:opacity-50"
             >
               <PencilIcon className="w-4 h-4" />
-              Save
+              {isSaving ? "Saving..." : "Save"}
             </button>
             <button
               onClick={handleCancel}
@@ -271,8 +398,8 @@ function PersonalInfoPanel() {
       {/* Basic Information */}
       <Section icon={<UserIcon className="w-5 h-5 text-[#6C3FC5]" />} title="Basic Information">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <Field label="First Name"  value={data.firstName} editMode={editMode} onChange={(v) => handleChange("firstName", v)} />
-          <Field label="Last Name"   value={data.lastName}  editMode={editMode} onChange={(v) => handleChange("lastName", v)} />
+          <Field label="First Name" value={data.firstName} editMode={editMode} onChange={(v) => handleChange("firstName", v)} />
+          <Field label="Last Name" value={data.lastName} editMode={editMode} onChange={(v) => handleChange("lastName", v)} />
         </div>
         <div className="mt-6">
           <Field
@@ -312,8 +439,8 @@ function PersonalInfoPanel() {
       {/* Location */}
       <Section icon={<MapPinIcon className="w-5 h-5 text-[#6C3FC5]" />} title="Location">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <Field label="City"    value={data.city}    editMode={editMode} onChange={(v) => handleChange("city", v)} />
-          <Field label="State"   value={data.state}   editMode={editMode} onChange={(v) => handleChange("state", v)} />
+          <Field label="City" value={data.city} editMode={editMode} onChange={(v) => handleChange("city", v)} />
+          <Field label="State" value={data.state} editMode={editMode} onChange={(v) => handleChange("state", v)} />
           <Field label="Country" value={data.country} editMode={editMode} onChange={(v) => handleChange("country", v)} />
         </div>
       </Section>
@@ -324,7 +451,7 @@ function PersonalInfoPanel() {
       <Section icon={<BriefcaseIcon className="w-5 h-5 text-[#6C3FC5]" />} title="Professional Information">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Field label="Current Education" value={data.currentEducation} editMode={editMode} onChange={(v) => handleChange("currentEducation", v)} />
-          <Field label="Occupation"        value={data.occupation}       editMode={editMode} onChange={(v) => handleChange("occupation", v)} />
+          <Field label="Occupation" value={data.occupation} editMode={editMode} onChange={(v) => handleChange("occupation", v)} />
         </div>
         <div className="mt-6">
           <Field label="Company" value={data.company} editMode={editMode} onChange={(v) => handleChange("company", v)} />
@@ -465,7 +592,7 @@ const initialShortlisted = [
 type ShortlistedEntry = typeof initialShortlisted[number];
 
 function ShortlistedPanel() {
-  const [list,   setList]   = useState<ShortlistedEntry[]>(initialShortlisted);
+  const [list, setList] = useState<ShortlistedEntry[]>(initialShortlisted);
   const [search, setSearch] = useState("");
 
   const filtered = list.filter((u) =>
@@ -534,10 +661,10 @@ function ShortlistedPanel() {
 
           {/* Info strip */}
           <div className="bg-gray-50 rounded-xl px-4 py-3 grid grid-cols-4 gap-3 mb-4">
-            <InfoCell icon={<GraduationCapIcon className="w-4 h-4 text-purple-500" />} label="Program"   value={uni.program} />
-            <InfoCell icon={<ClockIcon className="w-4 h-4 text-purple-500" />}         label="Duration"  value={uni.duration} />
-            <InfoCell icon={<RupeeIcon className="w-4 h-4 text-purple-500" />}         label="Total Fees" value={uni.fees} />
-            <InfoCell icon={<CalIcon className="w-4 h-4 text-purple-500" />}           label="Start Date" value={uni.startDate} />
+            <InfoCell icon={<GraduationCapIcon className="w-4 h-4 text-purple-500" />} label="Program" value={uni.program} />
+            <InfoCell icon={<ClockIcon className="w-4 h-4 text-purple-500" />} label="Duration" value={uni.duration} />
+            <InfoCell icon={<RupeeIcon className="w-4 h-4 text-purple-500" />} label="Total Fees" value={uni.fees} />
+            <InfoCell icon={<CalIcon className="w-4 h-4 text-purple-500" />} label="Start Date" value={uni.startDate} />
           </div>
 
           {/* Action buttons */}
@@ -642,7 +769,7 @@ function InfoCell({
 
 type SettingsTab = "account" | "security";
 
-function SettingsPanel() {
+function SettingsPanel({ userData }: { userData: UserData }) {
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
 
   return (
@@ -656,11 +783,10 @@ function SettingsPanel() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-3 text-sm font-semibold capitalize transition-colors ${
-              activeTab === tab
-                ? "text-[#6C3FC5] border-b-2 border-[#6C3FC5]"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
+            className={`pb-3 text-sm font-semibold capitalize transition-colors ${activeTab === tab
+              ? "text-[#6C3FC5] border-b-2 border-[#6C3FC5]"
+              : "text-gray-400 hover:text-gray-600"
+              }`}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
@@ -672,9 +798,9 @@ function SettingsPanel() {
         <div>
           <h2 className="font-bold text-gray-900 text-sm mb-5">Account Information</h2>
           <div className="flex flex-col gap-5">
-            <SettingsField label="Username"      value={`${dummyUser.firstName} ${dummyUser.lastName}`} />
-            <SettingsField label="Email Address" value={dummyUser.email.toLowerCase()} />
-            <SettingsField label="Phone Number"  value={dummyUser.phone} />
+            <SettingsField label="Username" value={`${userData.firstName} ${userData.lastName}`} />
+            <SettingsField label="Email Address" value={userData.email.toLowerCase()} />
+            <SettingsField label="Phone Number" value={userData.phone} />
           </div>
         </div>
       )}
@@ -687,18 +813,91 @@ function SettingsPanel() {
 
 // ── Security Tab ──────────────────────────────────────────────────────────────
 function SecurityTab() {
-  const [showCurrent, setShowCurrent]   = useState(false);
-  const [showNew,     setShowNew]       = useState(false);
-  const [currentPw,   setCurrentPw]     = useState("");
-  const [newPw,       setNewPw]         = useState("");
-  const [confirmPw,   setConfirmPw]     = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [currentPw, setCurrentPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
 
-  function handleChangePassword() {
-    // placeholder — wire to API later
-    setCurrentPw("");
-    setNewPw("");
-    setConfirmPw("");
-  }
+  const router = useRouter();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (!currentPw || !newPw) {
+      toast.error("Current password and new password are required");
+      return;
+    }
+    if (newPw !== confirmPw) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    if (newPw.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    setIsChangingPassword(true);
+    const token = localStorage.getItem('studentToken');
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/password/change`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          currentPassword: currentPw,
+          newPassword: newPw,
+          confirmPassword: confirmPw
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(data.message || "Password updated successfully");
+        setCurrentPw("");
+        setNewPw("");
+        setConfirmPw("");
+      } else {
+        toast.error(data.error || "Failed to update password");
+      }
+    } catch (err) {
+      toast.error("An error occurred while changing password");
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
+  const handleDeleteAccount = async (password: string) => {
+    setIsDeleting(true);
+    const token = localStorage.getItem('studentToken');
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/account`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ password })
+      });
+      if (res.ok) {
+        toast.success("Account deleted successfully.");
+        localStorage.removeItem('studentToken');
+        router.push('/login');
+      } else {
+        const err = await res.json();
+        toast.error(err.error || "Failed to delete account");
+      }
+    } catch (e) {
+      toast.error("An error occurred");
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -764,10 +963,11 @@ function SecurityTab() {
         {/* Change Password Button */}
         <button
           onClick={handleChangePassword}
-          className="mt-5 flex items-center gap-2 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+          disabled={isChangingPassword}
+          className="mt-5 flex items-center gap-2 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors disabled:opacity-50"
         >
           <LockIcon className="w-4 h-4" />
-          Change Password
+          {isChangingPassword ? "Updating..." : "Change Password"}
         </button>
       </div>
 
@@ -782,11 +982,101 @@ function SecurityTab() {
           <p className="text-gray-500 text-xs mb-4">
             Once you delete your account, there is no going back. Please be certain.
           </p>
-          <button className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors">
+          <button 
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+          >
             <TrashIcon className="w-4 h-4" />
             Delete Account
           </button>
         </div>
+      </div>
+
+      <DeleteAccountModal
+        isOpen={isDeleteModalOpen}
+        isDeleting={isDeleting}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteAccount}
+      />
+    </div>
+  );
+}
+
+function DeleteAccountModal({
+  isOpen,
+  isDeleting,
+  onClose,
+  onConfirm
+}: {
+  isOpen: boolean;
+  isDeleting: boolean;
+  onClose: () => void;
+  onConfirm: (password: string) => void;
+}) {
+  const [step, setStep] = useState<1 | 2>(1);
+  const [password, setPassword] = useState("");
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+      setPassword("");
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
+        {step === 1 && (
+          <>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Account</h3>
+            <p className="text-sm text-gray-500 mb-4">Please enter your password to continue.</p>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-800 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors bg-white mb-6"
+            />
+            <div className="flex justify-end gap-3">
+              <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800">Cancel</button>
+              <button 
+                onClick={() => {
+                  if (password.trim()) setStep(2);
+                }} 
+                disabled={!password.trim()}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50 transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <h3 className="text-lg font-bold text-red-600 mb-2">Warning!</h3>
+            <p className="text-sm text-gray-700 mb-4">
+              This action cannot be undone. All your data will be permanently deleted. Are you absolutely sure you want to delete your account?
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setStep(1)} 
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 disabled:opacity-50"
+              >
+                Back
+              </button>
+              <button 
+                onClick={() => onConfirm(password)} 
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg disabled:opacity-50 transition-colors flex items-center gap-2"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete My Account"}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
