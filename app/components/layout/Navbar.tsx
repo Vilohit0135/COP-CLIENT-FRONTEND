@@ -184,10 +184,9 @@ export default function Navbar() {
                 </svg>
               </button>
 
-              <div 
-                className={`absolute -left-11 top-full mt-3 w-56 bg-white rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 transition-all duration-200 origin-top transform ${
-                  dropdownOpen ? "opacity-100 scale-100 translate-y-0 visible" : "opacity-0 scale-95 -translate-y-2 invisible pointer-events-none"
-                }`}
+              <div
+                className={`absolute -left-11 top-full mt-3 w-56 bg-white rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 transition-all duration-200 origin-top transform ${dropdownOpen ? "opacity-100 scale-100 translate-y-0 visible" : "opacity-0 scale-95 -translate-y-2 invisible pointer-events-none"
+                  }`}
               >
                 {/* Invisible bridge to prevent hover loss */}
                 <div className="absolute -top-4 left-0 w-full h-4 bg-transparent" aria-hidden="true" />

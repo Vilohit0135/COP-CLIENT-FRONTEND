@@ -95,9 +95,9 @@ export default function Section7({ section }: Section7Props) {
             <p className="text-[16px] leading-[24px] text-[#6B7280] mb-6">{textBelowHeading}</p>
             <div className="grid grid-cols-2 gap-4">
               {boxFields.slice(0, 4).map((box, idx) => (
-                <div key={idx} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-5 flex flex-col gap-3 items-start">
-                  <div className="w-10 h-10 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
-                    <Image src={box.icon} alt={`icon-${idx}`} width={20} height={20} />
+                <div key={idx} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-8 flex flex-col gap-3 items-start">
+                  <div className="w-14 h-14 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
+                    <Image src={box.icon} alt={`icon-${idx}`} width={28} height={28} />
                   </div>
                   <div>
                     <h3 className="text-[16px] leading-[22px] font-semibold text-[#1F2937] mb-1">{box.heading}</h3>
@@ -113,8 +113,8 @@ export default function Section7({ section }: Section7Props) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {boxFields.slice(4, 7).map((box, idx) => (
             <div key={`bottom-${idx}`} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-6 flex flex-col gap-4 items-start">
-              <div className="w-12 h-12 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
-                <Image src={box.icon} alt={`icon-bottom-${idx}`} width={24} height={24} />
+              <div className="w-14 h-14 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
+                <Image src={box.icon} alt={`icon-bottom-${idx}`} width={28} height={28} />
               </div>
               <div>
                 <h3 className="text-[18px] leading-[24px] font-semibold text-[#1F2937] mb-2">{box.heading}</h3>

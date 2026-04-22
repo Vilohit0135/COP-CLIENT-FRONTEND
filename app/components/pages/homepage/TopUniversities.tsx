@@ -75,9 +75,10 @@ export default async function TopUniversities({ section }: TopUniversitiesProps)
     if (res.ok) {
       const providers = await res.json();
       if (Array.isArray(providers) && providers.length > 0) {
-        // show only trending providers and limit to 7
-        const trending = providers.filter((p: any) => !!p.trending);
-        const top = trending.slice(0, 7);
+        // combine featured providers first, then fill with non-featured to get up to 7
+        const featured = providers.filter((p: any) => !!p.isFeatured);
+        const nonFeatured = providers.filter((p: any) => !p.isFeatured);
+        const top = [...featured, ...nonFeatured].slice(0, 7);
         universityLogos = top.map((p: any) => [p._id || p.slug || p.name, p.logo || ""] as [string, any]);
       }
     }
@@ -102,22 +103,8 @@ export default async function TopUniversities({ section }: TopUniversitiesProps)
   return (
     <section className="w-full bg-white">
       <div className="w-full px-0 py-2 lg:py-3">
-        {/* Invisible separator: keeps gap but not visible so background doesn't clash */}
-        <div
-          style={{
-            height: "24px",
-            background: "transparent",
-            width: "100%",
-          }}
-        />
-
-        {/* Container with 2 Boxes - Full Width (boxed frame to separate from hero) */}
-        <div
-          className="grid grid-cols-1 gap-0 overflow-hidden"
-          style={{
-            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-          }}
-        >
+        {/* Container with 2 Boxes - Full Width (removed extra separator and outer shadow) */}
+        <div className="grid grid-cols-1 gap-0 overflow-hidden">
           <UpperWhiteBox title={title} universityLogos={universityLogos} />
           <StatsBox stats={{ students, counselling, partners, rating }} />
         </div>
