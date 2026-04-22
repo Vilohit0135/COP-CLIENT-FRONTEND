@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-14 pb-8 sm:pb-10 md:pb-12">
           <div className="sm:col-span-2 md:col-span-1 flex flex-col">
             <div className="flex items-start gap-3 mb-0 sm:mb-0">
-              <img src="/Container%20(40).png" alt="CollegeProgram logo" className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl block flex-shrink-0 -mt-7 -ml-5" />
+              <img src="/Container (40).png" alt="CollegeProgram logo" className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl block flex-shrink-0 -mt-7 -ml-5" />
               <span className="font-bold text-lg sm:text-xl leading-tight pt-0">CollegeProgram</span>
             </div>
 
