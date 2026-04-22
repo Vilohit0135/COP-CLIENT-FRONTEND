@@ -2,12 +2,68 @@
 
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
+import Link from 'next/link';
 
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const router = useRouter();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!formData.email || !formData.password) {
+            toast.error("Email and password are required");
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const processEnvApi = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+            const response = await fetch(`${processEnvApi}/api/public/student/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    identifier: formData.email,
+                    password: formData.password
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                toast.success("Login successful!");
+                if (data.token) {
+                    localStorage.setItem('studentToken', data.token);
+                }
+                router.push("/");
+            } else {
+                toast.error(data.error || "Invalid credentials");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            toast.error("An unexpected error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
-        <div className="w-full lg:w-1/2 flex justify-center p-6 bg-white min-h-screen mt-20">
+        <div className="w-full lg:w-1/2 flex justify-center p-6 bg-white min-h-screen mt-20 relative">
+            <Toaster position="bottom-right" />
             <div className="w-full max-w-md">
                 {/* Logo */}
                 <div className="flex items-center gap-2 mb-6">
@@ -28,15 +84,18 @@ const LoginForm = () => {
                     <p className="text-gray-500">Sign in to continue your learning journey</p>
                 </div>
 
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleSubmit}>
                     {/* Email Field */}
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Email Address</label>
+                        <label className="text-sm font-semibold text-gray-700">Email or Phone Number</label>
                         <div className="relative group">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-purple-600" />
                             <input
-                                type="email"
-                                placeholder="your.email@example.com"
+                                type="text"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="your.email@example.com or Phone"
                                 className="w-full pl-12 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl outline-none focus:border-purple-600 focus:ring-4 focus:ring-purple-500/10 transition-all text-gray-800 placeholder:text-gray-400"
                             />
                         </div>
@@ -49,6 +108,9 @@ const LoginForm = () => {
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors group-focus-within:text-purple-600" />
                             <input
                                 type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
                                 placeholder="Enter your password"
                                 className="w-full pl-12 pr-12 py-2.5 bg-white border border-gray-200 rounded-xl outline-none focus:border-purple-600 focus:ring-4 focus:ring-purple-500/10 transition-all text-gray-800 placeholder:text-gray-400"
                             />
@@ -74,9 +136,14 @@ const LoginForm = () => {
                     {/* Sign In Button */}
                     <button
                         type="submit"
-                        className="w-full py-2.5 bg-[#9810FA] text-white font-bold rounded-xl shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                        disabled={isLoading}
+                        className={`w-full py-2.5 text-white font-bold rounded-xl shadow-lg transform transition-all ${
+                            isLoading 
+                                ? 'bg-gray-400 cursor-not-allowed' 
+                                : 'bg-[#9810FA] shadow-purple-500/30 hover:shadow-purple-500/40 hover:-translate-y-0.5 active:translate-y-0'
+                        }`}
                     >
-                        Sign In
+                        {isLoading ? 'Signing In...' : 'Sign In'}
                     </button>
 
                     {/* Divider */}
@@ -106,7 +173,7 @@ const LoginForm = () => {
 
                 {/* Footer */}
                 <p className="mt-6 text-center text-gray-600">
-                    Don't have an account? <a href="#" className="font-bold text-purple-600 hover:text-purple-700">Sign up</a>
+                    Don't have an account? <Link href="/signup" className="font-bold text-purple-600 hover:text-purple-700">Sign up</Link>
                 </p>
 
                 <div className="mt-8 text-center text-xs text-gray-400">

@@ -3,13 +3,88 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User, Phone, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
+import toast, { Toaster } from 'react-hot-toast';
 
 const SignupForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: ''
+    });
+    
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (formData.password !== formData.confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+        
+        if (formData.password.length < 6) {
+            toast.error("Password must be at least 6 characters");
+            return;
+        }
+        
+        if (!formData.email && !formData.phone) {
+            toast.error("Email or phone number is required");
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            const processEnvApi = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+            const response = await fetch(`${processEnvApi}/api/public/student/signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    password: formData.password,
+                    confirmPassword: formData.confirmPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                toast.success("Account created successfully!");
+                // Clear the form on success
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    password: '',
+                    confirmPassword: ''
+                });
+            } else {
+                toast.error(data.error || "Failed to create account");
+            }
+        } catch (error) {
+            console.error("Signup error:", error);
+            toast.error("An unexpected error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
-        <div className="w-full lg:w-1/2 flex justify-center p-6 bg-white min-h-screen">
+        <div className="w-full lg:w-1/2 flex justify-center p-6 bg-white min-h-screen relative">
+            <Toaster position="bottom-right" />
             <div className="w-full max-w-md mt-10">
                 {/* Logo and Brand */}
                 <div className="flex items-center gap-3 mb-8">
@@ -27,7 +102,7 @@ const SignupForm = () => {
                     <p className="text-gray-500 text-sm">Create an account to explore 1000+ college programs</p>
                 </div>
 
-                <form className="space-y-5">
+                <form className="space-y-5" onSubmit={handleSubmit}>
                     {/* Full Name Field */}
                     <div className="space-y-1.5">
                         <label className="text-sm font-semibold text-gray-700">Full Name</label>
@@ -35,6 +110,9 @@ const SignupForm = () => {
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
                                 placeholder="Enter your full name"
                                 className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-[#9810FA] transition-all text-gray-800 placeholder:text-gray-400"
                             />
@@ -48,6 +126,9 @@ const SignupForm = () => {
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
                                 placeholder="your.email@example.com"
                                 className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-[#9810FA] transition-all text-gray-800 placeholder:text-gray-400"
                             />
@@ -61,6 +142,9 @@ const SignupForm = () => {
                             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
                                 placeholder="+91 XXXXX XXXXX"
                                 className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-[#9810FA] transition-all text-gray-800 placeholder:text-gray-400"
                             />
@@ -74,6 +158,9 @@ const SignupForm = () => {
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type={showPassword ? "text" : "password"}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
                                 placeholder="Create a password"
                                 className="w-full pl-12 pr-12 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-[#9810FA] transition-all text-gray-800 placeholder:text-gray-400"
                             />
@@ -94,6 +181,9 @@ const SignupForm = () => {
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
                                 placeholder="Confirm your password"
                                 className="w-full pl-12 pr-12 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-[#9810FA] transition-all text-gray-800 placeholder:text-gray-400"
                             />
@@ -115,9 +205,14 @@ const SignupForm = () => {
                     {/* Create Account Button */}
                     <button
                         type="submit"
-                        className="w-full py-4 bg-[#9810FA] text-white font-bold rounded-xl shadow-lg shadow-[#9810FA]/30 hover:shadow-[#9810FA]/40 transform hover:-translate-y-0.5 transition-all"
+                        disabled={isLoading}
+                        className={`w-full py-4 text-white font-bold rounded-xl shadow-lg transform transition-all ${
+                            isLoading 
+                                ? 'bg-gray-400 cursor-not-allowed' 
+                                : 'bg-[#9810FA] shadow-[#9810FA]/30 hover:shadow-[#9810FA]/40 hover:-translate-y-0.5'
+                        }`}
                     >
-                        Create Account
+                        {isLoading ? 'Creating Account...' : 'Create Account'}
                     </button>
 
                     {/* Divider */}
