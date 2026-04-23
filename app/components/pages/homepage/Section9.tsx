@@ -110,7 +110,7 @@ export default function Section9({ section }: Section9Props) {
 
   return (
     <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
 
         {/* Pill */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
@@ -173,7 +173,7 @@ export default function Section9({ section }: Section9Props) {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "24px",
+            gap: "32px",
             marginBottom: "48px",
           }}
         >
@@ -191,7 +191,7 @@ export default function Section9({ section }: Section9Props) {
               }}
             >
               {/* Image with category badge overlay */}
-              <div style={{ position: "relative", width: "100%", height: "180px", flexShrink: 0 }}>
+              <div style={{ position: "relative", width: "100%", height: "240px", flexShrink: 0 }}>
                 <Image
                   src="/Blogs.png"
                   alt={article.title}

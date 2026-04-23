@@ -12,6 +12,7 @@ interface Section6Props {
 interface Program {
   _id: string;
   title: string;
+  slug?: string;
   thumbnail?: string;
   fees: number;
   discountedFees?: number;
@@ -21,6 +22,9 @@ interface Program {
   features?: string[];
   rating?: number;
   reviews?: number;
+  providerName?: string;
+  providerSlug?: string;
+  providerLogo?: string;
 }
 
 export default function Section6({ section }: Section6Props) {
@@ -51,7 +55,7 @@ export default function Section6({ section }: Section6Props) {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
-            setPrograms(data.slice(0, 4));
+            setPrograms(data);
             return;
           }
         }
@@ -61,10 +65,10 @@ export default function Section6({ section }: Section6Props) {
 
       // Mock fallback
       setPrograms([
-        { _id: "p1", title: "Master of Computer Applications", fees: 120000, discountedFees: 100000, duration: "24 Months", trending: false, certifications: ["UGC","NAAC A+"], features: ["Job Assistance","Flexible Learning","Industry Projects"], rating: 4.6, reviews: 189 },
-        { _id: "p2", title: "Executive MBA (Finance)", fees: 200000, discountedFees: 166667, duration: "18 Months", trending: true, certifications: ["UGC","AIU"], features: ["Weekend Classes","CFO Sessions","Bloomberg Terminal"], rating: 4.9, reviews: 312 },
-        { _id: "p3", title: "MBA in Data Science", fees: 180000, discountedFees: 150000, duration: "24 Months", trending: false, certifications: ["UGC","NAAC A+"], features: ["Industry Mentors","Live Projects","Placement Support"], rating: 4.7, reviews: 198 },
-        { _id: "p4", title: "BBA in Business Analytics", fees: 120000, discountedFees: 100000, duration: "36 Months", trending: false, certifications: ["UGC","AICTE"], features: ["Industry Projects","Internships","Job Assistance"], rating: 4.4, reviews: 134 },
+        { _id: "p1", title: "Master of Computer Applications", fees: 120000, discountedFees: 100000, duration: "24 Months", trending: false, certifications: ["UGC","NAAC A+"], features: ["Job Assistance","Flexible Learning","Industry Projects"], rating: 4.6, reviews: 189, providerName: "Amity Online", providerSlug: "amity-online" },
+        { _id: "p2", title: "Executive MBA (Finance)", fees: 200000, discountedFees: 166667, duration: "18 Months", trending: true, certifications: ["UGC","AIU"], features: ["Weekend Classes","CFO Sessions","Bloomberg Terminal"], rating: 4.9, reviews: 312, providerName: "Symbiosis Online", providerSlug: "symbiosis-online" },
+        { _id: "p3", title: "MBA in Data Science", fees: 180000, discountedFees: 150000, duration: "24 Months", trending: false, certifications: ["UGC","NAAC A+"], features: ["Industry Mentors","Live Projects","Placement Support"], rating: 4.7, reviews: 198, providerName: "NMIMS Online", providerSlug: "nmims-online" },
+        { _id: "p4", title: "BBA in Business Analytics", fees: 120000, discountedFees: 100000, duration: "36 Months", trending: false, certifications: ["UGC","AICTE"], features: ["Industry Projects","Internships","Job Assistance"], rating: 4.4, reviews: 134, providerName: "Jain Online", providerSlug: "jain-online" },
       ]);
     };
     fetchData();
@@ -90,12 +94,27 @@ export default function Section6({ section }: Section6Props) {
           {subtitle && <p style={{fontFamily: 'Inter', fontSize: 16, fontWeight: 400, color: '#6A7282', lineHeight: '24px'}}>{subtitle}</p>}
         </div>
 
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 320px)', gap: 24, justifyContent: 'center', margin: '0 auto'}}>
-          {programs.map((p) => (
-            <div key={p._id} style={{background:'#fff', width: '100%', maxWidth: 320, height: 526, borderRadius: 24, border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 6px 18px rgba(16,24,40,0.06)'}}>
-              <div style={{height:200, background: 'linear-gradient(180deg, #F3E8FF 0%, #EEF2FF 100%)', position:'relative', borderTopLeftRadius: 24, borderTopRightRadius:24}}>
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32}}>
+          {programs.slice(0, 3).map((p) => (
+            <div key={p._id} style={{background:'#fff', width: '100%', borderRadius: 24, border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 6px 18px rgba(16,24,40,0.06)'}}>
+              {/* Card image area */}
+              <div style={{height:240, position:'relative', borderTopLeftRadius: 24, borderTopRightRadius:24, overflow:'hidden', background: 'linear-gradient(180deg, #F3E8FF 0%, #EEF2FF 100%)'}}>
+                {p.thumbnail ? (
+                  <img src={p.thumbnail} alt={p.title} style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}} />
+                ) : null}
+                {/* Dark overlay for readability */}
+                {p.thumbnail && <div style={{position:'absolute', inset:0, background:'linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 100%)'}} />}
+
+                {/* Provider name top-left */}
+                {p.providerName && (
+                  <div style={{position:'absolute', left:12, top:12, display:'flex', flexDirection:'column', gap:1}}>
+                    <span style={{color: p.thumbnail ? '#ffffffcc' : '#94A3B8', fontSize:11, fontWeight:500}}>From</span>
+                    <span style={{color: p.thumbnail ? '#fff' : '#1E293B', fontSize:13, fontWeight:700, lineHeight:'16px', textShadow: p.thumbnail ? '0 1px 3px rgba(0,0,0,0.5)' : 'none'}}>{p.providerName}</span>
+                  </div>
+                )}
+
                 {p.trending && <div style={{position:'absolute', right:12, top:12, background: 'linear-gradient(90deg,#6B46FF,#9B2CFF)', color:'#fff', padding:'6px 10px', borderRadius:999, fontSize:12, fontWeight:700, display:'flex', alignItems:'center', gap:6}}><TrendingUp size={12}/>Trending</div>}
-                {p.rating && <div style={{position:'absolute', left:12, bottom:12, background:'#fff', padding:'6px 8px', borderRadius:8, display:'flex', alignItems:'center', gap:6, boxShadow:'0 2px 6px rgba(16,24,40,0.06)'}}><Star size={12} className="text-yellow-500"/><strong style={{fontSize:12}}>{p.rating}</strong><span style={{color:'#64748B', fontSize:12}}>({p.reviews})</span></div>}
+                {p.rating ? <div style={{position:'absolute', left:12, bottom:12, background:'#fff', padding:'6px 8px', borderRadius:8, display:'flex', alignItems:'center', gap:6, boxShadow:'0 2px 6px rgba(16,24,40,0.06)'}}><Star size={12} className="text-yellow-500" fill="#EAB308"/><strong style={{fontSize:12}}>{p.rating}</strong>{p.reviews ? <span style={{color:'#64748B', fontSize:12}}>({p.reviews} reviews)</span> : null}</div> : null}
               </div>
 
               <div style={{padding:16, display:'flex', flexDirection:'column', gap:8, flex:1}}>
@@ -106,15 +125,15 @@ export default function Section6({ section }: Section6Props) {
                 <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, fontSize:12, color:'#475569', marginBottom:6}}>
                   <div>
                     <div style={{fontSize:11, color:'#94A3B8'}}>Duration</div>
-                    <div style={{fontWeight:600, color:'#0F172A'}}>{p.duration || '24 Months'}</div>
+                    <div style={{fontWeight:600, color:'#0F172A'}}>{p.duration || '—'}</div>
                   </div>
                   <div>
                     <div style={{fontSize:11, color:'#94A3B8'}}>Total Fee</div>
-                    <div style={{fontWeight:600, color:'#0F172A'}}>{formatCurrency(p.fees)}</div>
+                    <div style={{fontWeight:600, color:'#0F172A'}}>{p.fees ? formatCurrency(p.fees) : '—'}</div>
                   </div>
                 </div>
 
-                <div style={{background:'#ECFDF5', borderRadius:8, padding:'8px 10px', color:'#065F46', fontWeight:700, maxWidth: '100%', marginBottom:8}}>EMI Starting: {formatCurrency(emi(p.discountedFees || p.fees))}/mo</div>
+                {p.fees > 0 && <div style={{background:'#ECFDF5', borderRadius:8, padding:'8px 10px', color:'#065F46', fontWeight:700, maxWidth: '100%', marginBottom:8}}>EMI Starting: {formatCurrency(emi(p.discountedFees || p.fees))}/mo</div>}
 
                 <div style={{display:'flex', gap:8, flexWrap:'wrap', marginBottom:8}}>
                   {(p.certifications||[]).map((c, i) => <span key={i} style={{background:'#F1F5F9', padding:'4px 8px', borderRadius:6, fontSize:12}}>{c}</span>)}
@@ -129,7 +148,7 @@ export default function Section6({ section }: Section6Props) {
                 </div>
 
                 <div style={{display:'flex', gap:8, marginTop:8}}>
-                  <button style={{flex:1, padding:'10px 12px', background:'linear-gradient(90deg,#6B46FF,#9B2CFF)', color:'#fff', borderRadius:8, border:'none', fontWeight:600}}>View Details</button>
+                  <a href={p.providerSlug ? `/universities/${p.providerSlug}` : '#'} style={{flex:1, padding:'10px 12px', background:'linear-gradient(90deg,#6B46FF,#9B2CFF)', color:'#fff', borderRadius:8, border:'none', fontWeight:600, textAlign:'center', textDecoration:'none', display:'flex', alignItems:'center', justifyContent:'center'}}>View Details</a>
                   <button style={{padding:'10px 12px', borderRadius:8, border:'1px solid #C4B5FD', background:'transparent', color:'#6B46FF', fontWeight:600}}>Compare</button>
                 </div>
               </div>
