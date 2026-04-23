@@ -1,4 +1,5 @@
 import { SectionContent } from "@/app/lib/types";
+import { getCoursesHomeSummary } from "@/app/lib/api";
 import Section3Client from "./Section3Client";
 
 interface Section3Props {
@@ -14,7 +15,7 @@ function resolveValue(values: Record<string, any> | undefined, keys: string[]) {
   return undefined;
 }
 
-export default function Section3({ section }: Section3Props) {
+export default async function Section3({ section }: Section3Props) {
   const v = section.values || {};
 
   // Try multiple possible CMS field names
@@ -42,6 +43,14 @@ export default function Section3({ section }: Section3Props) {
     } else {
       descriptionFirst = displayText;
     }
+  }
+
+  // Fetch live course data from the backend
+  let courseGroups: any[] = [];
+  try {
+    courseGroups = await getCoursesHomeSummary();
+  } catch {
+    courseGroups = [];
   }
 
   return (
@@ -85,7 +94,7 @@ export default function Section3({ section }: Section3Props) {
         )}
 
         {/* Interactive tabs and cards */}
-        <Section3Client />
+        <Section3Client courseGroups={courseGroups} />
       </div>
     </section>
   );

@@ -91,7 +91,11 @@ export default function Homepage({ sections }: HomepageProps) {
   );
   const section10 = section10Index >= 0 ? sections[section10Index] : null;
 
-  // Remove hero, section5, section6, section7, section8, section9 so we don't render duplicates
+  // Pick out the Questions section (individual Q&A fields) to pass to Section10
+  const questionsIndex = sections.findIndex((s) => s.sectionApiId === "questions");
+  const questionsSection = questionsIndex >= 0 ? sections[questionsIndex] : null;
+
+  // Remove hero, section5, section6, section7, section8, section9, section10, questions so we don't render duplicates
   const rest = sections.filter(
     (s, i) =>
       i !== heroIndex &&
@@ -101,6 +105,7 @@ export default function Homepage({ sections }: HomepageProps) {
       i !== section8Index &&
       i !== section9Index &&
       i !== section10Index &&
+      i !== questionsIndex &&
       s.sectionApiId !== "hero_section"
   );
 
@@ -128,7 +133,7 @@ export default function Homepage({ sections }: HomepageProps) {
       {section9 ? <Section9 key={section9._id} section={section9} /> : null}
 
       {/* Section 10: Frequently Asked Questions - rendered explicitly below Blogs & Resources */}
-      {section10 ? <Section10 key={section10._id} section={section10} /> : null}
+      {section10 ? <Section10 key={section10._id} section={section10} questionsSection={questionsSection} /> : null}
     </main>
   );
 }
