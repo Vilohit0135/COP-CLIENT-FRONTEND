@@ -66,24 +66,33 @@ export default function Navbar() {
 
   useEffect(() => {
     // fetch promo from CMS page content
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "";
-    const url = apiBase ? `${apiBase}/api/public/page-content/home-page` : "/api/public/page-content/home-page";
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const url = `${apiBase}/api/public/page-content/home-page`;
     let cancelled = false;
-    fetch(url)
-      .then((r) => r.json())
+    fetch(url, { cache: "no-store" })
+      .then(async (r) => {
+        if (!r.ok) {
+          console.warn(`[Navbar promo] ${url} returned ${r.status}`);
+          return null;
+        }
+        return r.json();
+      })
       .then((json) => {
-        if (cancelled) return;
+        if (cancelled || !json) return;
         const items = Array.isArray(json?.content) ? json.content : [];
         for (const it of items) {
           const vals = it.values || {};
-          const promo = vals.Promo || vals.promo || vals.PROMO || vals.promoText || vals.promo_text;
+          const key = Object.keys(vals).find((k) => k.toLowerCase().includes("promo"));
+          const promo = key ? vals[key] : null;
           if (promo) {
             setPromoText(String(promo));
             return;
           }
         }
       })
-      .catch(() => { })
+      .catch((err) => {
+        console.warn("[Navbar promo] fetch failed", err);
+      });
     return () => { cancelled = true };
   }, []);
 
