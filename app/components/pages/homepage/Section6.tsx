@@ -2,7 +2,7 @@
 
 import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
-import { useEffect, useState } from "react";
+import { useState /* , useEffect */ } from "react";
 import { Star, BookOpen, CheckCircle, TrendingUp } from "lucide-react";
 
 interface Section6Props {
@@ -29,7 +29,33 @@ interface Program {
 
 export default function Section6({ section }: Section6Props) {
   const v = section.values || {};
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const [programs, setPrograms] = useState<Program[]>([
+    { _id: "p1", title: "Master of Computer Applications", fees: 120000, discountedFees: 100000, duration: "24 Months", trending: false, certifications: ["UGC", "NAAC A+"], features: ["Job Assistance", "Flexible Learning", "Industry Projects"], rating: 4.6, reviews: 189 },
+    { _id: "p2", title: "Executive MBA (Finance)", fees: 200000, discountedFees: 166667, duration: "18 Months", trending: true, certifications: ["UGC", "AIU"], features: ["Weekend Classes", "CFO Sessions", "Bloomberg Terminal"], rating: 4.9, reviews: 312 },
+    { _id: "p3", title: "MBA in Data Science", fees: 180000, discountedFees: 150000, duration: "24 Months", trending: false, certifications: ["UGC", "NAAC A+"], features: ["Industry Mentors", "Live Projects", "Placement Support"], rating: 4.7, reviews: 198 },
+    { _id: "p4", title: "BBA in Business Analytics", fees: 120000, discountedFees: 100000, duration: "36 Months", trending: false, certifications: ["UGC", "AICTE"], features: ["Industry Projects", "Internships", "Job Assistance"], rating: 4.4, reviews: 134 },
+  ]);
+  // Suppress unused warning while the live fetch is disabled.
+  void setPrograms;
+
+  // Disabled until the backend exposes a best-ROI programs endpoint.
+  // useEffect(() => {
+  //   const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch(`${apiBase}/api/public/providers/programs/best-roi`, { cache: "no-store" });
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         if (Array.isArray(data) && data.length > 0) {
+  //           setPrograms(data.slice(0, 4));
+  //         }
+  //       }
+  //     } catch (e) {
+  //       // ignore — falls back to mock data above
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const getFieldValue = (aliases: string[], fallback = "") => {
     for (const a of aliases) {
