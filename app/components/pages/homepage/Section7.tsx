@@ -74,7 +74,7 @@ export default function Section7({ section }: Section7Props) {
 
   return (
     <section className="py-16 bg-white">
-      <div className="max-w-[1380px] mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Top: Image left, Heading + 2x2 grid right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-6">
           {/* Left: Image */}

@@ -161,8 +161,33 @@ export default function ProfilePage() {
   const [activeNav, setActiveNav] = useState<NavKey>("profile");
 
   const [userData, setUserData] = useState<UserData>(dummyUser);
+  const [shortlisted, setShortlisted] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isShortlistLoading, setIsShortlistLoading] = useState(false);
   const router = useRouter();
+
+  const fetchShortlist = async () => {
+    try {
+      const token = localStorage.getItem('studentToken');
+      if (!token) return;
+
+      setIsShortlistLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/shortlist`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setShortlisted(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch shortlist", err);
+    } finally {
+      setIsShortlistLoading(false);
+    }
+  };
 
   React.useEffect(() => {
     const fetchProfile = async () => {
@@ -200,7 +225,29 @@ export default function ProfilePage() {
       }
     };
     fetchProfile();
+    fetchShortlist();
   }, []);
+
+  const handleRemoveShortlist = async (providerId: string) => {
+    const token = localStorage.getItem('studentToken');
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/shortlist/${providerId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (response.ok) {
+        setShortlisted(prev => prev.filter(item => item.providerId !== providerId));
+        toast.success("Removed from shortlist");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to remove from shortlist");
+    }
+  };
 
   const handleUpdateProfile = async (updates: Partial<UserData>) => {
     const token = localStorage.getItem('studentToken');
@@ -304,7 +351,13 @@ export default function ProfilePage() {
         {/* ── Main Content ───────────────────────────────────────────────── */}
         <main className="flex-1">
           {activeNav === "profile" && <PersonalInfoPanel userData={userData} onUpdate={handleUpdateProfile} />}
-          {activeNav === "shortlisted" && <ShortlistedPanel />}
+          {activeNav === "shortlisted" && (
+            <ShortlistedPanel 
+              list={shortlisted} 
+              isLoading={isShortlistLoading} 
+              onRemove={handleRemoveShortlist} 
+            />
+          )}
           {activeNav === "settings" && <SettingsPanel userData={userData} />}
         </main>
       </div>
@@ -591,18 +644,29 @@ const initialShortlisted = [
 
 type ShortlistedEntry = typeof initialShortlisted[number];
 
-function ShortlistedPanel() {
-  const [list, setList] = useState<ShortlistedEntry[]>(initialShortlisted);
+function ShortlistedPanel({ 
+  list, 
+  isLoading, 
+  onRemove 
+}: { 
+  list: any[], 
+  isLoading: boolean, 
+  onRemove: (id: string) => void 
+}) {
   const [search, setSearch] = useState("");
 
   const filtered = list.filter((u) =>
     u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.location.toLowerCase().includes(search.toLowerCase()) ||
-    u.program.toLowerCase().includes(search.toLowerCase())
+    (u.states && u.states.some((s: string) => s.toLowerCase().includes(search.toLowerCase())))
   );
 
-  function remove(id: number) {
-    setList((prev) => prev.filter((u) => u.id !== id));
+  if (isLoading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 flex flex-col items-center justify-center gap-4">
+        <div className="w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
+        <p className="text-gray-500 font-medium">Loading your shortlist...</p>
+      </div>
+    );
   }
 
   return (
@@ -614,7 +678,7 @@ function ShortlistedPanel() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search universities, programs, or locations..."
+          placeholder="Search shortlisted universities..."
           className="flex-1 text-sm text-gray-700 outline-none placeholder-gray-400 bg-transparent"
         />
         <FilterIcon className="w-5 h-5 text-gray-400 flex-shrink-0" />
@@ -623,61 +687,92 @@ function ShortlistedPanel() {
       {/* University Cards */}
       {filtered.length === 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center text-gray-400 text-sm">
-          No shortlisted universities found.
+          {search ? "No matches found for your search." : "No shortlisted universities found."}
         </div>
       )}
 
-      {filtered.map((uni) => (
-        <div key={uni.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 relative">
-          {/* Remove button */}
-          <button
-            onClick={() => remove(uni.id)}
-            className="absolute top-4 right-4 text-gray-300 hover:text-gray-500 transition-colors"
-            aria-label="Remove"
-          >
-            <XIcon className="w-4 h-4" />
-          </button>
+      {filtered.map((uni) => {
+        const initials = uni.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
+        const colors = ["bg-purple-600", "bg-orange-400", "bg-red-500", "bg-blue-500", "bg-teal-500"];
+        const color = colors[uni.name.length % colors.length];
 
-          {/* Top row: avatar + name/meta */}
-          <div className="flex items-start gap-4 mb-4">
-            <div className={`${uni.color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0`}>
-              <span className="text-white text-sm font-extrabold">{uni.initials}</span>
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 text-base leading-tight">{uni.name}</h3>
-              <div className="flex flex-wrap items-center gap-2 mt-1">
-                <span className="flex items-center gap-1 text-xs text-gray-500">
-                  <PinIcon className="w-3 h-3 text-gray-400" />
-                  {uni.location}
-                </span>
-                <span className="flex items-center gap-1 text-xs text-gray-500">
-                  <StarIcon className="w-3 h-3 text-yellow-400" />
-                  {uni.rating}
-                </span>
-                <span className="text-xs text-gray-400">{uni.accreditations}</span>
+        return (
+          <div key={uni.providerId} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 relative group hover:shadow-md transition-shadow">
+            {/* Remove button */}
+            <button
+              onClick={() => onRemove(uni.providerId)}
+              className="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors p-1"
+              aria-label="Remove"
+            >
+              <TrashIcon className="w-4 h-4" />
+            </button>
+
+            {/* Top row: avatar + name/meta */}
+            <div className="flex items-start gap-4 mb-4">
+              <div className={`${color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-inner`}>
+                {uni.logo ? (
+                  <img src={uni.logo} alt={uni.name} className="w-8 h-8 object-contain brightness-0 invert" />
+                ) : (
+                  <span className="text-white text-sm font-extrabold">{initials}</span>
+                )}
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 text-base leading-tight group-hover:text-purple-700 transition-colors">{uni.name}</h3>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
+                  <span className="flex items-center gap-1 text-xs text-gray-500">
+                    <PinIcon className="w-3.5 h-3.5 text-gray-400" />
+                    {uni.states?.[0] || "Online"}
+                  </span>
+                  <span className="flex items-center gap-1 text-xs text-gray-500">
+                    <StarIcon className="w-3.5 h-3.5 text-yellow-400" />
+                    {uni.rating || "4.2"}
+                  </span>
+                  <span className="text-xs text-gray-400 font-medium">
+                    {uni.approvals?.map((a: any) => a.name).join(" | ")}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Info strip */}
-          <div className="bg-gray-50 rounded-xl px-4 py-3 grid grid-cols-4 gap-3 mb-4">
-            <InfoCell icon={<GraduationCapIcon className="w-4 h-4 text-purple-500" />} label="Program" value={uni.program} />
-            <InfoCell icon={<ClockIcon className="w-4 h-4 text-purple-500" />} label="Duration" value={uni.duration} />
-            <InfoCell icon={<RupeeIcon className="w-4 h-4 text-purple-500" />} label="Total Fees" value={uni.fees} />
-            <InfoCell icon={<CalIcon className="w-4 h-4 text-purple-500" />} label="Start Date" value={uni.startDate} />
-          </div>
+            {/* Info strip */}
+            <div className="bg-gray-50/80 rounded-xl px-4 py-3 grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+              <InfoCell 
+                icon={<GraduationCapIcon className="w-4 h-4 text-purple-500" />} 
+                label="Primary Program" 
+                value={uni.courses?.[0]?.title || "Multi-Program"} 
+              />
+              <InfoCell 
+                icon={<ClockIcon className="w-4 h-4 text-purple-500" />} 
+                label="Duration" 
+                value={uni.minimumDuration || "24 Months"} 
+              />
+              <InfoCell 
+                icon={<RupeeIcon className="w-4 h-4 text-purple-500" />} 
+                label="Starting Fee" 
+                value={uni.startingFee ? `₹${uni.startingFee.toLocaleString()}` : "Contact for Fees"} 
+              />
+              <InfoCell 
+                icon={<CalIcon className="w-4 h-4 text-purple-500" />} 
+                label="Admissions" 
+                value="Ongoing" 
+              />
+            </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1.5 border border-[#6C3FC5] text-[#6C3FC5] hover:bg-purple-50 text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-              View Details <span className="text-base leading-none">→</span>
-            </button>
-            <button className="flex items-center gap-1.5 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-              Compare Programs
-            </button>
+            {/* Action buttons */}
+            <div className="flex items-center gap-3">
+              <Link 
+                href={`/universities/${uni.name.toLowerCase().replace(/\s+/g, '-')}`} // Fallback slug if providerId not mapping to slug
+                className="flex items-center gap-1.5 border border-[#6C3FC5] text-[#6C3FC5] hover:bg-purple-50 text-xs font-bold px-5 py-2 rounded-lg transition-colors"
+              >
+                View Details <span className="text-base leading-none">→</span>
+              </Link>
+              <button className="flex items-center gap-1.5 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-xs font-bold px-5 py-2 rounded-lg transition-colors shadow-sm shadow-purple-200">
+                Compare Programs
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

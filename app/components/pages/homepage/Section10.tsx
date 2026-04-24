@@ -89,7 +89,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
 
   return (
     <section className="w-full bg-white py-16 px-4">
-      <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div className="max-w-4xl mx-auto flex flex-col items-center">
 
         {/* Pill */}
         <span

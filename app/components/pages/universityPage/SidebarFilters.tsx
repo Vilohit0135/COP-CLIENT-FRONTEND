@@ -34,7 +34,10 @@ const categories = [
   },
 ];
 
-export default function SidebarFilters() {
+import { useRouter } from "next/navigation";
+
+export default function SidebarFilters({ selectedToCompare = [] }: { selectedToCompare?: string[] }) {
+  const router = useRouter();
   return (
     <aside className="w-full lg:w-[320px] shrink-0 space-y-6">
       <div className="bg-[#FFFFFF] rounded-2xl p-6 shadow-xl border border-[#E5E7EB]">
@@ -70,6 +73,33 @@ export default function SidebarFilters() {
           </div>
         </div>
       </div>
+
+      {selectedToCompare.length > 0 && (
+        <div className="bg-[#FFFFFF] rounded-2xl p-6 shadow-xl border border-[#E5E7EB] mt-6 sticky top-6">
+          <h2 className="text-xl font-bold mb-2 text-gray-800">Compare Universities</h2>
+          <p className="text-sm text-gray-500 mb-6 font-medium">
+            {selectedToCompare.length} selected (max 4)
+          </p>
+          <button 
+            onClick={() => router.push(`/compareUniversities?ids=${selectedToCompare.join(',')}`)}
+            disabled={selectedToCompare.length < 2}
+            className={`w-full font-bold py-3.5 rounded-xl transition-all shadow-sm flex justify-center items-center gap-2 ${
+              selectedToCompare.length >= 2 
+                ? 'bg-gradient-to-r from-[#4F39F6] to-[#9810FA] hover:scale-[1.02] text-white shadow-purple-600/20 cursor-pointer'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+            }`}
+          >
+            {selectedToCompare.length < 2 ? (
+              'Select at least 2'
+            ) : (
+              <>
+                Compare Now
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

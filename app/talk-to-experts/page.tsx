@@ -1,4 +1,5 @@
 import TalkToExperts from "@/app/components/pages/experts/TalkToExperts";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const metadata = {
   title: "Talk to Our Expert Counselors | CollegeProgram",
@@ -6,5 +7,5 @@ export const metadata = {
 };
 
 export default function TalkToExpertsRoute() {
-  return <TalkToExperts />;
+  return <ProtectedRoute> <TalkToExperts /> </ProtectedRoute>;
 }

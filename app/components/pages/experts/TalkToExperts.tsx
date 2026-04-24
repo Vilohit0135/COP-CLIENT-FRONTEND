@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Phone, Shield } from "lucide-react";
 
 export default function TalkToExperts() {
@@ -12,6 +12,34 @@ export default function TalkToExperts() {
     programOfInterest: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('studentToken');
+        if (!token) return;
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/student/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setFormData(prev => ({
+            ...prev,
+            fullName: data.name || (data.firstName ? `${data.firstName} ${data.lastName || ''}`.trim() : prev.fullName),
+            email: data.email || prev.email,
+            whatsappNumber: data.phone || prev.whatsappNumber,
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch profile for pre-filling form", err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const title = "Talk to our expert counselors";
   const description = "Have questions about programs, admissions, or career paths? Fill out the form and our expert counselors will be in touch directly.";

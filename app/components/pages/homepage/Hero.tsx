@@ -1,5 +1,6 @@
+'use client'
 import { SectionContent } from "@/app/lib/types";
-
+import { motion } from "framer-motion";
 interface HeroProps {
   section: SectionContent;
 }
@@ -103,11 +104,11 @@ export default function Hero({ section }: HeroProps) {
   return (
     <section className="relative w-full bg-white text-gray-900 overflow-visible">
       {/* Responsive container with proper scaling */}
-      <div className="w-full px-4 sm:px-6 lg:px-8 pt-0 pb-6 mt-20 lg:mt-24">
+      <div className="w-full pt-0 pb-6">
         <div className="max-w-7xl mx-auto">
           <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16">
             {/* Left column: text */}
-            <div className="w-full lg:w-1/2 text-left relative">
+            <motion.div initial={{ scale: 0.9 }} className="w-full lg:w-1/2 text-center lg:text-left   relative">
               {/* Privacy matters pill - text based (match CMS field if present) */}
               {(() => {
                 const privacyAliases = ["Above main heading pill", "Above main heading", "Privacy pill", "Your Privacy Matters", "privacy_pill"];
@@ -210,26 +211,28 @@ export default function Hero({ section }: HeroProps) {
               )}
 
               {description && (
-                <p style={{
-                  marginTop: "clamp(1.5rem, 3vw, 2rem)",
-                  fontSize: "clamp(16px, 2vw, 18px)",
-                  color: "#6A7282",
-                  maxWidth: "38rem",
-                  lineHeight: "1.6",
-                  letterSpacing: "0.01em"
-                }}>
+                <p
+                  className="mx-auto lg:mx-0"
+                  style={{
+                    marginTop: "clamp(1.5rem, 3vw, 2rem)",
+                    fontSize: "clamp(16px, 2vw, 18px)",
+                    color: "#6A7282",
+                    maxWidth: "38rem",
+                    lineHeight: "1.6",
+                    letterSpacing: "0.01em"
+                  }}>
                   {description}
                 </p>
               )}
 
               {/* Stats row - larger icons aligned to text */}
-              <div className="mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-10 items-center flex-wrap">
+              <div className="mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-10 items-center justify-center lg:justify-start flex-wrap">
                 <div className="flex items-center gap-3 sm:gap-4">
                   <img src="/Container (47).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
                   <div>
-                      <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statUniversities}</div>
-                      <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Partnerships</div>
-                    </div>
+                    <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statUniversities}</div>
+                    <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Partnerships</div>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
@@ -257,7 +260,7 @@ export default function Hero({ section }: HeroProps) {
               )}
 
               {/* 4-box group (100% Secure, 4.8 Rating, Certifications, Counselling) - RESPONSIVE and evenly spaced */}
-              <div className="mt-6 lg:mt-8 flex items-center gap-4 w-full lg:w-fit justify-start">
+              <div className="mt-6 lg:mt-8 flex items-center gap-4 w-full lg:w-fit justify-center lg:justify-start flex-wrap">
                 <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
                   <img src="/Stats.png" alt="100% Secure" className="w-full h-full object-contain" />
                 </div>
@@ -271,10 +274,10 @@ export default function Hero({ section }: HeroProps) {
                   <img src="/Container (45).png" alt="Counselling" className="w-full h-full object-contain" />
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Right column: image + decorative circle + overlays */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center relative" style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px" }}>
+            <motion.div initial={{}} className="w-full lg:w-1/2 flex items-start justify-center pb-20 lg:pb-32 relative" style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px" }}>
               {/* Decorative purple circle - responsive */}
               <div className="absolute rounded-full bg-gradient-to-br from-purple-300 to-purple-600 opacity-30 -z-10" style={{
                 width: "clamp(300px, 50vw, 600px)",
@@ -384,7 +387,7 @@ export default function Hero({ section }: HeroProps) {
                   </div>
                 </div>
               )}
-            </div>
+            </motion.div>
           </div>
 
           {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
@@ -406,18 +409,18 @@ export default function Hero({ section }: HeroProps) {
 
             return (
               <div className="mt-12 lg:mt-16 w-full">
-                  {dynamicFields.map(([fieldKey, fieldValue]) => {
-                    const displayText = typeof fieldValue === "string" 
-                      ? fieldValue 
-                      : richTextToPlain(fieldValue);
+                {dynamicFields.map(([fieldKey, fieldValue]) => {
+                  const displayText = typeof fieldValue === "string"
+                    ? fieldValue
+                    : richTextToPlain(fieldValue);
 
-                    return (
-                      <div key={fieldKey}>
-                        {displayText}
-                      </div>
-                    );
-                  })}
-                </div>
+                  return (
+                    <div key={fieldKey}>
+                      {displayText}
+                    </div>
+                  );
+                })}
+              </div>
             );
           })()}
         </div>

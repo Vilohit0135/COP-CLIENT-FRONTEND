@@ -7,10 +7,26 @@ interface DetailedComparisonTableProps {
     universities: University[];
 }
 
+interface ComparisonRow {
+    label: string;
+    key: string;
+    isTitle?: boolean;
+    isPurpleText?: boolean;
+    isBold?: boolean;
+    isRating?: boolean;
+    isBadges?: boolean;
+    isPurpleBg?: boolean;
+}
+
+interface ComparisonSection {
+    title: string;
+    rows: ComparisonRow[];
+}
+
 const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps) => {
     const router = useRouter();
 
-    const sections = [
+    const sections: ComparisonSection[] = [
         {
             title: "BASIC INFORMATION",
             rows: [
@@ -63,10 +79,10 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
     };
 
     return (
-        <div className="animate-in fade-in duration-700 max-w-[1280px] mx-auto px-4 py-8">
+        <div className="animate-in fade-in duration-700 mx-auto px-4 py-8">
             <button
                 onClick={() => router.back()}
-                className="flex items-center gap-2 text-[#803AF2] font-bold mb-8 hover:gap-3 transition-all"
+                className="flex items-center gap-2 text-[#803AF2] font-bold mb-8 hover:gap-3 transition-all cursor-pointer"
             >
                 <IconArrowLeft size={20} /> Back to Comparison
             </button>
@@ -81,7 +97,13 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                         <p className="text-gray-500 font-medium">Compare universities side-by-side • Research Freely Mode ON 🌟</p>
                     </div>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600 font-bold transition-colors">
+                <button 
+                    onClick={() => {
+                        localStorage.removeItem('selectedToCompare');
+                        router.push('/compareUniversities');
+                    }}
+                    className="text-gray-400 hover:text-gray-600 font-bold transition-colors cursor-pointer"
+                >
                     Clear All
                 </button>
             </div>
@@ -99,17 +121,34 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                                 {universities.map((uni) => (
                                     <th key={uni.id} className="p-8 min-w-[350px]">
                                         <div className="bg-white border-2 border-gray-50 rounded-2xl p-6 relative group hover:border-purple-100 transition-all duration-300">
-                                            <button className="absolute top-4 right-4 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
+                                            <button 
+                                                onClick={() => {
+                                                    const remainingIds = universities
+                                                        .filter(u => u.id !== uni.id)
+                                                        .map(u => u.id);
+                                                    const newIdsString = remainingIds.join(',');
+                                                    localStorage.setItem('selectedToCompare', JSON.stringify(remainingIds));
+                                                    
+                                                    if (newIdsString) {
+                                                        router.push(`/compareUniversities/detailed?ids=${newIdsString}`);
+                                                    } else {
+                                                        router.push('/compareUniversities');
+                                                    }
+                                                }}
+                                                className="absolute top-4 right-4 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+                                            >
                                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
                                             </button>
                                             <h3 className="font-black text-[#111827] text-xl mb-1">{uni.name}</h3>
                                             <p className="text-gray-400 text-sm font-medium">{uni.location}</p>
-                                            <div className="mt-4 inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-xs font-black border border-green-100">
-                                                <div className="w-1 h-1 rounded-full bg-green-500" />
-                                                Best Value
-                                            </div>
+                                            {uni.bestROI && (
+                                                <div className="mt-4 inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-xs font-black border border-green-100">
+                                                    <div className="w-1 h-1 rounded-full bg-green-500" />
+                                                    Best Value
+                                                </div>
+                                            )}
                                         </div>
                                     </th>
                                 ))}
@@ -136,10 +175,10 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                                                             <div className="flex items-center gap-1">
                                                                 <div className="flex gap-0.5">
                                                                     {[...Array(5)].map((_, i) => (
-                                                                        <IconStar 
-                                                                            key={i} 
-                                                                            size={14} 
-                                                                            className={`${i < Math.floor(value) ? 'fill-[#F59E0B] text-[#F59E0B]' : 'text-gray-200 fill-gray-200'}`} 
+                                                                        <IconStar
+                                                                            key={i}
+                                                                            size={14}
+                                                                            className={`${i < Math.floor(value) ? 'fill-[#F59E0B] text-[#F59E0B]' : 'text-gray-200 fill-gray-200'}`}
                                                                         />
                                                                     ))}
                                                                 </div>
@@ -147,7 +186,7 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                                                             </div>
                                                         ) : row.isBadges ? (
                                                             <div className="flex flex-wrap gap-2">
-                                                                {value.split(',').map((badge: string, i: number) => (
+                                                                {typeof value === 'string' && value.split(',').map((badge: string, i: number) => (
                                                                     <span key={i} className="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-xs font-black border border-blue-100">
                                                                         {badge.trim()}
                                                                     </span>

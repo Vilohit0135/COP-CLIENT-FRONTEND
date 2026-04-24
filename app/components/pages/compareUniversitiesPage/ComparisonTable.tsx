@@ -2,13 +2,14 @@ import React from 'react';
 import { IconArrowLeft, IconStar, IconMapPin, IconCertificate, IconClock, IconCurrencyRupee, IconLayoutGrid, IconUsers, IconCheck } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { University } from './universityData';
+import TalkToCounselor from '../../talkToCounselor';
 
 interface ComparisonTableProps {
     selectedData: University[];
-    onBack: () => void;
+    onRemove: (id: string) => void;
 }
 
-const ComparisonTable = ({ selectedData, onBack }: ComparisonTableProps) => {
+const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
     const router = useRouter();
 
     const handleDetailedComparison = () => {
@@ -32,15 +33,8 @@ const ComparisonTable = ({ selectedData, onBack }: ComparisonTableProps) => {
     ];
 
     return (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <button
-                onClick={onBack}
-                className="flex items-center gap-2 text-[#803AF2] font-bold mb-6 hover:gap-3 transition-all"
-            >
-                <IconArrowLeft size={20} /> Back to Selection
-            </button>
-
-            <div className="bg-white rounded-[32px] border border-gray-100 shadow-xl overflow-hidden mb-12">
+        <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="bg-white rounded-xl border border-gray-100 shadow-xl overflow-hidden mb-12 w-full">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -49,10 +43,13 @@ const ComparisonTable = ({ selectedData, onBack }: ComparisonTableProps) => {
                                     Features
                                 </th>
                                 {selectedData.map((uni, idx) => (
-                                    <th key={uni.id} className="p-6 bg-white min-w-[300px] border-b border-gray-100">
-                                        <div className="flex items-center justify-between">
+                                    <th key={uni.id} className="p-6 bg-white min-w-[300px] border-b border-gray-100 relative">
+                                        <div className="flex flex-col items-center justify-center text-center">
                                             <h3 className="font-extrabold text-[#803AF2] text-xl leading-tight">{uni.name}</h3>
-                                            <button className="text-gray-400 hover:text-red-500 transition-colors">
+                                            <button
+                                                onClick={() => onRemove(uni.id)}
+                                                className="absolute top-6 right-6 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                                            >
                                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
@@ -105,14 +102,16 @@ const ComparisonTable = ({ selectedData, onBack }: ComparisonTableProps) => {
                 </div>
             </div>
 
-            <div className="flex justify-end mb-12">
+            <div className="flex justify-end mb-8 cursor-pointer">
                 <button
                     onClick={handleDetailedComparison}
-                    className="bg-[#803AF2] hover:bg-[#6D28D9] text-white px-8 py-4 rounded-2xl font-black text-lg shadow-lg shadow-purple-200 transition-all hover:scale-105 active:scale-95"
+                    className="bg-[#803AF2] hover:bg-[#6D28D9] text-white px-8 py-4 rounded-2xl font-black text-sm shadow-lg shadow-purple-200 transition-all hover:scale-105 active:scale-95 cursor-pointer"
                 >
                     View Detailed Comparison
                 </button>
             </div>
+
+            <TalkToCounselor />
         </div>
     );
 };

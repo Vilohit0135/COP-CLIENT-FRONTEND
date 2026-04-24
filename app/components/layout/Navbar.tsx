@@ -120,8 +120,8 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="bg-[#7C3AED] text-white text-sm py-2 px-6">
-        <div className="max-w-[1440px] mx-auto overflow-hidden" style={{ position: "relative" }}>
+      <div className="bg-[#7C3AED] text-white text-sm py-2">
+        <div className="w-full mx-auto overflow-hidden" style={{ position: "relative" }}>
           {promoText ? (
             <div style={{ overflow: "hidden" }}>
               <style>{`
@@ -139,11 +139,13 @@ export default function Navbar() {
                     <div className="promo-item item-1">{promoText}</div>
                     <div className="promo-item item-2">{promoText}</div>
                     <div className="promo-item item-3">{promoText}</div>
+                    <div className="promo-item item-4">{promoText}</div>
                   </div>
                   <div className="promo-content" aria-hidden={true}>
                     <div className="promo-item item-1">{promoText}</div>
                     <div className="promo-item item-2">{promoText}</div>
                     <div className="promo-item item-3">{promoText}</div>
+                    <div className="promo-item item-4">{promoText}</div>
                   </div>
                 </div>
               </div>
@@ -178,7 +180,8 @@ export default function Navbar() {
             >
               <button
                 onClick={() => setDropdownOpen((v) => !v)}
-                className="flex items-center gap-1 font-semibold text-[13px] leading-[19.5px] hover:text-white/80 transition cursor-pointer"
+                className={`flex items-center gap-1 font-semibold text-[13px] leading-[19.5px] transition cursor-pointer px-3 py-2 rounded-lg ${pathname.startsWith('/explore-programs') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
+                  }`}
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               >
                 Explore Programs
@@ -199,21 +202,32 @@ export default function Navbar() {
               >
                 {/* Invisible bridge to prevent hover loss */}
                 <div className="absolute -top-4 left-0 w-full h-4 bg-transparent" aria-hidden="true" />
-                {explorePrograms.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition text-sm font-medium"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    {item.icon}
-                    {item.label}
-                  </Link>
-                ))}
+                {explorePrograms.map((item) => {
+                  const isActive = pathname === item.href || (item.href.includes('?') ? pathname === item.href.split('?')[0] && typeof window !== 'undefined' && window.location.search === '?' + item.href.split('?')[1] : pathname.startsWith(item.href));
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-4 py-3 transition text-sm font-medium ${isActive
+                        ? 'bg-purple-100 text-purple-800 border-l-4 border-purple-600'
+                        : 'text-gray-700 hover:bg-purple-50 hover:text-purple-700 border-l-4 border-transparent'
+                        }`}
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      {item.icon}
+                      {item.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
-            <Link href="/universities" className="font-semibold text-[13px] leading-[19.5px] hover:text-white/80 transition" style={{ fontFamily: "'Nunito', sans-serif" }}>
+            <Link
+              href="/universities"
+              className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg ${pathname.startsWith('/universities') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
+                }`}
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               Top Universities
             </Link>
           </div>
@@ -234,7 +248,14 @@ export default function Navbar() {
               <div className="w-px h-6 bg-white/30 mx-2" />
             </div>
 
-            <Link href="/compare-universities" className="hidden sm:flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 hover:bg-white/20 transition px-3 py-1.5 text-[13px] leading-[19.5px] font-semibold" style={{ fontFamily: "'Nunito', sans-serif" }}>
+            <Link
+              href="/compareUniversities"
+              className={`hidden sm:flex items-center gap-2 rounded-lg border transition px-3 py-1.5 text-[13px] leading-[19.5px] font-semibold ${pathname.startsWith('/compareUniversities')
+                ? 'bg-white/30 border-white text-white shadow-sm'
+                : 'bg-white/10 border-white/40 hover:bg-white/20 text-white'
+                }`}
+              style={{ fontFamily: "'Nunito', sans-serif" }}
+            >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
@@ -243,7 +264,10 @@ export default function Navbar() {
 
             <Link
               href="/talk-to-experts"
-              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow"
+              className={`flex items-center gap-2 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow ${pathname.startsWith('/talk-to-experts')
+                ? 'bg-orange-600 text-white ring-2 ring-white/50'
+                : 'bg-orange-500 hover:bg-orange-600 text-white'
+                }`}
               style={{ fontFamily: "'Nunito', sans-serif" }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -255,16 +279,22 @@ export default function Navbar() {
             {isClient && isLoggedIn ? (
               <Link
                 href="/profile"
-                className="hidden sm:flex rounded-full w-9 h-9 border border-white/50 overflow-hidden cursor-pointer bg-white/20 hover:bg-white/30 transition items-center justify-center"
+                className={`hidden sm:flex rounded-full w-9 h-9 border overflow-hidden cursor-pointer transition items-center justify-center ${pathname.startsWith('/profile')
+                  ? 'bg-white/40 border-white text-white shadow-sm'
+                  : 'bg-white/20 hover:bg-white/30 border-white/50 text-white'
+                  }`}
               >
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-current" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </Link>
             ) : (
               <Link
                 href="/login"
-                className="hidden sm:block rounded-lg border border-white/50 px-4 py-2 text-sm font-medium hover:bg-white/10 transition"
+                className={`hidden sm:block rounded-lg border px-4 py-2 text-sm font-medium transition ${pathname.startsWith('/login')
+                  ? 'bg-white/30 border-white text-white shadow-sm'
+                  : 'border-white/50 hover:bg-white/10 text-white'
+                  }`}
               >
                 Sign In
               </Link>

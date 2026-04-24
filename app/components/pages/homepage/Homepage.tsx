@@ -110,27 +110,55 @@ export default function Homepage({ sections }: HomepageProps) {
   );
 
   return (
-    <main className="min-h-screen w-full" style={{ fontFamily: 'Inter, Arial, Helvetica, sans-serif' }}>
+    <main className="min-h-screen w-full flex flex-col items-stretch" style={{ fontFamily: 'Inter, Arial, Helvetica, sans-serif' }}>
       {/* Hero: rendered explicitly so homepage layout is clear here. */}
-      {hero ? <Hero key={hero._id} section={hero} /> : null}
+      {hero ? (
+        <div className="w-full">
+          <Hero key={hero._id} section={hero} />
+        </div>
+      ) : null}
 
       {/* Remaining sections: rendered by the generic SectionRenderer */}
-      {rest.length > 0 && <SectionRenderer sections={rest} />}
+      {rest.length > 0 && (
+        <div className="w-full">
+          <SectionRenderer sections={rest} />
+        </div>
+      )}
 
       {/* Section 5: Talk to Expert Counselors - rendered explicitly */}
-      {section5 ? <Section5 key={section5._id} section={section5} /> : null}
+      {section5 ? (
+        <div className="w-full">
+          <Section5 key={section5._id} section={section5} />
+        </div>
+      ) : null}
 
       {/* Section 6: Best ROI Programs - rendered explicitly below Section 5 */}
-      {section6 ? <Section6 key={section6._id} section={section6} /> : null}
+      {section6 ? (
+        <div className="w-full">
+          <Section6 key={section6._id} section={section6} />
+        </div>
+      ) : null}
 
       {/* Section 7: Choose Us - rendered explicitly below Best ROI */}
-      {section7 ? <Section7 key={section7._id} section={section7} /> : null}
+      {section7 ? (
+        <div className="w-full">
+          <Section7 key={section7._id} section={section7} />
+        </div>
+      ) : null}
 
       {/* Section 8: Student Testimonials - rendered explicitly below Choose Us */}
-      {section8 ? <Section8 key={section8._id} section={section8} /> : null}
+      {section8 ? (
+        <div className="w-full">
+          <Section8 key={section8._id} section={section8} />
+        </div>
+      ) : null}
 
       {/* Section 9: Blogs & Resources - rendered explicitly below Student Testimonials */}
-      {section9 ? <Section9 key={section9._id} section={section9} /> : null}
+      {section9 ? (
+        <div className="w-full">
+          <Section9 key={section9._id} section={section9} />
+        </div>
+      ) : null}
 
       {/* Section 10: Frequently Asked Questions - rendered explicitly below Blogs & Resources */}
       {section10 ? <Section10 key={section10._id} section={section10} questionsSection={questionsSection} /> : null}

@@ -12,9 +12,9 @@ export default function TalkToCounselor({ isSpecializationView }: { isSpecializa
                         ? "Our expert counselors can guide you to the right specialization based on your interests and career goals"
                         : "Our expert counselors are here to help you find the perfect program for your career goals"}
                 </p>
-                <button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 px-10 rounded-full transition-all transform hover:scale-105 shadow-xl">
+                <a href="/talk-to-experts" className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-4 px-10 rounded-full transition-all transform hover:scale-105 shadow-xl">
                     {isSpecializationView ? "Get Expert Guidance" : "Talk to a Counselor"}
-                </button>
+                </a>
             </div>
 
             {/* Decorative blobs */}

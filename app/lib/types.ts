@@ -105,6 +105,20 @@ export interface Provider {
   canonicalUrl?: string;
   createdAt?: string;
   updatedAt?: string;
+  comparison?: {
+    location?: string;
+    feesStartingFrom?: number;
+    duration?: string;
+    intakePeriod?: string;
+    timeCommitment?: string;
+    totalSeatsAvailable?: number;
+    overallRating?: number;
+    accreditation?: string;
+    placementRate?: number;
+    averageSalary?: number;
+    eligibility?: string;
+    minimumRequirements?: string;
+  };
   
   // UI Helpers (Not in DB)
   location?: string;

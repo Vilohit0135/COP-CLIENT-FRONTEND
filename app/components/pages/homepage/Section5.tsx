@@ -95,7 +95,7 @@ export default function Section5({ section }: Section5Props) {
 
   return (
     <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div style={{ display: "flex", gap: "64px", alignItems: "flex-start", flexWrap: "wrap" }}>
 
           {/* ── LEFT SIDE ───────────────────────────────────────────────────── */}
@@ -179,13 +179,15 @@ export default function Section5({ section }: Section5Props) {
           {/* ── RIGHT SIDE: FORM CARD ────────────────────────────────────────── */}
           {/* Figma: 500×727px, radius 16px, border 1px #E5E7EB, padding 33px 33px 1px, 2× box-shadow */}
           <div style={{
-            width: "500px",
+            width: "100%",
+            maxWidth: "500px",
             flexShrink: 0,
             borderRadius: "16px",
             border: "1px solid #E5E7EB",
             backgroundColor: "#FFFFFF",
-            padding: "33px 33px 1px 33px",
+            padding: "33px",
             boxShadow: "0px 8px 10px -6px rgba(0,0,0,0.10), 0px 20px 25px -5px rgba(0,0,0,0.10)",
+            margin: "0 auto lg:margin-0",
           }}>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
 
@@ -292,7 +294,7 @@ export default function Section5({ section }: Section5Props) {
                 type="submit"
                 disabled={loading}
                 style={{
-                  width: "434px",
+                  width: "100%",
                   height: "52px",
                   borderRadius: "10px",
                   backgroundColor: "#9810FA",
@@ -325,12 +327,13 @@ export default function Section5({ section }: Section5Props) {
 
               {/* No Spam Calls — Figma: 431×32px, radius 8px, bg #10B981, border #059669, 2× shadow #000 10% */}
               <div style={{
-                width: "431px",
-                height: "32px",
+                width: "100%",
+                height: "auto",
+                minHeight: "32px",
                 borderRadius: "8px",
                 backgroundColor: "#10B981",
                 border: "1px solid #059669",
-                padding: "0 12px",
+                padding: "6px 12px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -351,7 +354,9 @@ export default function Section5({ section }: Section5Props) {
                 lineHeight: "19.5px",
                 color: "#6A7282",
                 textAlign: "center",
-                width: "398px",
+                width: "100%",
+                maxWidth: "398px",
+                margin: "0 auto",
                 paddingBottom: "20px",
               }}>
                 By submitting, you agree to our{" "}
