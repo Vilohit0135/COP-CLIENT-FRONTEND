@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "placehold.co" },
       { protocol: "https", hostname: "i.pravatar.cc" },
       { protocol: "https", hostname: "encrypted-tbn0.gstatic.com" },
+      { protocol: "https", hostname: "api.collegesathi.com" },
+      { protocol: "https", hostname: "media.collegesathi.com" },
+      { protocol: "https", hostname: "upload.wikimedia.org" },
     ],
   },
   async rewrites() {

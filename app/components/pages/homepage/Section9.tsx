@@ -110,7 +110,7 @@ export default function Section9({ section }: Section9Props) {
 
   return (
     <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px" }}>
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
 
         {/* Pill */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
@@ -169,14 +169,7 @@ export default function Section9({ section }: Section9Props) {
         </p>
 
         {/* Cards Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "24px",
-            marginBottom: "48px",
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {articles.map((article, idx) => (
             <div
               key={idx}

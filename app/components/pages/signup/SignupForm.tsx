@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User, Phone, GraduationCap } from 'lucide-react';
 import Link from 'next/link';
 import toast, { Toaster } from 'react-hot-toast';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
 
 const SignupForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +20,45 @@ const SignupForm = () => {
     });
     
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setIsLoading(true);
+            try {
+                const processEnvApi = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+                const response = await fetch(`${processEnvApi}/api/public/student/google-auth`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        accessToken: tokenResponse.access_token
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    toast.success("Login successful!");
+                    if (data.token) {
+                        localStorage.setItem('studentToken', data.token);
+                    }
+                    router.push("/");
+                } else {
+                    toast.error(data.error || "Google login failed");
+                }
+            } catch (error) {
+                console.error("Google Auth error:", error);
+                toast.error("An unexpected error occurred during Google login.");
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        onError: () => {
+            toast.error("Google login failed");
+        }
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -228,6 +269,8 @@ const SignupForm = () => {
                     {/* Google Button */}
                     <button
                         type="button"
+                        onClick={() => handleGoogleLogin()}
+                        disabled={isLoading}
                         className="w-full py-3 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all shadow-sm"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">

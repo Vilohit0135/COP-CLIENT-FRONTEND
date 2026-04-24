@@ -1,5 +1,5 @@
 export interface University {
-    id: number;
+    id: string; // Changed to string for MongoDB _id
     name: string;
     location: string;
     programType: string;
@@ -7,31 +7,23 @@ export interface University {
     fee: string;
     feeDescription: string;
     logo: string;
-    intake: string;
-    recognition: {
-        ugc: string;
-        aicte: string;
-        naac: string;
-        nirf: string;
-    };
-    ranking: string;
+    intakePeriod: string;
+    timeCommitment: string;
+    totalSeats: string;
     studentRating: number;
-    placements: {
-        highest: string;
-        average: string;
-        rate: string;
-    };
+    nationalRanking: string;
     accreditation: string;
+    placements: {
+        rate: string;
+        average: string;
+    };
+    minRequirements: string;
     learningMode: string;
     specializations: string;
     totalStudents: string;
     keyHighlights: string[];
-    emiOption: string;
-    intakePeriod: string;
-    timeCommitment: string;
-    totalSeats: string;
-    nationalRanking: string;
-    minRequirements: string;
+    emiOption?: string;
+    bestROI?: boolean;
 }
 
 export const universities: University[] = [

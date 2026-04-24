@@ -80,3 +80,22 @@ export async function getCourseDetail(identifier: string) {
   if (!res.ok) throw new Error(`Failed to fetch course detail: ${identifier}`);
   return res.json();
 }
+export async function getAllProviderCourses(specializationId?: string) {
+  const url = specializationId 
+    ? `${API_BASE}/api/public/provider-courses?specializationId=${specializationId}`
+    : `${API_BASE}/api/public/provider-courses`;
+  const res = await fetch(url, {
+    next: { revalidate: 1 },
+  });
+  if (!res.ok) throw new Error("Failed to fetch provider courses");
+  return res.json();
+}
+
+export async function getProvidersBySpecialization(identifier: string) {
+
+  const res = await fetch(`${API_BASE}/api/public/specializations/${identifier}/providers`, {
+    next: { revalidate: 1 },
+  });
+  if (!res.ok) throw new Error(`Failed to fetch providers for specialization: ${identifier}`);
+  return res.json();
+}

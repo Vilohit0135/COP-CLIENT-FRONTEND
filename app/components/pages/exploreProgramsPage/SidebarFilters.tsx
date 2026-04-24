@@ -31,7 +31,7 @@ export default function SidebarFilters({
         <div className="space-y-3">
           <button
             onClick={() => onSelectDegreeType(null)}
-            className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all ${selectedDegreeTypeId === null
+            className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDegreeTypeId === null
               ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
               : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
               }`}
@@ -48,7 +48,7 @@ export default function SidebarFilters({
             <button
               key={type._id}
               onClick={() => onSelectDegreeType(type._id)}
-              className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all ${selectedDegreeTypeId === type._id
+              className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDegreeTypeId === type._id
                 ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
                 : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
                 }`}
@@ -56,7 +56,7 @@ export default function SidebarFilters({
               <span className={selectedDegreeTypeId === type._id ? "text-white" : "text-purple-600"}>
                 {icons[idx % icons.length]}
               </span>
-              <span className="font-semibold">{type.name} Courses</span>
+              <span className="font-semibold">{type.name}</span>
             </button>
           ))}
         </div>

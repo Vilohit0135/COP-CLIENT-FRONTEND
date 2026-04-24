@@ -8,6 +8,9 @@ import SidebarFilters from "./SidebarFilters";
 import ProgramCard from "./ProgramCard";
 import Link from "next/link";
 import TalkToCounselor from "../../talkToCounselor";
+import CompactUniversityCard from "./CompactUniversityCard";
+import { getAllProviderCourses } from "@/app/lib/api";
+import { ProviderCourse } from "@/app/lib/types";
 
 interface ExploreProgramsPageProps {
   sections: SectionContent[];
@@ -28,7 +31,41 @@ export default function ExploreProgramsPage({
 }: ExploreProgramsPageProps) {
   const [selectedDegreeTypeId, setSelectedDegreeTypeId] = React.useState<string | null>(null);
   const [selectedCourseId, setSelectedCourseId] = React.useState<string | null>(null);
+  const [selectedSpecializationId, setSelectedSpecializationId] = React.useState<string | null>(null);
+  const [providerCoursesList, setProviderCoursesList] = React.useState<ProviderCourse[]>([]);
+  const [isLoadingProviders, setIsLoadingProviders] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [selectedToCompare, setSelectedToCompare] = React.useState<string[]>([]);
+
+  // Load selection from localStorage on mount
+  React.useEffect(() => {
+    const saved = localStorage.getItem('selectedToCompare');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setSelectedToCompare(parsed);
+        }
+      } catch (e) {
+        console.error("Failed to parse selectedToCompare", e);
+      }
+    }
+  }, []);
+
+  // Save selection to localStorage whenever it changes
+  React.useEffect(() => {
+    localStorage.setItem('selectedToCompare', JSON.stringify(selectedToCompare));
+  }, [selectedToCompare]);
+
+  const handleToggleCompare = (id: string) => {
+    if (selectedToCompare.includes(id)) {
+      setSelectedToCompare(selectedToCompare.filter((c) => c !== id));
+    } else {
+      if (selectedToCompare.length < 4) {
+        setSelectedToCompare([...selectedToCompare, id]);
+      }
+    }
+  };
 
   React.useEffect(() => {
     if (initialType && degreeTypes.length > 0) {
@@ -95,13 +132,41 @@ export default function ExploreProgramsPage({
     return list;
   }, [specializations, selectedCourseId, selectedDegreeTypeId, searchQuery, courses]);
 
-  const isSpecializationView = !!selectedCourseId;
+  const filteredProviderCourses = useMemo(() => {
+    let list = providerCoursesList;
+    if (searchQuery) {
+      list = list.filter((pc) => {
+        const providerName = (pc.providerId as any)?.name || "";
+        return providerName.toLowerCase().includes(searchQuery.toLowerCase());
+      });
+    }
+    return list;
+  }, [providerCoursesList, searchQuery]);
+
+  const isSpecializationView = !!selectedCourseId && !selectedSpecializationId;
+  const isUniversityView = !!selectedSpecializationId;
 
   const handleBack = () => {
-    if (selectedCourseId) {
+    if (selectedSpecializationId) {
+      setSelectedSpecializationId(null);
+      setProviderCoursesList([]);
+    } else if (selectedCourseId) {
       setSelectedCourseId(null);
     } else if (selectedDegreeTypeId) {
       setSelectedDegreeTypeId(null);
+    }
+  };
+
+  const handleSpecializationClick = async (specId: string) => {
+    setSelectedSpecializationId(specId);
+    setIsLoadingProviders(true);
+    try {
+      const data = await getAllProviderCourses(specId);
+      setProviderCoursesList(data);
+    } catch (err) {
+      console.error("Failed to load provider courses:", err);
+    } finally {
+      setIsLoadingProviders(false);
     }
   };
 
@@ -110,21 +175,39 @@ export default function ExploreProgramsPage({
       {/* Hero / Header Section */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-[1280px] mx-auto px-4 py-8">
-          <button
-            onClick={handleBack}
-            className="flex items-center text-xl font-bold text-purple-600 mb-4 hover:text-purple-700 transition-colors"
-          >
-            <IconArrowLeft stroke={2} size={25} />
-            {selectedCourseId ? "Back to Programs" : "Back to Home"}
-          </button>
+          {isSpecializationView && (
+            <button
+              onClick={handleBack}
+              className="flex items-center cursor-pointer text-xl font-bold text-purple-600 mb-4 hover:text-purple-700 transition-colors"
+            >
+              <IconArrowLeft stroke={2} size={25} />
+              Back to Programs
+            </button>
+          )}
 
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-2 tracking-tight">
-            {isSpecializationView ? "Explore By Specializations" : "Explore Programs"}
+          {!isSpecializationView && (
+            <Link
+              href="/"
+              className="flex items-center cursor-pointer text-xl font-bold text-purple-600 mb-4 hover:text-purple-700 transition-colors"
+            >
+              <IconArrowLeft stroke={2} size={25} />
+              Back to Home
+            </Link>
+          )}
+
+          <h1 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">
+            {isUniversityView 
+              ? `Universities for ${specializations.find(s => s._id === selectedSpecializationId)?.name || "Specialization"}`
+              : isSpecializationView 
+                ? "Explore By Specializations" 
+                : "Explore Programs"}
           </h1>
           <p className="text-lg text-gray-500 font-medium">
-            {isSpecializationView
-              ? "Choose a specialization to see universities offering it"
-              : "Choose a program type to explore specializations and universities"}
+            {isUniversityView
+              ? "Browse through top universities offering your chosen specialization"
+              : isSpecializationView
+                ? "Choose a specialization to see universities offering it"
+                : "Choose a program type to explore specializations and universities"}
           </p>
         </div>
       </div>
@@ -144,10 +227,17 @@ export default function ExploreProgramsPage({
           {/* Main Content */}
           <div className="flex-1 space-y-8">
             {/* Search Bar */}
+            {/* Search Bar */}
             <div className="relative">
               <input
                 type="text"
-                placeholder={isSpecializationView ? "Search specializations..." : "Search programs..."}
+                placeholder={
+                  isUniversityView 
+                    ? "Search universities..." 
+                    : isSpecializationView 
+                      ? "Search specializations..." 
+                      : "Search programs..."
+                }
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-14 pl-14 pr-6 rounded-2xl border border-[#D1D5DC] bg-white shadow-sm outline-none focus:border-purple-300 transition-all text-lg placeholder:font-semibold"
@@ -156,8 +246,33 @@ export default function ExploreProgramsPage({
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {!isSpecializationView ? (
+            <div className={`grid grid-cols-1 ${isUniversityView ? "md:grid-cols-2" : "md:grid-cols-2 xl:grid-cols-3"} gap-6`}>
+              {isUniversityView ? (
+                // Universities View
+                isLoadingProviders ? (
+                  <div className="col-span-full py-20 flex flex-col items-center justify-center text-gray-400">
+                    <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                    <p className="text-lg font-medium">Finding Universities...</p>
+                  </div>
+                ) : filteredProviderCourses.length > 0 ? (
+                  filteredProviderCourses.map((pc) => (
+                    <CompactUniversityCard 
+                      key={pc._id} 
+                      university={pc.providerId as any} // Cast as Provider
+                      isCompare={selectedToCompare.includes((pc.providerId as any)._id)}
+                      onToggleCompare={() => handleToggleCompare((pc.providerId as any)._id)}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-dashed border-gray-200">
+                    <p className="text-xl font-bold text-gray-400">
+                      {searchQuery 
+                        ? `No universities matching "${searchQuery}"`
+                        : "No universities found for this specialization yet."}
+                    </p>
+                  </div>
+                )
+              ) : !isSpecializationView ? (
                 // Courses View
                 filteredCourses.map((course) => (
                   <ProgramCard
@@ -177,7 +292,7 @@ export default function ExploreProgramsPage({
                     variant="specialization"
                     title={spec.name}
                     subtitle="2-4 Years | 150+ Universities" // Placeholders as per image
-                    onClick={() => { }} // Navigate to university listing filtered by this specialization if needed
+                    onClick={() => handleSpecializationClick(spec._id)}
                   />
                 ))
               )}

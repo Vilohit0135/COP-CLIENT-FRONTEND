@@ -90,7 +90,7 @@ export default function Section6({ section }: Section6Props) {
           {subtitle && <p style={{fontFamily: 'Inter', fontSize: 16, fontWeight: 400, color: '#6A7282', lineHeight: '24px'}}>{subtitle}</p>}
         </div>
 
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 320px)', gap: 24, justifyContent: 'center', margin: '0 auto'}}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
           {programs.map((p) => (
             <div key={p._id} style={{background:'#fff', width: '100%', maxWidth: 320, height: 526, borderRadius: 24, border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 6px 18px rgba(16,24,40,0.06)'}}>
               <div style={{height:200, background: 'linear-gradient(180deg, #F3E8FF 0%, #EEF2FF 100%)', position:'relative', borderTopLeftRadius: 24, borderTopRightRadius:24}}>
