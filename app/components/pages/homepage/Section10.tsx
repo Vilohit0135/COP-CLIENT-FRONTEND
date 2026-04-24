@@ -4,10 +4,10 @@ import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 interface Section10Props {
   section: SectionContent;
+  questionsSection?: SectionContent | null;
 }
 
 const DEFAULT_FAQS = [
@@ -33,10 +33,12 @@ const DEFAULT_FAQS = [
   },
 ];
 
-export default function Section10({ section }: Section10Props) {
+const VISIBLE_COUNT = 4;
+
+export default function Section10({ section, questionsSection }: Section10Props) {
   const v = section.values || {};
   const [openIndex, setOpenIndex] = useState<number>(0);
-  const router = useRouter();
+  const [showAll, setShowAll] = useState(false);
 
   const getFieldValue = (aliases: string[], fallback = "") => {
     for (const a of aliases) {
@@ -48,6 +50,32 @@ export default function Section10({ section }: Section10Props) {
     }
     return fallback;
   };
+
+  // Build FAQ list from the separate questions section — reads all fields generically
+  const buildFaqsFromQuestions = (): { question: string; answer: string }[] => {
+    if (!questionsSection?.values) return [];
+    const qv = questionsSection.values;
+    const faqs: { question: string; answer: string }[] = [];
+    for (const key of Object.keys(qv)) {
+      const raw = richTextToPlain(qv[key]).trim();
+      if (!raw) continue;
+      const newlineIdx = raw.indexOf("\n");
+      if (newlineIdx === -1) {
+        faqs.push({ question: raw, answer: "" });
+      } else {
+        faqs.push({
+          question: raw.substring(0, newlineIdx).trim(),
+          answer: raw.substring(newlineIdx + 1).trim(),
+        });
+      }
+    }
+    return faqs;
+  };
+
+  const allFaqs = buildFaqsFromQuestions();
+  const faqs = allFaqs.length > 0 ? allFaqs : DEFAULT_FAQS;
+  const visibleFaqs = showAll ? faqs : faqs.slice(0, VISIBLE_COUNT);
+  const hasMore = faqs.length > VISIBLE_COUNT;
 
   const pill = getFieldValue(["Pill", "pill", "Badge", "badge"], "GOT QUESTIONS ?");
   const mainHeading = getFieldValue(
@@ -129,7 +157,7 @@ export default function Section10({ section }: Section10Props) {
             gap: 16,
           }}
         >
-          {DEFAULT_FAQS.map((faq, idx) => (
+          {visibleFaqs.map((faq, idx) => (
             <div
               key={idx}
               style={{
@@ -194,10 +222,11 @@ export default function Section10({ section }: Section10Props) {
           ))}
         </div>
 
-        {/* View More Questions Button */}
+        {/* View More Questions Button — only shown when CMS has >4 questions */}
+        {hasMore && (
         <div style={{ width: "100%", display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
           <button
-            onClick={() => router.push("/search")}
+            onClick={() => setShowAll((prev) => !prev)}
             style={{
               width: 227,
               height: 48,
@@ -218,9 +247,10 @@ export default function Section10({ section }: Section10Props) {
               justifyContent: "center",
             }}
           >
-            View More Questions
+            {showAll ? "Show Less" : "View More Questions"}
           </button>
         </div>
+        )}
 
       </div>
     </section>

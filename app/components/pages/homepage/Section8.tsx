@@ -71,7 +71,7 @@ export default function Section8({ section }: Section8Props) {
 
   return (
     <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
 
         {/* Pill */}
         <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
@@ -129,13 +129,18 @@ export default function Section8({ section }: Section8Props) {
           {belowHeading}
         </p>
 
-        {/* Carousel: Arrows + Cards */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        {/* Carousel: Cards with overlaid arrows */}
+        <div style={{ position: "relative" }}>
           {/* Left Arrow */}
           <button
             onClick={prev}
             aria-label="Previous"
             style={{
+              position: "absolute",
+              left: -20,
+              top: "50%",
+              transform: "translateY(-50%)",
+              zIndex: 10,
               width: 40,
               height: 40,
               borderRadius: "50%",
@@ -145,7 +150,6 @@ export default function Section8({ section }: Section8Props) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              flexShrink: 0,
               boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
             }}
           >
@@ -155,7 +159,7 @@ export default function Section8({ section }: Section8Props) {
           </button>
 
           {/* Cards */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
             {cards.map((card, idx) => (
               <div
                 key={idx}
@@ -167,7 +171,6 @@ export default function Section8({ section }: Section8Props) {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  minHeight: "220px",
                   boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
                 }}
               >
@@ -298,6 +301,11 @@ export default function Section8({ section }: Section8Props) {
             onClick={next}
             aria-label="Next"
             style={{
+              position: "absolute",
+              right: -20,
+              top: "50%",
+              transform: "translateY(-50%)",
+              zIndex: 10,
               width: 40,
               height: 40,
               borderRadius: "50%",
@@ -307,7 +315,6 @@ export default function Section8({ section }: Section8Props) {
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              flexShrink: 0,
               boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
             }}
           >

@@ -41,6 +41,14 @@ export async function getCourses() {
   return res.json();
 }
 
+export async function getCoursesHomeSummary() {
+  const res = await fetch(`${API_BASE}/api/public/courses/home-summary`, {
+    next: { revalidate: 30 },
+  });
+  if (!res.ok) throw new Error("Failed to fetch courses home summary");
+  return res.json();
+}
+
 export async function getSpecializations() {
   const res = await fetch(`${API_BASE}/api/public/specializations`, {
     next: { revalidate: 1 },
