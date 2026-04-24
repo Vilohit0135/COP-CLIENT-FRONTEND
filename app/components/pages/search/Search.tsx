@@ -41,90 +41,82 @@ export default function SearchPage() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "60px 16px 80px",
+        justifyContent: "center",
+        padding: "40px 20px 60px",
         fontFamily: "Inter, Arial, Helvetica, sans-serif",
       }}
     >
+      <div
+        style={{
+          width: "65vw",
+          minHeight: "65vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
       {/* ── Outer wrapper: Back + Heading above + inner search box ── */}
-      <div style={{ width: "100%", maxWidth: 1079 }}>
+      <div style={{ width: "100%" }}>
 
-        {/* Back button + Heading row (three-column layout) */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 20,
-            marginBottom: 20,
-          }}
-        >
-          {/* Left column: Back control (keeps left alignment) */}
-          <div style={{ flex: "0 0 auto" }}>
-            <button
-              onClick={() => router.back()}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                background: "transparent",
-                padding: 0,
-                border: "none",
-                cursor: "pointer",
-                color: "#6D28D9",
-                fontWeight: 600,
-                fontSize: 14,
-                lineHeight: "20px",
-              }}
-            >
-              <ArrowLeft style={{ width: 14, height: 14 }} />
-              <span style={{ marginLeft: 4 }}>Back</span>
-            </button>
-          </div>
-
-          {/* Center column: Heading */}
-          <div style={{ flex: "1 1 auto", display: "flex", justifyContent: "center" }}>
-            <div style={{ width: 722, textAlign: "center" }}>
-              <h1
-                style={{
-                  fontWeight: 700,
-                  fontSize: 36,
-                  lineHeight: "40px",
-                  color: "#101828",
-                  margin: 0,
-                }}
-              >
-                Find your path with the right information!
-              </h1>
-              <p
-                style={{
-                  fontWeight: 400,
-                  fontSize: 18,
-                  lineHeight: "28px",
-                  color: "#4A5565",
-                  marginTop: 6,
-                  marginBottom: 0,
-                }}
-              >
-                Discover online courses, universities &amp; specializations.
-              </p>
-            </div>
-          </div>
-
-          {/* Right column: spacer to balance left */}
-          <div style={{ flex: "0 0 120px" }} />
+        {/* Back button */}
+        <div style={{ marginBottom: 32 }}>
+          <button
+            onClick={() => router.back()}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              background: "transparent",
+              padding: 0,
+              border: "none",
+              cursor: "pointer",
+              color: "#7C3AED",
+              fontWeight: 600,
+              fontSize: 13,
+              lineHeight: "20px",
+            }}
+          >
+            <ArrowLeft style={{ width: 14, height: 14 }} />
+            <span>Back</span>
+          </button>
         </div>
 
-        {/* ── Inner search box (1079×484, solid border, drop shadows) ── */}
+        {/* Heading */}
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <h1
+            style={{
+              fontWeight: 700,
+              fontSize: 32,
+              lineHeight: "40px",
+              color: "#101828",
+              margin: 0,
+            }}
+          >
+            Find your path with the right information!
+          </h1>
+          <p
+            style={{
+              fontWeight: 400,
+              fontSize: 16,
+              lineHeight: "24px",
+              color: "#6B7280",
+              marginTop: 8,
+              marginBottom: 0,
+            }}
+          >
+            Discover online courses, universities &amp; specializations.
+          </p>
+        </div>
+
+        {/* ── Inner search box ── */}
         <div
           style={{
             width: "100%",
-            minHeight: 484,
             background: "#FFFFFF",
-            borderRadius: 16,
+            borderRadius: 12,
             border: "1px solid #E5E7EB",
-            boxShadow:
-              "0px 4px 6px -4px rgba(0,0,0,0.10), 0px 10px 15px -3px rgba(0,0,0,0.10)",
-            padding: "20px 32px 20px",
+            boxShadow: "0px 1px 3px rgba(0,0,0,0.08)",
+            padding: "24px 28px",
           }}
         >
           {/* Search bar */}
@@ -132,15 +124,14 @@ export default function SearchPage() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 10,
-              border: "1.5px solid #E2E8F0",
-              borderRadius: 12,
-              padding: "10px 16px",
-              background: "#FFFFFF",
-              boxShadow: "0px 1px 4px rgba(0,0,0,0.06)",
+              gap: 12,
+              border: "1px solid #E5E7EB",
+              borderRadius: 10,
+              padding: "12px 14px",
+              background: "#FAFAFA",
             }}
           >
-            <SearchIcon style={{ width: 18, height: 18, color: "#94A3B8", flexShrink: 0 }} />
+            <SearchIcon style={{ width: 18, height: 18, color: "#9CA3AF", flexShrink: 0 }} />
             <input
               type="text"
               value={query}
@@ -151,30 +142,30 @@ export default function SearchPage() {
                 border: "none",
                 outline: "none",
                 fontFamily: "Inter, Arial, Helvetica, sans-serif",
-                fontSize: 15,
-                color: "#0F172A",
+                fontSize: 14,
+                color: "#1F2937",
                 background: "transparent",
               }}
             />
-            <Mic style={{ width: 18, height: 18, color: "#94A3B8", flexShrink: 0, cursor: "pointer" }} />
+            <Mic style={{ width: 18, height: 18, color: "#9CA3AF", flexShrink: 0, cursor: "pointer" }} />
           </div>
 
           {/* Trending Courses */}
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: 20 }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                marginBottom: 8,
+                marginBottom: 12,
               }}
             >
-              <TrendingUp style={{ width: 18, height: 18, color: "#7C3AED" }} />
+              <TrendingUp style={{ width: 16, height: 16, color: "#7C3AED" }} />
               <span
                 style={{
                   fontWeight: 600,
-                  fontSize: 15,
-                  color: "#0F172A",
+                  fontSize: 14,
+                  color: "#111827",
                 }}
               >
                 Trending Courses
@@ -184,11 +175,7 @@ export default function SearchPage() {
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                gap: 8,
-                rowGap: 10,
-                columnGap: 8,
-                alignContent: "space-between",
-                paddingBottom: 8,
+                gap: 10,
               }}
             >
               {TRENDING_COURSES.map((course) => (
@@ -196,10 +183,10 @@ export default function SearchPage() {
                   key={course}
                   onClick={() => setQuery(course)}
                   style={{
-                    border: "1px solid #E6E7EB",
-                    borderRadius: 12,
-                    background: "#F8FAFC",
-                    padding: "8px 14px",
+                    border: "1px solid #D1D5DB",
+                    borderRadius: 10,
+                    background: "#F9FAFB",
+                    padding: "7px 12px",
                     fontSize: 13,
                     fontWeight: 500,
                     color: "#374151",
@@ -215,21 +202,21 @@ export default function SearchPage() {
           </div>
 
           {/* In-demand Specializations */}
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: 20 }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                marginBottom: 8,
+                marginBottom: 12,
               }}
             >
-              <Sparkles style={{ width: 18, height: 18, color: "#7C3AED" }} />
+              <Sparkles style={{ width: 16, height: 16, color: "#7C3AED" }} />
               <span
                 style={{
                   fontWeight: 600,
-                  fontSize: 15,
-                  color: "#0F172A",
+                  fontSize: 14,
+                  color: "#111827",
                 }}
               >
                 In-demand Specializations
@@ -239,11 +226,7 @@ export default function SearchPage() {
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                gap: 8,
-                rowGap: 10,
-                columnGap: 8,
-                alignContent: "space-between",
-                paddingBottom: 8,
+                gap: 10,
               }}
             >
               {IN_DEMAND_SPECIALIZATIONS.map((spec) => (
@@ -251,10 +234,10 @@ export default function SearchPage() {
                   key={spec}
                   onClick={() => setQuery(spec)}
                   style={{
-                    border: "1px solid #E6E7EB",
-                    borderRadius: 12,
-                    background: "#F8FAFC",
-                    padding: "8px 14px",
+                    border: "1px solid #D1D5DB",
+                    borderRadius: 10,
+                    background: "#F9FAFB",
+                    padding: "7px 12px",
                     fontSize: 13,
                     fontWeight: 500,
                     color: "#374151",
@@ -279,57 +262,56 @@ export default function SearchPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 16,
-          marginTop: 28,
+          gap: 12,
+          marginTop: 24,
         }}
       >
         <p
           style={{
             fontWeight: 400,
-            fontSize: 14,
-            color: "#64748B",
+            fontSize: 13,
+            color: "#6B7280",
             margin: 0,
           }}
         >
           Or explore by category
         </p>
-        <div style={{ display: "flex", gap: 12 }}>
+        <div style={{ display: "flex", gap: 10 }}>
           <button
             style={{
-              padding: "10px 28px",
+              padding: "8px 24px",
               borderRadius: 8,
               border: "1.5px solid #7C3AED",
               background: "#FFFFFF",
               color: "#7C3AED",
               fontWeight: 600,
-              fontSize: 14,
+              fontSize: 13,
               lineHeight: "20px",
               cursor: "pointer",
               fontFamily: "Inter, Arial, Helvetica, sans-serif",
-              boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.06), 0px 2px 4px -2px rgba(0,0,0,0.06)",
             }}
           >
             Browse Programs
           </button>
           <button
             style={{
-              padding: "10px 28px",
+              padding: "8px 24px",
               borderRadius: 8,
               border: "1.5px solid #7C3AED",
               background: "#FFFFFF",
               color: "#7C3AED",
               fontWeight: 600,
-              fontSize: 14,
+              fontSize: 13,
               lineHeight: "20px",
               cursor: "pointer",
               fontFamily: "Inter, Arial, Helvetica, sans-serif",
-              boxShadow: "0px 4px 6px -1px rgba(0,0,0,0.06), 0px 2px 4px -2px rgba(0,0,0,0.06)",
             }}
           >
             Browse Universities
           </button>
         </div>
       </div>
+      </div>{/* ── end 70vw container ── */}
     </div>
   );
 }
