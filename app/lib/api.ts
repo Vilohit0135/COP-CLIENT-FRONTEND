@@ -81,7 +81,7 @@ export async function getCourseDetail(identifier: string) {
   return res.json();
 }
 export async function getAllProviderCourses(specializationId?: string) {
-  const url = specializationId 
+  const url = specializationId
     ? `${API_BASE}/api/public/provider-courses?specializationId=${specializationId}`
     : `${API_BASE}/api/public/provider-courses`;
   const res = await fetch(url, {
@@ -97,5 +97,13 @@ export async function getProvidersBySpecialization(identifier: string) {
     next: { revalidate: 1 },
   });
   if (!res.ok) throw new Error(`Failed to fetch providers for specialization: ${identifier}`);
+  return res.json();
+}
+
+export async function getBestROIPrograms() {
+  const res = await fetch(`${API_BASE}/api/public/providers/programs/best-roi`, {
+    next: { revalidate: 30 },
+  });
+  if (!res.ok) throw new Error("Failed to fetch best ROI programs");
   return res.json();
 }
