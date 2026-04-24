@@ -2,7 +2,7 @@
 
 import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
-import { useState /* , useEffect */ } from "react";
+import { useState, useEffect } from "react";
 import { Star, BookOpen, CheckCircle, TrendingUp } from "lucide-react";
 
 interface Section6Props {
