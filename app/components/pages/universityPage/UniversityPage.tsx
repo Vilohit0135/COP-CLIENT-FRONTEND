@@ -85,7 +85,7 @@ export default function UniversityPage({ sections, providers }: UniversityPagePr
   // Or if there's no specific section setup, we render a default header.
 
   return (
-    <main className="min-h-screen bg-[#FDFCFE]">
+    <main className="min-h-screen bg-[#FDFCFE] pt-7">
       {/* Dynamic Sections (like Hero for this page if it exists in CMS) */}
       {/* <SectionRenderer sections={sections.filter(s => s.sectionIndex === 0)} /> */}
 
@@ -110,9 +110,9 @@ export default function UniversityPage({ sections, providers }: UniversityPagePr
           <div className="flex-1">
             <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-8">
               {providers.map((uni) => (
-                <UniversityCard 
-                  key={uni._id} 
-                  university={uni} 
+                <UniversityCard
+                  key={uni._id}
+                  university={uni}
                   isCompare={selectedToCompare.includes(uni._id)}
                   onToggleCompare={() => handleToggleCompare(uni._id)}
                   isShortlisted={shortlistedIds.includes(uni._id)}

@@ -103,6 +103,10 @@ export interface Provider {
   metaDescription?: string;
   metaKeywords?: string;
   canonicalUrl?: string;
+  whoShouldChoosePoints?: {
+    text: string;
+    _id?: string;
+  }[];
   createdAt?: string;
   updatedAt?: string;
   comparison?: {
@@ -118,6 +122,10 @@ export interface Provider {
     averageSalary?: number;
     eligibility?: string;
     minimumRequirements?: string;
+    ugcDebStatus?: boolean;
+    naacGrade?: string;
+    examType?: string;
+    roiScore?: string;
   };
   
   // UI Helpers (Not in DB)
@@ -179,6 +187,8 @@ export interface ProviderCourse {
   difficultyLevel?: "Beginner" | "Intermediate" | "Advanced";
   bestROI?: boolean;
   trending?: boolean;
+  approvals?: string[];
+  highlights?: string[];
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;

@@ -171,10 +171,10 @@ export default function ExploreProgramsPage({
   };
 
   return (
-    <main className="min-h-screen bg-[#F9FAFB]">
+    <main className="min-h-screen bg-[#F9FAFB] pt-7">
       {/* Hero / Header Section */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-[1280px] mx-auto px-4 py-8">
+        <div className="max-w-[87vw] mx-auto  py-8">
           {isSpecializationView && (
             <button
               onClick={handleBack}
@@ -196,10 +196,10 @@ export default function ExploreProgramsPage({
           )}
 
           <h1 className="text-3xl font-black text-gray-900 mb-2 tracking-tight">
-            {isUniversityView 
+            {isUniversityView
               ? `Universities for ${specializations.find(s => s._id === selectedSpecializationId)?.name || "Specialization"}`
-              : isSpecializationView 
-                ? "Explore By Specializations" 
+              : isSpecializationView
+                ? "Explore By Specializations"
                 : "Explore Programs"}
           </h1>
           <p className="text-lg text-gray-500 font-medium">
@@ -232,10 +232,10 @@ export default function ExploreProgramsPage({
               <input
                 type="text"
                 placeholder={
-                  isUniversityView 
-                    ? "Search universities..." 
-                    : isSpecializationView 
-                      ? "Search specializations..." 
+                  isUniversityView
+                    ? "Search universities..."
+                    : isSpecializationView
+                      ? "Search specializations..."
                       : "Search programs..."
                 }
                 value={searchQuery}
@@ -256,9 +256,10 @@ export default function ExploreProgramsPage({
                   </div>
                 ) : filteredProviderCourses.length > 0 ? (
                   filteredProviderCourses.map((pc) => (
-                    <CompactUniversityCard 
-                      key={pc._id} 
+                    <CompactUniversityCard
+                      key={pc._id}
                       university={pc.providerId as any} // Cast as Provider
+                      courseId={pc._id}
                       isCompare={selectedToCompare.includes((pc.providerId as any)._id)}
                       onToggleCompare={() => handleToggleCompare((pc.providerId as any)._id)}
                     />
@@ -266,7 +267,7 @@ export default function ExploreProgramsPage({
                 ) : (
                   <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                     <p className="text-xl font-bold text-gray-400">
-                      {searchQuery 
+                      {searchQuery
                         ? `No universities matching "${searchQuery}"`
                         : "No universities found for this specialization yet."}
                     </p>
