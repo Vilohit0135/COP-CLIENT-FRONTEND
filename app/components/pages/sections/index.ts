@@ -9,6 +9,7 @@ import * as Section5Module from "../homepage/Section5";
 import * as Section6Module from "../homepage/Section6";
 import * as Section7Module from "../homepage/Section7";
 import * as Section8Module from "../homepage/Section8";
+import * as Section9Module from "../homepage/Section9";
 import * as Section10Module from "../homepage/Section10";
 
 type SectionComponent = ComponentType<{ section: SectionContent }>;
@@ -217,6 +218,43 @@ const sectionRegistry: Record<string, SectionEntry> = {
   section8: {
     Component: Section8Module.default,
     usedFields: Section8Module.usedFields,
+  },
+  // Blogs & Resources / Articles Section (Section 9)
+  blogs__resources: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  blogs_resources: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  "blogs-resources": {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  blogs_and_resources: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  blogsresources: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  articles: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  section_9: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  "section-9": {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
+  },
+  section9: {
+    Component: Section9Module.default,
+    usedFields: Section9Module.usedFields,
   },
   // Frequently Asked Questions Section
   frequently_asked_questions: {

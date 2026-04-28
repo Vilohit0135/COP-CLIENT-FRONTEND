@@ -91,22 +91,48 @@ export default function Section9({ section }: Section9Props) {
     "Expert insights on education and career growth"
   );
 
+  // Known non-article fields to skip when scanning for article content
+  const NON_ARTICLE_KEYS = new Set([
+    "pill", "badge", "main heading", "title", "heading",
+    "below main heading", "subtitle", "description",
+  ]);
+
+  // First try explicit aliases, then fall back to scanning ALL string values
+  // in the section that aren't header fields — this way any field name works.
   const articleAliasGroups = [
     ["First Article", "first article", "Article 1", "article1", "article_1"],
     ["Second Article", "second article", "Article 2", "article2", "article_2"],
     ["Third Article", "third article", "Article 3", "article3", "article_3"],
   ];
 
-  const articles = DEFAULT_ARTICLES.map((def, i) => {
-    const raw = getFieldValue(articleAliasGroups[i], "");
-    if (!raw) return def;
-    const parsed = parseArticle(raw);
-    return {
-      ...def,
-      title: parsed.title || def.title,
-      description: parsed.description || def.description,
-    };
-  });
+  // Collect raw article strings: try aliases first, then pick up any remaining
+  // non-header textarea values in field order.
+  const aliasHits = articleAliasGroups.map((aliases) => getFieldValue(aliases, ""));
+  const anyAliasMatched = aliasHits.some(Boolean);
+
+  let rawArticleValues: string[];
+  if (anyAliasMatched) {
+    rawArticleValues = aliasHits;
+  } else {
+    // No alias matched — collect every non-empty string value whose key isn't a header field
+    rawArticleValues = Object.keys(v)
+      .filter((k) => !NON_ARTICLE_KEYS.has(k.toLowerCase()))
+      .map((k) => richTextToPlain(v[k]).trim())
+      .filter(Boolean)
+      .slice(0, 3);
+  }
+
+  const articles = rawArticleValues.length > 0
+    ? rawArticleValues.map((raw, i) => {
+        const parsed = parseArticle(raw);
+        const def = DEFAULT_ARTICLES[i] || DEFAULT_ARTICLES[0];
+        return {
+          ...def,
+          title: parsed.title || def.title,
+          description: parsed.description || def.description,
+        };
+      })
+    : DEFAULT_ARTICLES;
 
   return (
     <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>

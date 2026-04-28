@@ -73,6 +73,7 @@ export default function Homepage({ sections }: HomepageProps) {
       s.sectionApiId === "blogs-resources" ||
       s.sectionApiId === "blogs_and_resources" ||
       s.sectionApiId === "blogsresources" ||
+      s.sectionApiId === "articles" ||
       s.sectionApiId === "section_9" ||
       s.sectionApiId === "section9"
   );
@@ -95,7 +96,15 @@ export default function Homepage({ sections }: HomepageProps) {
   const questionsIndex = sections.findIndex((s) => s.sectionApiId === "questions");
   const questionsSection = questionsIndex >= 0 ? sections[questionsIndex] : null;
 
-  // Remove hero, section5, section6, section7, section8, section9, section10, questions so we don't render duplicates
+  // All sectionApiIds that are rendered explicitly below — never let them fall into rest
+  const SECTION9_IDS = new Set([
+    "blogs__resources", "blogs_resources", "blogs-resources",
+    "blogs_and_resources", "blogsresources",
+    "articles",
+    "section_9", "section-9", "section9",
+  ]);
+
+  // Remove hero, section5–10, questions so we don't render duplicates
   const rest = sections.filter(
     (s, i) =>
       i !== heroIndex &&
@@ -106,7 +115,8 @@ export default function Homepage({ sections }: HomepageProps) {
       i !== section9Index &&
       i !== section10Index &&
       i !== questionsIndex &&
-      s.sectionApiId !== "hero_section"
+      s.sectionApiId !== "hero_section" &&
+      !SECTION9_IDS.has(s.sectionApiId)   // belt-and-suspenders: never let section9 leak into rest
   );
 
   return (

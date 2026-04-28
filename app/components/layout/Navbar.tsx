@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const explorePrograms = [
   {
@@ -42,8 +42,16 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [promoText, setPromoText] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = () => {
+    const q = searchQuery.trim();
+    if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+    else router.push("/search");
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -235,13 +243,23 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-0">
               <div className="w-px h-6 bg-white/30 mx-2" />
               <div className="flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 hover:bg-white/20 transition px-3 py-1.5">
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="flex-shrink-0 cursor-pointer focus:outline-none"
+                  aria-label="Search"
+                >
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
                 <input
                   type="text"
                   placeholder="Search programs..."
                   className="bg-transparent outline-none text-sm placeholder-white/70 text-white w-36"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 />
               </div>
               <div className="w-px h-6 bg-white/30 mx-2" />

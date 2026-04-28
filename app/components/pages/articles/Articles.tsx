@@ -150,22 +150,40 @@ const ALL_ARTICLES = [
   },
 ];
 
+export interface ArticleData {
+  slug: string;
+  category: string;
+  date: string;
+  readTime: string;
+  title: string;
+  description: string;
+  author: string;
+  image: string;
+}
+
+interface ArticlesPageProps {
+  cmsArticles?: ArticleData[];
+  pageTitle?: string;
+  pageSubtitle?: string;
+}
+
 const ARTICLES_PER_PAGE = 6;
-const TOTAL_PAGES = Math.ceil(ALL_ARTICLES.length / ARTICLES_PER_PAGE);
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function ArticlesPage() {
+export default function ArticlesPage({ cmsArticles, pageTitle, pageSubtitle }: ArticlesPageProps = {}) {
   const [activeCategory, setActiveCategory] = useState("MBA");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const pageArticles = ALL_ARTICLES.slice(
+  const articles: ArticleData[] = cmsArticles && cmsArticles.length > 0 ? cmsArticles : ALL_ARTICLES;
+  const totalPages = Math.ceil(articles.length / ARTICLES_PER_PAGE);
+  const pageArticles = articles.slice(
     (currentPage - 1) * ARTICLES_PER_PAGE,
     currentPage * ARTICLES_PER_PAGE
   );
 
   const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= TOTAL_PAGES) {
+    if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -200,7 +218,7 @@ export default function ArticlesPage() {
             margin: "0 0 8px 0",
           }}
         >
-          Latest Blogs &amp; Resources
+          {pageTitle || "Latest Blogs & Resources"}
         </h1>
         <p
           style={{
@@ -212,7 +230,7 @@ export default function ArticlesPage() {
             margin: 0,
           }}
         >
-          Expert insights on education and career growth
+          {pageSubtitle || "Expert insights on education and career growth"}
         </p>
       </div>
 
@@ -379,7 +397,7 @@ export default function ArticlesPage() {
             />
 
             {/* Page numbers */}
-            {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <PaginationBtn
                 key={page}
                 label={String(page)}
@@ -393,7 +411,7 @@ export default function ArticlesPage() {
             <PaginationBtn
               label="›"
               onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === TOTAL_PAGES}
+              disabled={currentPage === totalPages}
               active={false}
             />
           </div>
