@@ -80,14 +80,16 @@ export default function Navbar() {
       .then((json) => {
         if (cancelled || !json) return;
         const items = Array.isArray(json?.content) ? json.content : [];
+        const uniquePromos = new Set<string>();
         for (const it of items) {
           const vals = it.values || {};
-          const key = Object.keys(vals).find((k) => k.toLowerCase().includes("promo"));
-          const promo = key ? vals[key] : null;
-          if (promo) {
-            setPromoText(String(promo));
-            return;
+          const keys = Object.keys(vals).filter((k) => k.toLowerCase().includes("promo"));
+          for (const k of keys) {
+            if (vals[k]) uniquePromos.add(String(vals[k]));
           }
+        }
+        if (uniquePromos.size > 0) {
+          setPromoText(Array.from(uniquePromos).join(" \u00A0\u00A0\u00A0 \u2022 \u00A0\u00A0\u00A0 "));
         }
       })
       .catch((err) => {
@@ -126,9 +128,9 @@ export default function Navbar() {
             <div style={{ overflow: "hidden" }}>
               <style>{`
                 .promo-wrapper{overflow:hidden;width:100%;}
-                .promo-track{display:flex;align-items:center;gap:24rem}
-                .promo-content{display:flex;gap:24rem;align-items:center;min-width:100%;padding:0}
-                .promo-item{display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
+                .promo-track{display:flex;align-items:center;gap:2.5rem;width:max-content}
+                .promo-content{display:flex;gap:2.5rem;align-items:center;padding:0;flex-shrink:0}
+                .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
                 @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
                 .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
               `}</style>
@@ -136,16 +138,14 @@ export default function Navbar() {
               <div className="promo-wrapper">
                 <div ref={trackRef} className="promo-track promo-animate" style={{ ['--marquee-distance' as any]: marqueeVars.distance, ['--marquee-duration' as any]: marqueeVars.duration } as React.CSSProperties}>
                   <div ref={contentRef} className="promo-content" aria-hidden={false}>
-                    <div className="promo-item item-1">{promoText}</div>
-                    <div className="promo-item item-2">{promoText}</div>
-                    <div className="promo-item item-3">{promoText}</div>
-                    <div className="promo-item item-4">{promoText}</div>
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="promo-item">{promoText}</div>
+                    ))}
                   </div>
                   <div className="promo-content" aria-hidden={true}>
-                    <div className="promo-item item-1">{promoText}</div>
-                    <div className="promo-item item-2">{promoText}</div>
-                    <div className="promo-item item-3">{promoText}</div>
-                    <div className="promo-item item-4">{promoText}</div>
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="promo-item">{promoText}</div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -154,21 +154,20 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="px-3 py-2.5 bg-transparent">
+      <div className="fixed px-7 py-2.5 bg-transparent w-full">
         <div
-          className="w-full max-w-[1280px] mx-auto flex items-center justify-between px-4 h-[70px] text-white"
+          className="w-full mx-auto flex items-center justify-between px-4 h-[72px] text-white rounded-3xl"
           style={{
             background: "linear-gradient(90deg, rgba(157, 111, 221, 0.65) 0%, rgba(168, 132, 244, 0.65) 55%, rgba(139, 92, 246, 0.65) 100%)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(10px)",
-            borderRadius: 16,
             border: "1px solid rgba(255, 255, 255, 0.4)",
             boxShadow: "0 8px 32px rgba(157, 111, 221, 0.2)"
           }}
         >
 
           <Link href="/" className="flex items-center gap-1 flex-shrink-0">
-            <img src="logo.svg" alt="CollegeProgram logo" className="h-10 sm:h-16 w-auto object-contain" />
+            <img src="/logo.svg" alt="CollegeProgram logo" className="h-10 sm:h-16 w-auto object-contain" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

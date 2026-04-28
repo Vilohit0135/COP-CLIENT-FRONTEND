@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function TalkToExpertsRoute() {
-  return <ProtectedRoute> <TalkToExperts /> </ProtectedRoute>;
+  return <TalkToExperts />;
 }
