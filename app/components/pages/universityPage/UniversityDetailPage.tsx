@@ -276,9 +276,9 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] px-10 flex flex-col gap-5 pt-5">
-      {/* Breadcrumb */}
-      <div className="flex justify-between">
+    <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-5">
+      {/* Breadcrumb - Hidden on mobile for cleaner look */}
+      <div className="hidden md:flex justify-between items-center">
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <Link href="/" className="hover:text-purple-600 transition-colors">Home</Link>
           <ChevronRight className="w-3.5 h-3.5" />
@@ -333,9 +333,9 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
         </button>
 
         {/* Hero Content */}
-        <div className="relative  px-4 py-10 md:py-16 flex flex-col items-start text-center text-white pl-20  ">
+        <div className="relative px-6 py-10 md:py-16 flex flex-col items-center md:items-start text-center md:text-left text-white md:pl-20">
           {/* Logo */}
-          <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center p-2 mb-4">
+          <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-2xl shadow-xl flex items-center justify-center p-3 mb-6 md:mb-4">
             <Image
               src={provider.logo || "/placeholder-logo.png"}
               alt={`${provider.name} Logo`}
@@ -346,43 +346,41 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
           </div>
 
           {/* University Name */}
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">
+          <h1 className="text-2xl md:text-4xl font-extrabold text-white mb-3 tracking-tight leading-tight">
             {provider.name}
           </h1>
-          <p className="text-white/70 text-sm mb-5 max-w-xl">
+          <p className="text-white/80 text-sm md:text-base mb-6 max-w-xl line-clamp-2 md:line-clamp-none font-medium">
             {provider.shortExcerpt || "A premier institution offering high-quality education with a focus on innovation and excellence."}
           </p>
         </div>
       </div>
       {/* add to compare div */}
-      <div className="bg-gradient-to-b from-[#D9C3FF] to-[#E9DDFF] flex gap-2 px-4 py-4 rounded-2xl justify-between">
-        <div className="flex gap-2 ">
-          <div>
-            <IconChartHistogram stroke={2} color="#4F46E5" />
+      <div className="bg-gradient-to-br from-[#E9DDFF] via-[#D9C3FF] to-[#E9DDFF] flex flex-col md:flex-row gap-4 p-5 md:px-6 md:py-4 rounded-3xl justify-between items-center border border-purple-200/50 shadow-sm">
+        <div className="flex gap-4 items-center md:items-start text-center md:text-left">
+          <div className="hidden sm:flex w-12 h-12 bg-white/50 rounded-2xl items-center justify-center shrink-0 shadow-inner">
+            <IconChartHistogram stroke={2} color="#4F46E5" className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-[#4F46E5] font-semibold">Want to compare Manipal with other universities?</h1>
-            <h2 className="text-[#64748B] text-sm">Side-by-side fee, exam, employer, and ROI data — all visible without entering your number.</h2>
+            <h1 className="text-[#4F46E5] font-bold text-base md:text-lg">Want to compare with other universities?</h1>
+            <h2 className="text-[#64748B] text-xs md:text-sm font-medium mt-1">Side-by-side fee, exam, employer, and ROI data — all visible without entering your number.</h2>
           </div>
         </div>
-        <div>
+        <div className="w-full md:w-auto">
 
           {/* Action Buttons */}
-          <div className="flex items-center">
-            <button
-              onClick={handleAddToCompare}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#7C3AED] text-white text-sm font-bold rounded-xl hover:bg-[#6D28D9] transition-all shadow-md cursor-pointer"
-            >
-              <TrendingUp className="w-4 h-4" />
-              Add to compare
-            </button>
-          </div>
+          <button
+            onClick={handleAddToCompare}
+            className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-[#7C3AED] text-white text-sm font-bold rounded-2xl hover:bg-[#6D28D9] transition-all shadow-lg shadow-purple-200 active:scale-95 cursor-pointer"
+          >
+            <TrendingUp className="w-4 h-4" />
+            Add to compare
+          </button>
         </div>
       </div>
       {/* Main Content Area */}
       <div className="pb-8">
-        {/* Navigation Tabs */}
-        <div className="sticky top-0 z-40 bg-white border border-gray-200 rounded-xl shadow-sm mb-6 overflow-x-auto no-scrollbar  lg:max-w-[calc(100%-360px)]">
+        {/* Navigation Tabs - Adjusted for mobile sticky header */}
+        <div className="sticky top-[80px] md:top-0 z-40 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg shadow-gray-100/50 mb-8 overflow-x-auto no-scrollbar lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0">
           <div className="flex min-w-max">
             {tabs.map((tab) => (
               <button
@@ -514,7 +512,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                     {provider.whoShouldChoosePoints.map((point: any, idx: number) => (
                       <div key={idx} className="flex items-start gap-3">
                         <div className="mt-0.5 shrink-0">
-                          <X className="w-4 h-4 text-emerald-500" />
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                         </div>
                         <p className="text-sm text-emerald-700 font-medium leading-tight">{point.text}</p>
                       </div>
@@ -687,7 +685,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
               if (!selectedCourse) return null;
 
               return (
-                <section id="fees-breakdown" className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 mb-6 transition-all animate-in fade-in slide-in-from-bottom-4 duration-500 scroll-mt-24">
+                <section id="fees-breakdown" className="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100 mb-6 transition-all animate-in fade-in slide-in-from-bottom-4 duration-500 scroll-mt-24">
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center">
                       <CircleDollarSign className="w-6 h-6 text-indigo-600" />
@@ -726,7 +724,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                       <CreditCard className="w-5 h-5 text-emerald-600" />
                     </div>
                     <p className="text-sm font-medium text-emerald-900 leading-relaxed">
-                      <span className="font-bold">EMI available:</span> As low as ₹{selectedCourse.emiStartingAmount || "8,750/semester"} {selectedCourse.emiTerms || "through approved banking partners. No cost EMI on select cards."}
+                      <span className="font-bold">EMI available:</span> As low as ₹{(selectedCourse as any).emiStartingAmount || "8,750/semester"} {(selectedCourse as any).emiTerms || "through approved banking partners. No cost EMI on select cards."}
                     </p>
                   </div>
                 </section>

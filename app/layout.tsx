@@ -34,7 +34,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <OAuthProvider>
           <Layout>
-            <div className="pt-10">{children}</div>
+            <div className="lg:pt-10">{children}</div>
           </Layout>
           <Toaster position="top-center" />
         </OAuthProvider>

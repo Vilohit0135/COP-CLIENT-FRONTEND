@@ -39,16 +39,16 @@ const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr>
-                                <th className="p-6 bg-[#C4B5FD] text-[#4C1D95] font-black text-sm uppercase tracking-wider w-[240px]">
+                                <th className="p-4 sm:p-6 bg-[#C4B5FD] text-[#4C1D95] font-black text-xs sm:text-sm uppercase tracking-wider min-w-[140px] sm:w-[240px] sticky left-0 z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                                     Features
                                 </th>
                                 {selectedData.map((uni, idx) => (
-                                    <th key={uni.id} className="p-6 bg-white min-w-[300px] border-b border-gray-100 relative">
+                                    <th key={uni.id} className="p-4 sm:p-6 bg-white min-w-[260px] sm:min-w-[300px] border-b border-gray-100 relative">
                                         <div className="flex flex-col items-center justify-center text-center">
-                                            <h3 className="font-extrabold text-[#803AF2] text-xl leading-tight">{uni.name}</h3>
+                                            <h3 className="font-extrabold text-[#803AF2] text-lg sm:text-xl leading-tight px-2 sm:px-4">{uni.name}</h3>
                                             <button
                                                 onClick={() => onRemove(uni.id)}
-                                                className="absolute top-6 right-6 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                                                className="absolute top-2 sm:top-6 right-2 sm:right-6 text-gray-400 hover:text-red-500 transition-colors cursor-pointer bg-gray-50 sm:bg-transparent rounded-full p-1.5 sm:p-0"
                                             >
                                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -62,11 +62,11 @@ const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
                         <tbody className="divide-y divide-gray-50">
                             {features.map((feature) => (
                                 <tr key={feature.label}>
-                                    <td className="p-6 font-bold text-gray-700 bg-[#FDFDFF] divide-y divide-gray-100 border-r border-gray-50">
+                                    <td className="p-4 sm:p-6 font-bold text-gray-700 bg-[#FDFDFF] divide-y divide-gray-100 border-r border-gray-50 sticky left-0 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] text-xs sm:text-base">
                                         {feature.label}
                                     </td>
                                     {selectedData.map((uni) => (
-                                        <td key={uni.id} className="p-6 text-gray-600 font-medium">
+                                        <td key={uni.id} className="p-4 sm:p-6 text-gray-600 font-medium text-sm sm:text-base">
                                             {feature.isRating ? (
                                                 <div className="flex items-center gap-1">
                                                     <IconStar size={16} className="fill-yellow-400 text-yellow-400" />
@@ -102,10 +102,10 @@ const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
                 </div>
             </div>
 
-            <div className="flex justify-end mb-8 cursor-pointer">
+            <div className="flex justify-center sm:justify-end mb-8 cursor-pointer mt-4 sm:mt-0">
                 <button
                     onClick={handleDetailedComparison}
-                    className="bg-[#803AF2] hover:bg-[#6D28D9] text-white px-8 py-4 rounded-2xl font-black text-sm shadow-lg shadow-purple-200 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    className="w-full sm:w-auto bg-[#803AF2] hover:bg-[#6D28D9] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-sm shadow-lg shadow-purple-200 transition-all hover:scale-105 active:scale-95 cursor-pointer"
                 >
                     View Detailed Comparison
                 </button>

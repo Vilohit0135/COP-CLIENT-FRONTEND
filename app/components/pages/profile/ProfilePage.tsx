@@ -291,29 +291,40 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-10 px-4">
-      <div style={{ width: "70vw", minHeight: "70vh" }} className="flex flex-col md:flex-row gap-6">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center md:justify-center py-0 md:py-10 px-0 md:px-4 lg:pt-18">
+      <div className="w-full md:w-[70vw] min-h-screen md:min-h-[70vh] flex flex-col md:flex-row gap-4 md:gap-6">
 
         {/* ── Left Sidebar ──────────────────────────────────────────────── */}
-        <aside className="w-full md:w-64 flex-shrink-0 flex flex-col gap-4">
+        <aside className="w-full md:w-64 flex-shrink-0 flex flex-col gap-4 bg-white px-4 md:px-0 relative">
           {/* Profile card */}
-          <div className="bg-[#6C3FC5] rounded-2xl p-6 flex flex-col items-center text-white">
-            <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-3">
-              <UserIcon className="w-10 h-10 text-white" />
+          <div className="relative bg-white lg:bg-[#6C3FC5] rounded-b-[32px] md:rounded-2xl p-6 md:p-6 flex flex-col items-center shadow-xl shadow-purple-200/50">
+            {/* Settings Icon Mobile */}
+            <button
+              onClick={() => setActiveNav("settings")}
+              className="md:hidden absolute top-6 right-6 text-gray-400 hover:text-[#6C3FC5] transition-colors p-2"
+            >
+              <SettingsIcon className="w-6 h-6" />
+            </button>
+            <div className="w-20 h-20 rounded-full bg-purple-100 lg:bg-white/20 flex items-center justify-center mb-3 ring-4 ring-purple-50 lg:ring-white/10">
+              <UserIcon className="w-10 h-10 text-[#6C3FC5] lg:text-white" />
             </div>
-            <h2 className="font-bold text-lg leading-tight">
+            <h2 className="font-bold text-lg md:text-xl leading-tight text-gray-900 lg:text-white">
               {userData.firstName} {userData.lastName}
             </h2>
-            <p className="text-xs text-white/70 mt-1">{userData.occupation}</p>
+            <p className="text-xs text-gray-500 lg:text-white/70 mt-1">{userData.occupation}</p>
 
-            <nav className="w-full mt-5 flex flex-col gap-1">
+            <nav className="w-full mt-6 flex flex-row md:flex-col justify-center md:justify-start gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+              <style jsx>{`
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+              `}</style>
               {navItems.map((item) => (
                 <button
                   key={item.key}
                   onClick={() => setActiveNav(item.key)}
-                  className={`flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${activeNav === item.key
-                    ? "bg-white text-[#6C3FC5]"
-                    : "text-white/80 hover:bg-white/10"
+                  className={`flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 whitespace-nowrap px-2 md:px-3 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-sm font-semibold transition-all flex-shrink-0 flex-1 md:flex-none ${item.key === "settings" ? "hidden md:flex" : ""} ${activeNav === item.key
+                    ? "bg-[#6C3FC5] text-white lg:bg-white lg:text-[#6C3FC5] shadow-sm shadow-black/5 scale-100"
+                    : "text-gray-600 lg:text-white/80 hover:bg-purple-50 lg:hover:bg-white/10"
                     }`}
                 >
                   {item.icon}
@@ -321,11 +332,13 @@ export default function ProfilePage() {
                 </button>
               ))}
 
-              <hr className="border-white/20 my-2" />
+              <div className="hidden md:block">
+                <hr className="border-gray-100 lg:border-white/20 my-2" />
+              </div>
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors text-red-200 hover:bg-red-500/20 hover:text-white"
+                className="hidden md:flex flex-col md:flex-row items-center gap-1 md:gap-3 whitespace-nowrap px-4 md:px-3 py-2 md:py-2.5 rounded-xl text-[10px] md:text-sm font-semibold transition-colors text-red-600 lg:text-red-200 hover:bg-red-50 lg:hover:bg-red-500/20 hover:text-red-700 lg:hover:text-white flex-shrink-0"
               >
                 <LogoutIcon className="w-4 h-4" />
                 Logout
@@ -333,15 +346,15 @@ export default function ProfilePage() {
             </nav>
           </div>
 
-          {/* Help card */}
-          <div className="bg-[#5A2EA6] rounded-2xl p-5 text-white flex flex-col items-center text-center">
+          {/* Help card (Desktop only, mobile version moved to bottom of content) */}
+          <div className="hidden md:flex bg-[#5A2EA6] rounded-2xl p-5 text-white flex-col items-center text-center shadow-lg shadow-purple-900/10">
             <h3 className="font-extrabold text-base leading-tight mb-2">Need Help Deciding?</h3>
             <p className="text-xs text-white/80 mb-4 leading-relaxed">
               Our expert counselors can help you compare and choose the best university for your goals
             </p>
             <Link
               href="/talk-to-experts"
-              className="bg-[#F5A623] hover:bg-[#e09510] text-white font-bold text-sm px-5 py-2.5 rounded-full transition-colors"
+              className="bg-white text-[#6C3FC5] hover:bg-gray-100 font-bold text-sm px-5 py-2.5 rounded-full transition-colors"
             >
               Talk to an Expert
             </Link>
@@ -349,16 +362,39 @@ export default function ProfilePage() {
         </aside>
 
         {/* ── Main Content ───────────────────────────────────────────────── */}
-        <main className="flex-1">
+        <main className="flex-1 pb-10 md:pb-0 px-4 md:px-0">
           {activeNav === "profile" && <PersonalInfoPanel userData={userData} onUpdate={handleUpdateProfile} />}
           {activeNav === "shortlisted" && (
-            <ShortlistedPanel 
-              list={shortlisted} 
-              isLoading={isShortlistLoading} 
-              onRemove={handleRemoveShortlist} 
+            <ShortlistedPanel
+              list={shortlisted}
+              isLoading={isShortlistLoading}
+              onRemove={handleRemoveShortlist}
             />
           )}
           {activeNav === "settings" && <SettingsPanel userData={userData} />}
+
+          {/* Help card (Mobile only) */}
+          <div className="mt-8 md:hidden bg-[#5A2EA6] rounded-3xl p-6 text-white flex flex-col items-center text-center shadow-xl shadow-purple-900/10">
+            <h3 className="font-extrabold text-lg leading-tight mb-2">Need Help Deciding?</h3>
+            <p className="text-sm text-white/80 mb-4 leading-relaxed">
+              Our expert counselors can help you compare and choose the best university for your goals
+            </p>
+            <Link
+              href="/talk-to-experts"
+              className="w-full bg-white text-[#6C3FC5] font-bold text-sm py-3.5 rounded-2xl transition-colors text-center"
+            >
+              Talk to an Expert
+            </Link>
+          </div>
+
+          {/* Logout button (Mobile only) */}
+          <button
+            onClick={handleLogout}
+            className="md:hidden mt-6 w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 font-bold text-sm py-3.5 rounded-2xl transition-colors hover:bg-red-100"
+          >
+            <LogoutIcon className="w-5 h-5" />
+            Logout
+          </button>
         </main>
       </div>
     </div>
@@ -412,10 +448,10 @@ function PersonalInfoPanel({ userData, onUpdate }: { userData: UserData, onUpdat
   const data = editMode ? form : userData;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <div className="bg-white rounded-[32px] md:rounded-2xl shadow-xl shadow-black/5 border border-gray-100 p-6 md:p-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-extrabold text-gray-900">Personal Information</h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <h1 className="text-lg md:text-xl font-extrabold text-gray-900">Personal Information</h1>
 
         {editMode ? (
           <div className="flex items-center gap-2">
@@ -644,14 +680,14 @@ const initialShortlisted = [
 
 type ShortlistedEntry = typeof initialShortlisted[number];
 
-function ShortlistedPanel({ 
-  list, 
-  isLoading, 
-  onRemove 
-}: { 
-  list: any[], 
-  isLoading: boolean, 
-  onRemove: (id: string) => void 
+function ShortlistedPanel({
+  list,
+  isLoading,
+  onRemove
+}: {
+  list: any[],
+  isLoading: boolean,
+  onRemove: (id: string) => void
 }) {
   const [search, setSearch] = useState("");
 
@@ -697,7 +733,7 @@ function ShortlistedPanel({
         const color = colors[uni.name.length % colors.length];
 
         return (
-          <div key={uni.providerId} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 relative group hover:shadow-md transition-shadow">
+          <div key={uni.providerId} className="bg-white rounded-[32px] md:rounded-2xl border border-gray-100 shadow-sm p-5 relative group hover:shadow-md transition-shadow">
             {/* Remove button */}
             <button
               onClick={() => onRemove(uni.providerId)}
@@ -736,37 +772,37 @@ function ShortlistedPanel({
 
             {/* Info strip */}
             <div className="bg-gray-50/80 rounded-xl px-4 py-3 grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-              <InfoCell 
-                icon={<GraduationCapIcon className="w-4 h-4 text-purple-500" />} 
-                label="Primary Program" 
-                value={uni.courses?.[0]?.title || "Multi-Program"} 
+              <InfoCell
+                icon={<GraduationCapIcon className="w-4 h-4 text-purple-500" />}
+                label="Primary Program"
+                value={uni.courses?.[0]?.title || "Multi-Program"}
               />
-              <InfoCell 
-                icon={<ClockIcon className="w-4 h-4 text-purple-500" />} 
-                label="Duration" 
-                value={uni.minimumDuration || "24 Months"} 
+              <InfoCell
+                icon={<ClockIcon className="w-4 h-4 text-purple-500" />}
+                label="Duration"
+                value={uni.minimumDuration || "24 Months"}
               />
-              <InfoCell 
-                icon={<RupeeIcon className="w-4 h-4 text-purple-500" />} 
-                label="Starting Fee" 
-                value={uni.startingFee ? `₹${uni.startingFee.toLocaleString()}` : "Contact for Fees"} 
+              <InfoCell
+                icon={<RupeeIcon className="w-4 h-4 text-purple-500" />}
+                label="Starting Fee"
+                value={uni.startingFee ? `₹${uni.startingFee.toLocaleString()}` : "Contact for Fees"}
               />
-              <InfoCell 
-                icon={<CalIcon className="w-4 h-4 text-purple-500" />} 
-                label="Admissions" 
-                value="Ongoing" 
+              <InfoCell
+                icon={<CalIcon className="w-4 h-4 text-purple-500" />}
+                label="Admissions"
+                value="Ongoing"
               />
             </div>
 
             {/* Action buttons */}
-            <div className="flex items-center gap-3">
-              <Link 
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <Link
                 href={`/universities/${uni.name.toLowerCase().replace(/\s+/g, '-')}`} // Fallback slug if providerId not mapping to slug
-                className="flex items-center gap-1.5 border border-[#6C3FC5] text-[#6C3FC5] hover:bg-purple-50 text-xs font-bold px-5 py-2 rounded-lg transition-colors"
+                className="flex items-center justify-center gap-1.5 border border-[#6C3FC5] text-[#6C3FC5] hover:bg-purple-50 text-xs font-bold px-5 py-2.5 rounded-xl transition-colors"
               >
                 View Details <span className="text-base leading-none">→</span>
               </Link>
-              <button className="flex items-center gap-1.5 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-xs font-bold px-5 py-2 rounded-lg transition-colors shadow-sm shadow-purple-200">
+              <button className="flex items-center justify-center gap-1.5 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-colors shadow-lg shadow-purple-200">
                 Compare Programs
               </button>
             </div>
@@ -868,7 +904,7 @@ function SettingsPanel({ userData }: { userData: UserData }) {
   const [activeTab, setActiveTab] = useState<SettingsTab>("account");
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+    <div className="bg-white rounded-[32px] md:rounded-2xl shadow-xl shadow-black/5 border border-gray-100 p-6 md:p-8">
       {/* Header */}
       <h1 className="text-xl font-extrabold text-gray-900 mb-5">Settings</h1>
 
@@ -1077,7 +1113,7 @@ function SecurityTab() {
           <p className="text-gray-500 text-xs mb-4">
             Once you delete your account, there is no going back. Please be certain.
           </p>
-          <button 
+          <button
             onClick={() => setIsDeleteModalOpen(true)}
             className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
           >
@@ -1136,10 +1172,10 @@ function DeleteAccountModal({
             />
             <div className="flex justify-end gap-3">
               <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800">Cancel</button>
-              <button 
+              <button
                 onClick={() => {
                   if (password.trim()) setStep(2);
-                }} 
+                }}
                 disabled={!password.trim()}
                 className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg disabled:opacity-50 transition-colors"
               >
@@ -1155,15 +1191,15 @@ function DeleteAccountModal({
               This action cannot be undone. All your data will be permanently deleted. Are you absolutely sure you want to delete your account?
             </p>
             <div className="flex justify-end gap-3">
-              <button 
-                onClick={() => setStep(1)} 
+              <button
+                onClick={() => setStep(1)}
                 disabled={isDeleting}
                 className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 disabled:opacity-50"
               >
                 Back
               </button>
-              <button 
-                onClick={() => onConfirm(password)} 
+              <button
+                onClick={() => onConfirm(password)}
                 disabled={isDeleting}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg disabled:opacity-50 transition-colors flex items-center gap-2"
               >
