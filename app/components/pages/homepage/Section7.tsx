@@ -3,6 +3,7 @@
 import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import Image from "next/image";
+import AutoSlider from "./AutoSlider";
 
 interface Section7Props {
   section: SectionContent;
@@ -75,8 +76,31 @@ export default function Section7({ section }: Section7Props) {
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        {/* Top: Image left, Heading + 2x2 grid right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mb-6">
+        {/* Mobile: heading + horizontal slider for all 7 boxes */}
+        <div className="lg:hidden">
+          <h2 className="text-[28px] leading-[36px] font-bold text-[#1F2937] mb-2">{mainHeading}</h2>
+          <p className="text-[14px] leading-[22px] text-[#6B7280] mb-6">{textBelowHeading}</p>
+          <AutoSlider className="-mx-4 px-4">
+            {boxFields.map((box, idx) => (
+              <div
+                key={`m7-${idx}`}
+                className="snap-start flex-none"
+                style={{ width: 189, minHeight: 232, borderRadius: 12, border: '0.5px solid #E5E7EB', backgroundColor: '#F9FAFB', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: '16px 14px', gap: 10 }}
+              >
+                <div style={{ width: 44, height: 44, borderRadius: 8, background: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Image src={box.icon} alt={`icon-${idx}`} width={22} height={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 13, fontWeight: 600, color: '#1F2937', lineHeight: '18px', marginBottom: 4 }}>{box.heading}</h3>
+                  <p style={{ fontSize: 11, lineHeight: '16px', color: '#6B7280', display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{box.content}</p>
+                </div>
+              </div>
+            ))}
+          </AutoSlider>
+        </div>
+
+        {/* Desktop: Image left, Heading + 2x2 grid right */}
+        <div className="hidden lg:grid grid-cols-2 gap-10 items-start mb-6">
           {/* Left: Image */}
           <div className="w-full">
             <Image
@@ -109,8 +133,8 @@ export default function Section7({ section }: Section7Props) {
           </div>
         </div>
 
-        {/* Bottom: 3 boxes spanning full width */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Bottom: 3 boxes spanning full width — desktop only */}
+        <div className="hidden lg:grid grid-cols-3 gap-6">
           {boxFields.slice(4, 7).map((box, idx) => (
             <div key={`bottom-${idx}`} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-6 flex flex-col gap-4 items-start">
               <div className="w-14 h-14 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">

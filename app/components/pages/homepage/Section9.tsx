@@ -4,6 +4,7 @@ import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import Image from "next/image";
 import Link from "next/link";
+import FocusCenterSlider from "./FocusCenterSlider";
 
 interface Section9Props {
   section: SectionContent;
@@ -135,7 +136,7 @@ export default function Section9({ section }: Section9Props) {
     : DEFAULT_ARTICLES;
 
   return (
-    <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
+    <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "clamp(32px,6vw,64px)", paddingBottom: "clamp(32px,6vw,64px)" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
 
         {/* Pill */}
@@ -166,9 +167,9 @@ export default function Section9({ section }: Section9Props) {
         <h2
           style={{
             fontFamily: "Inter",
-            fontSize: 36,
+            fontSize: "clamp(22px,5vw,36px)",
             fontWeight: 700,
-            lineHeight: "40px",
+            lineHeight: "1.2",
             letterSpacing: "0px",
             color: "#101828",
             textAlign: "center",
@@ -182,7 +183,7 @@ export default function Section9({ section }: Section9Props) {
         <p
           style={{
             fontFamily: "Inter",
-            fontSize: 20,
+            fontSize: "clamp(14px, 4vw, 20px)",
             fontWeight: 400,
             lineHeight: "28px",
             letterSpacing: "0px",
@@ -194,10 +195,31 @@ export default function Section9({ section }: Section9Props) {
           {belowHeading}
         </p>
 
-        {/* Cards Grid */}
+        {/* Mobile: focus-center slider */}
+        <FocusCenterSlider className="mt-8 mb-8">
+          {articles.map((article, idx) => (
+            <div
+              key={`m9-${idx}`}
+              style={{ width: '100%', minHeight: 300, borderRadius: 16, border: '1px solid #E5E7EB', backgroundColor: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+            >
+              <div style={{ position: 'relative', width: '100%', height: 140, flexShrink: 0 }}>
+                <Image src="/Blogs.png" alt={article.title} fill sizes="280px" style={{ objectFit: 'cover' }} />
+                <span style={{ position: 'absolute', top: 10, left: 10, background: 'linear-gradient(135deg,#4F39F6 0%,#9810FA 100%)', color: '#fff', fontFamily: 'Inter', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 9999 }}>{article.category}</span>
+              </div>
+              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+                <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#6B7280' }}>{article.date} · {article.readTime}</span>
+                <h3 style={{ fontFamily: 'Inter', fontSize: 15, fontWeight: 700, color: '#101828', lineHeight: '21px', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.title}</h3>
+                <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#6B7280', lineHeight: '19px', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.description}</p>
+                <Link href={`/articles/${article.slug}`} style={{ marginTop: 'auto', fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: '#4F39F6', textDecoration: 'none' }}>Read More →</Link>
+              </div>
+            </div>
+          ))}
+        </FocusCenterSlider>
+
+        {/* Desktop: Cards Grid */}
         <div
+          className="hidden md:grid"
           style={{
-            display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: "32px",
             marginBottom: "48px",

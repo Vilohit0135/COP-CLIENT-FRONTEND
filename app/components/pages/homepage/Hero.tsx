@@ -104,11 +104,17 @@ export default function Hero({ section }: HeroProps) {
   return (
     <section className="relative w-full bg-white text-gray-900 overflow-visible">
       {/* Responsive container with proper scaling */}
-      <div className="w-full pt-0 pb-6">
+      {/* pt accounts for sticky promo bar (~36px) + fixed navbar pill (~92px) minus the outer pt-10 (40px) = ~88px needed */}
+      <div className="w-full pt-[88px] lg:pt-[32px] pb-6">
         <div className="max-w-7xl mx-auto">
-          <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16 ">
+          <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16">
             {/* Left column: text */}
-            <motion.div initial={{ scale: 0.85 }} className="w-full lg:w-1/2 text-center lg:text-left relative">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: 'easeOut' }}
+              className="w-full lg:w-1/2 text-center lg:text-left relative px-4 lg:px-0"
+            >
               {/* Privacy matters pill - text based (match CMS field if present) */}
               {(() => {
                 const privacyAliases = ["Above main heading pill", "Above main heading", "Privacy pill", "Your Privacy Matters", "privacy_pill"];
@@ -140,11 +146,12 @@ export default function Hero({ section }: HeroProps) {
                     <span
                       title={privacyText}
                       style={{
-                        fontSize: "clamp(14px, 1.8vw, 18px)",
+                        fontSize: "clamp(11px, 3.2vw, 18px)",
                         fontWeight: 600,
-                        lineHeight: 1,
-                        whiteSpace: "nowrap",
+                        lineHeight: 1.3,
+                        whiteSpace: "normal",
                         display: "block",
+                        wordBreak: "break-word",
                       }}
                     >
                       {privacyText}
@@ -225,31 +232,72 @@ export default function Hero({ section }: HeroProps) {
                 </p>
               )}
 
-              {/* Stats row - larger icons aligned to text */}
-              <div className="mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-10 items-center justify-center lg:justify-start ">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <img src="/Container (47).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
-                  <div>
-                    <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statUniversities}</div>
-                    <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Partnerships</div>
-                  </div>
-                </div>
+              {/* Mobile-only hero image */}
+              <div className="block lg:hidden mt-5 mb-2 w-full rounded-2xl overflow-hidden">
+                <img
+                  src="/Margin.png"
+                  alt="Hero"
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                />
+              </div>
 
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <img src="/Container (48).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
-                  <div>
-                    <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statPrograms}</div>
-                    <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Available</div>
-                  </div>
-                </div>
+              {/* Stats row */}
+              <div className="mt-6 lg:mt-10 xl:mt-12 flex flex-row gap-3 sm:gap-8 lg:gap-10 items-start justify-center lg:justify-start">
+                {[
+                  { icon: '/Container (47).png', label: statUniversities, sub: 'Partnerships' },
+                  { icon: '/Container (48).png', label: statPrograms, sub: 'Available' },
+                  { icon: '/Container (49).png', label: statStudents, sub: 'Enrolled' },
+                ].map((stat, i) => (
+                  <div key={i} className="flex items-start gap-2" style={{ flex: 1, minWidth: 0 }}>
+                    <img src={stat.icon} alt="icon" style={{ width: 36, height: 36, objectFit: 'contain', flexShrink: 0 }} />
+                    <div style={{ minWidth: 0 }}>
+                      {(() => {
+                        const lbl = String(stat.label || "").trim();
+                        // Try to capture a leading numeric token (e.g. "500", "50K+")
+                        const m = lbl.match(/^\s*([0-9][0-9,]*[A-Za-z]*\+?)\s*(.*)$/i);
+                        let numberPart = lbl;
+                        let textPart = "";
+                        if (m) {
+                          numberPart = m[1];
+                          textPart = m[2] || "";
 
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <img src="/Container (49).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
-                  <div>
-                    <div className="font-semibold text-gray-900" style={{ fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.1", whiteSpace: "nowrap", color: "#161C2D", fontWeight: "600" }}>{statStudents}</div>
-                    <div className="text-xs text-gray-600" style={{ fontSize: "clamp(11px, 1.2vw, 13px)", color: "#6A7282", marginTop: "2px" }}>Enrolled</div>
+                          // If the text part begins with a '+' (e.g. "2000 +Programs"),
+                          // move the '+' to the number so it becomes "2000+" and the
+                          // remaining text becomes the label on the next line.
+                          const plusLeading = textPart.match(/^\s*\+\s*(.*)$/);
+                          if (plusLeading) {
+                            numberPart = String(numberPart).replace(/\s*\+\s*$/, '') + '+';
+                            textPart = plusLeading[1] || '';
+                          }
+
+                          // If the text part ends with a '+' (e.g. "Universities +"),
+                          // move that '+' to the number as well so it becomes "500+".
+                          const plusTrailing = textPart.match(/^(.*)\s*\+\s*$/);
+                          if (plusTrailing) {
+                            textPart = (plusTrailing[1] || '').trim();
+                            numberPart = String(numberPart).replace(/\s*\+\s*$/, '') + '+';
+                          }
+                        } else {
+                          // fallback: keep trailing + attached
+                          numberPart = lbl.replace(/\s*\+\s*$/, '+');
+                        }
+
+                        // Normalize any stray whitespace around '+' and keep it attached
+                        numberPart = String(numberPart).replace(/\s*\+\s*$/, '+');
+
+                        return (
+                          <>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#161C2D', lineHeight: '1.05', whiteSpace: 'nowrap' }}>{numberPart}</div>
+                            {textPart ? (
+                              <div style={{ fontSize: 13, fontWeight: 700, color: '#161C2D', lineHeight: '1.2' }}>{textPart}</div>
+                            ) : null}
+                            <div style={{ fontSize: 11, color: '#6A7282', marginTop: 6 }}>{stat.sub}</div>
+                          </>
+                        );
+                      })()}
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
 
               {/* Trusted badge */}
@@ -259,25 +307,22 @@ export default function Hero({ section }: HeroProps) {
                 </div>
               )}
 
-              {/* 4-box group (100% Secure, 4.8 Rating, Certifications, Counselling) - RESPONSIVE and evenly spaced */}
-              <div className="mt-6 lg:mt-8 flex items-center gap-4 w-full lg:w-fit justify-center lg:justify-start">
-                <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Stats.png" alt="100% Secure" className="w-full h-full object-contain" />
-                </div>
-                <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Container (43).png" alt="4.8 Rating" className="w-full h-full object-contain" />
-                </div>
-                <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Container (44).png" alt="Certifications" className="w-full h-full object-contain" />
-                </div>
-                <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
-                  <img src="/Container (45).png" alt="Counselling" className="w-full h-full object-contain" />
-                </div>
+              {/* 4-badge static row */}
+              <div className="mt-6 lg:mt-8 flex items-center gap-2 lg:gap-4 w-full justify-center lg:justify-start">
+                {['/Stats.png', '/Container (43).png', '/Container (44).png', '/Container (45).png'].map((src, i) => (
+                  <div key={i} className="flex-shrink-0" style={{ height: 'clamp(28px, 5vw, 44px)', flex: 1, maxWidth: 150 }}>
+                    <img src={src} alt="badge" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  </div>
+                ))}
               </div>
             </motion.div>
 
-            {/* Right column: image + decorative circle + overlays */}
-            <motion.div initial={{ scale: 0.85 }} className="w-full lg:w-1/2 flex items-start justify-center  relative" style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px" }}>
+            {/* Right column: image + decorative circle + overlays — hidden on mobile */}
+            <motion.div
+              initial={{ opacity: 0, x: 32 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+              className="hidden lg:flex w-full lg:w-1/2 items-start justify-center relative" style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px" }}>
               {/* Decorative purple circle - responsive */}
               {/* <motion.div initial={{ scale: 0.85 }} className="absolute rounded-full bg-gradient-to-br from-purple-300 to-purple-600 opacity-30 -z-10" style={{
                 width: "clamp(300px, 50vw, 600px)",
