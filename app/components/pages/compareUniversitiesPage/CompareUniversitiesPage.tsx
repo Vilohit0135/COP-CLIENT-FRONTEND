@@ -29,7 +29,7 @@ export default function CompareUniversitiesPage() {
                 setSelectedUniversities(idList);
                 localStorage.setItem('selectedToCompare', JSON.stringify(idList));
                 setIsTableOpen(true);
-                
+
                 // Scroll to comparison table
                 setTimeout(() => {
                     tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -57,7 +57,7 @@ export default function CompareUniversitiesPage() {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/public/providers`);
                 const data = await response.json();
-                
+
                 const mappedData: University[] = data.map((provider: any) => {
                     const comp = provider.comparison || {};
                     return {
@@ -117,13 +117,13 @@ export default function CompareUniversitiesPage() {
     const selectedData = universityList.filter(u => selectedUniversities.includes(u.id));
 
     return (
-        <div className="min-h-screen bg-[#FDFDFF] font-['Nunito'] overflow-hidden">
-            <div className="px-4 sm:px-6 lg:px-8 py-8">
+        <div className="min-h-screen bg-[#FDFDFF] font-['Nunito'] overflow-hidden lg:pt-7">
+            <div className="px-4 sm:px-6 lg:px-8 py-6 md:py-8">
                 {/* back to universities */}
-                <div className="mb-4">
+                <div className="mb-4 sm:mb-6 mt-4 md:mt-0">
                     <Link
                         href="/universities"
-                        className="text-[#9810FA] hover:underline flex items-center gap-1 font-bold text-xl"
+                        className="text-[#9810FA] hover:underline flex items-center gap-1 font-bold text-lg sm:text-xl"
                     >
                         <ArrowLeft size={18} strokeWidth={2.5} />
                         Back to Universities
@@ -131,9 +131,9 @@ export default function CompareUniversitiesPage() {
                 </div>
 
                 {/* Page Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl font-extrabold text-[#111827] mb-2">Compare Universities</h1>
-                    <p className="text-gray-500 font-medium">Select and compare the best universities and select the right choice</p>
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-[#111827] mb-1 sm:mb-2">Compare Universities</h1>
+                    <p className="text-gray-500 font-medium text-sm sm:text-base">Select and compare the best universities and select the right choice</p>
                 </div>
 
                 <HeroSection />

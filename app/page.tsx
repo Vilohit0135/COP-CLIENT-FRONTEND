@@ -1,6 +1,6 @@
 import { getPageContent } from "@/app/lib/api";
-import { PageResponse } from "@/app/lib/types";
-import SectionRenderer from "@/app/components/SectionRenderer";
+import { PageResponse, SectionContent } from "@/app/lib/types";
+// import SectionRenderer from "@/app/components/SectionRenderer";
 import Homepage from "@/app/components/pages/homepage";
 
 function mergeWithPlaceholders(data: PageResponse) {
@@ -16,7 +16,7 @@ function mergeWithPlaceholders(data: PageResponse) {
       });
 
       // Only keep values that are declared on this page's section schema.
-      const merged: Record<string, any> = {};
+      const merged: Record<string, unknown> = {};
       for (const field of section.fields) {
         const name = field.name;
 
@@ -38,14 +38,14 @@ function mergeWithPlaceholders(data: PageResponse) {
 
       return {
         _id: item?._id || `__placeholder_${section.apiIdentifier || idx}`,
-        pageSlug: data.page?.slug,
+        pageSlug: data.page.slug,
         sectionApiId: section.apiIdentifier,
         sectionIndex: idx,
         itemIndex: item?.itemIndex ?? 0,
         values: merged,
       };
     })
-    .filter(Boolean) as any[];
+    .filter(Boolean) as SectionContent[];
 }
 
 export default async function Home() {
@@ -65,7 +65,7 @@ export default async function Home() {
     );
   }
 
-  let sections = mergeWithPlaceholders(data);
+  const sections = mergeWithPlaceholders(data);
 
   // Ensure Expert Counselors section is present. If the CMS/page schema
   // doesn't include it, insert a placeholder immediately after Section 3
@@ -91,14 +91,14 @@ export default async function Home() {
     // If Section 3 is not present, insert at the top.
     const insertAt = findIdx >= 0 ? findIdx : 0;
 
-    const placeholder = {
+    const placeholder: SectionContent = {
       _id: `__placeholder_${expertApiId}`,
-      pageSlug: data.page?.slug,
+      pageSlug: data.page.slug,
       sectionApiId: expertApiId,
       sectionIndex: insertAt,
       itemIndex: 0,
       values: {},
-    } as any;
+    };
 
     sections.splice(insertAt, 0, placeholder);
 

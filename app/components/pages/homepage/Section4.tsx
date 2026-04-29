@@ -102,7 +102,7 @@ export default function Section4({ section }: Section4Props) {
   const counselors: Counselor[] = COUNSELOR_DEFS.map((def, idx) => {
     const rawKey = Object.keys(v).find((k) => k.toLowerCase() === def.cmsKey.toLowerCase());
     const raw = rawKey ? richTextToPlain(v[rawKey]).trim() : "";
-    const lines = raw.split("\n").map((l) => l.trim()).filter(Boolean);
+    const lines = raw.split("\n").map((l: string) => l.trim()).filter(Boolean);
     const fb = FALLBACK_LINES[idx];
     return {
       id: String(idx + 1),
