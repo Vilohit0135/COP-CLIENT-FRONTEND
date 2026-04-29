@@ -45,7 +45,7 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
   // Sort sections by sectionIndex to ensure correct rendering order
   const sorted = deduped.sort((a, b) => (a.sectionIndex ?? 0) - (b.sectionIndex ?? 0));
 
-  const extractTextFromDoc = (node: any): string => {
+  const extractTextFromDoc = (node: unknown): string => {
     if (!node) return "";
     if (typeof node === "string") return node;
     let out = "";
@@ -53,26 +53,30 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
       for (const n of node) out += extractTextFromDoc(n);
       return out;
     }
-    if (node.type === "text" && typeof node.text === "string") return node.text;
-    if (node.content && Array.isArray(node.content)) {
-      for (const c of node.content) out += extractTextFromDoc(c);
+    if (typeof node === "object") {
+      const obj = node as { type?: string; text?: unknown; content?: unknown };
+      if (obj.type === "text" && typeof obj.text === "string") return obj.text;
+      if (Array.isArray(obj.content)) {
+        for (const c of obj.content) out += extractTextFromDoc(c);
+      }
     }
     return out;
   };
 
-  const renderGenericValue = (v: any) => {
+  const renderGenericValue = (v: unknown) => {
     if (v === undefined || v === null) return null;
     if (typeof v === "string") return <div className="prose">{v}</div>;
     if (Array.isArray(v)) return <div className="prose">{v.join(", ")}</div>;
     if (typeof v === "object") {
-      if (v.type === "doc" && Array.isArray(v.content)) {
+      const obj = v as { type?: string; content?: unknown };
+      if (obj.type === "doc" && Array.isArray(obj.content)) {
         return <div className="prose">{extractTextFromDoc(v)}</div>;
       }
       try {
         return (
           <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-2 rounded">{JSON.stringify(v, null, 2)}</pre>
         );
-      } catch (e) {
+      } catch {
         return null;
       }
     }
@@ -101,11 +105,11 @@ export default function SectionRenderer({ sections }: SectionRendererProps) {
         const Component = entry.Component;
         // Normalize entry.usedFields into an array of strings safely so runtime
         // errors don't occur if a module exported a non-array by mistake.
-        const normalizeToArray = (v: any): string[] => {
+        const normalizeToArray = (v: unknown): string[] => {
           if (!v) return [];
           if (Array.isArray(v)) return v.map((s) => String(s));
           if (typeof v === "string") return [v];
-          if (typeof v === "object") return Object.keys(v).map((k) => String(k));
+          if (typeof v === "object") return Object.keys(v as object).map((k) => String(k));
           return [String(v)];
         };
 
