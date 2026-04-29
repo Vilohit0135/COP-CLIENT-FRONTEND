@@ -60,7 +60,7 @@ const LoginForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.email || !formData.password) {
             toast.error("Email and password are required");
             return;
@@ -176,11 +176,10 @@ const LoginForm = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full py-2.5 text-white font-bold rounded-xl shadow-lg transform transition-all ${
-                            isLoading 
-                                ? 'bg-gray-400 cursor-not-allowed' 
-                                : 'bg-[#9810FA] shadow-purple-500/30 hover:shadow-purple-500/40 hover:-translate-y-0.5 active:translate-y-0'
-                        }`}
+                        className={`w-full py-2.5 text-white font-bold rounded-xl shadow-lg transform transition-all ${isLoading
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-[#9810FA] shadow-purple-500/30 hover:shadow-purple-500/40 hover:-translate-y-0.5 active:translate-y-0'
+                            }`}
                     >
                         {isLoading ? 'Signing In...' : 'Sign In'}
                     </button>

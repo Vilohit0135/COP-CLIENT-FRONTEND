@@ -61,12 +61,16 @@ export default async function ExploreProgramsRoute({ searchParams }: { searchPar
   }
 
   try {
-    // Fetch the actual data
-    [degreeTypes, courses, specializations] = await Promise.all([
+    // Fetch the actual data and wait 1.5s to show skeleton
+    const [fetchedDegreeTypes, fetchedCourses, fetchedSpecializations] = await Promise.all([
       getDegreeTypes(),
       getCourses(),
       getSpecializations(),
+      new Promise((resolve) => setTimeout(resolve, 1500)),
     ]);
+    degreeTypes = fetchedDegreeTypes;
+    courses = fetchedCourses;
+    specializations = fetchedSpecializations;
   } catch (err) {
     console.error("Failed to load exploration data:", err);
   }
