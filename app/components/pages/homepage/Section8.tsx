@@ -4,6 +4,7 @@ import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import { useState } from "react";
 import Image from "next/image";
+import FocusCenterSlider from "./FocusCenterSlider";
 
 interface Section8Props {
   section: SectionContent;
@@ -70,7 +71,7 @@ export default function Section8({ section }: Section8Props) {
   const next = () => setActiveSlide((p) => (p + 1) % totalDots);
 
   return (
-    <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
+    <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "clamp(32px,6vw,64px)", paddingBottom: "clamp(32px,6vw,64px)" }}>
       <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
 
         {/* Pill */}
@@ -101,13 +102,14 @@ export default function Section8({ section }: Section8Props) {
         <h2
           style={{
             fontFamily: "Inter",
-            fontSize: 36,
+            fontSize: "clamp(22px,5vw,36px)",
             fontWeight: 800,
-            lineHeight: "40px",
+            lineHeight: "1.2",
             letterSpacing: "0px",
             color: "#101828",
             textAlign: "center",
             margin: "0 0 12px 0",
+            padding: "0 16px",
           }}
         >
           {mainHeading}
@@ -131,10 +133,35 @@ export default function Section8({ section }: Section8Props) {
 
         {/* Carousel: Cards with overlaid arrows */}
         <div style={{ position: "relative" }}>
-          {/* Left Arrow */}
+          {/* Mobile: focus-center slider */}
+          <FocusCenterSlider className="mb-8">
+            {cards.map((card, idx) => (
+              <div
+                key={`m8-${idx}`}
+                style={{ width: '100%', minHeight: 280, borderRadius: 16, border: '1px solid #E5E7EB', backgroundColor: '#fff', padding: '20px 18px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+              >
+                <div>
+                  <div style={{ fontFamily: 'Georgia,serif', fontSize: 48, lineHeight: 1, color: '#E5E7EB', marginBottom: 6, userSelect: 'none' }}>&ldquo;</div>
+                  <p style={{ fontFamily: 'Inter', fontSize: 14, fontWeight: 400, lineHeight: '22px', color: '#374151', margin: 0 }}>{card.quote}</p>
+                </div>
+                <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', overflow: 'hidden', background: '#E5E7EB', flexShrink: 0, position: 'relative' }}>
+                    <Image src={card.avatar} alt={card.name} fill sizes="40px" style={{ objectFit: 'cover' }} />
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: 'Inter', fontSize: 14, fontWeight: 600, color: '#101828', lineHeight: '20px' }}>{card.name}</div>
+                    <div style={{ fontFamily: 'Inter', fontSize: 12, color: '#6B7280', lineHeight: '17px' }}>{card.degree} · {card.university}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </FocusCenterSlider>
+
+          {/* Desktop: Left Arrow */}
           <button
             onClick={prev}
             aria-label="Previous"
+            className="hidden md:flex"
             style={{
               position: "absolute",
               left: -20,
@@ -146,7 +173,6 @@ export default function Section8({ section }: Section8Props) {
               borderRadius: "50%",
               border: "1px solid #E5E7EB",
               background: "#FFFFFF",
-              display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
@@ -158,8 +184,8 @@ export default function Section8({ section }: Section8Props) {
             </svg>
           </button>
 
-          {/* Cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
+          {/* Desktop: Cards */}
+          <div className="hidden md:grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
             {cards.map((card, idx) => (
               <div
                 key={idx}
@@ -296,10 +322,11 @@ export default function Section8({ section }: Section8Props) {
             ))}
           </div>
 
-          {/* Right Arrow */}
+          {/* Right Arrow — desktop only */}
           <button
             onClick={next}
             aria-label="Next"
+            className="hidden md:flex"
             style={{
               position: "absolute",
               right: -20,
@@ -311,7 +338,6 @@ export default function Section8({ section }: Section8Props) {
               borderRadius: "50%",
               border: "1px solid #E5E7EB",
               background: "#FFFFFF",
-              display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",

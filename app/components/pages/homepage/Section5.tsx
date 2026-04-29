@@ -14,7 +14,7 @@ export default function Section5({ section }: Section5Props) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    whatsappNumber: "",
+    phoneNumber: "",
     otp: "",
     programOfInterest: "",
   });
@@ -94,12 +94,27 @@ export default function Section5({ section }: Section5Props) {
   );
 
   return (
-    <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "64px", paddingBottom: "64px" }}>
+    <section style={{ width: "100%", backgroundColor: "#FFFFFF", paddingTop: "clamp(32px,6vw,64px)", paddingBottom: "clamp(32px,6vw,64px)" }}>
       <div className="max-w-7xl mx-auto px-4 md:px-6">
+
+        {/* Mobile-only heading */}
+        <h2
+          className="md:hidden text-center mb-6"
+          style={{
+            fontFamily: "Inter",
+            fontSize: "clamp(22px,6vw,36px)",
+            fontWeight: 700,
+            lineHeight: 1.3,
+            color: "#101828",
+          }}
+        >
+          {title}
+        </h2>
+
         <div style={{ display: "flex", gap: "64px", alignItems: "flex-start", flexWrap: "wrap" }}>
 
-          {/* ── LEFT SIDE ───────────────────────────────────────────────────── */}
-          <div style={{ flex: 1, minWidth: "300px" }}>
+          {/* ── LEFT SIDE — hidden on mobile ────────────────────────────────── */}
+          <div className="hidden md:block" style={{ flex: 1, minWidth: "300px" }}>
 
             {/* Title — Figma: Inter 700, 48px, lh 60px, #101828 */}
             <h2 style={{
@@ -186,9 +201,37 @@ export default function Section5({ section }: Section5Props) {
             border: "1px solid #E5E7EB",
             backgroundColor: "#FFFFFF",
             padding: "33px",
+            position: "relative",
             boxShadow: "0px 8px 10px -6px rgba(0,0,0,0.10), 0px 20px 25px -5px rgba(0,0,0,0.10)",
             margin: "0 auto lg:margin-0",
           }}>
+            {/* No Spam Calls badge positioned above the form box */}
+            <div style={{
+              position: "absolute",
+              left: "50%",
+              top: "-18px",
+              transform: "translateX(-50%)",
+              zIndex: 20,
+            }}>
+              <div style={{
+                minHeight: "32px",
+                borderRadius: "8px",
+                backgroundColor: "#10B981",
+                border: "1px solid #059669",
+                padding: "6px 12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+                boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.10), 0px 10px 15px -3px rgba(0,0,0,0.10)",
+              }}>
+                <Shield size={14} color="#FFFFFF" />
+                <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>
+                  No Spam Calls
+                </span>
+              </div>
+            </div>
+
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
 
               {/* Full Name */}
@@ -217,22 +260,22 @@ export default function Section5({ section }: Section5Props) {
                 />
               </div>
 
-              {/* WhatsApp */}
+              {/* Phone Number */}
               <div>
-                <label style={labelStyle}>Whatsapp Number <span style={{ color: "#EF4444" }}>*</span></label>
+                <label style={labelStyle}>Phone Number <span style={{ color: "#EF4444" }}>*</span></label>
                 <div style={{ position: "relative" }}>
                   <Phone size={18} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF", pointerEvents: "none" }} />
                   <input
                     type="tel"
                     placeholder="98765 43210"
-                    value={formData.whatsappNumber}
-                    onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
                     style={{ ...inputStyle, paddingLeft: "42px" }}
                     required
                   />
                 </div>
                 <p style={{ fontFamily: "Inter", fontSize: "12px", color: "#6B7280", marginTop: "4px" }}>
-                  We'll send an OTP to verify your number
+                  We'll send an OTP to verify your phone number
                 </p>
               </div>
 
@@ -325,26 +368,7 @@ export default function Section5({ section }: Section5Props) {
                 )}
               </button>
 
-              {/* No Spam Calls — Figma: 431×32px, radius 8px, bg #10B981, border #059669, 2× shadow #000 10% */}
-              <div style={{
-                width: "100%",
-                height: "auto",
-                minHeight: "32px",
-                borderRadius: "8px",
-                backgroundColor: "#10B981",
-                border: "1px solid #059669",
-                padding: "6px 12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "6px",
-                boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.10), 0px 10px 15px -3px rgba(0,0,0,0.10)",
-              }}>
-                <Shield size={14} color="#FFFFFF" />
-                <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>
-                  No Spam Calls
-                </span>
-              </div>
+              {/* badge moved above form */}
 
               {/* Terms text — Figma: Inter 400, 12px, lh 19.5px, #6A7282, center, 398px wide */}
               <p style={{

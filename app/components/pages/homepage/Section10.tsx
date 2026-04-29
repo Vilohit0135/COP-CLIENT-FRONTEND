@@ -118,8 +118,8 @@ export default function Section10({ section, questionsSection }: Section10Props)
           style={{
             fontFamily: "Inter, Arial, Helvetica, sans-serif",
             fontWeight: 700,
-            fontSize: 36,
-            lineHeight: "40px",
+            fontSize: "clamp(22px, 5.5vw, 36px)",
+            lineHeight: "1.2",
             letterSpacing: "0px",
             color: "#101828",
             textAlign: "center",
@@ -135,7 +135,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
           style={{
             fontFamily: "Inter, Arial, Helvetica, sans-serif",
             fontWeight: 400,
-            fontSize: 20,
+            fontSize: "clamp(14px, 4vw, 20px)",
             lineHeight: "28px",
             letterSpacing: "0px",
             color: "#4A5565",
@@ -173,11 +173,12 @@ export default function Section10({ section, questionsSection }: Section10Props)
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "20px 24px",
+                  padding: "16px clamp(14px, 4vw, 24px)",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
                   textAlign: "left",
+                  gap: 8,
                 }}
                 onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
               >
@@ -185,9 +186,11 @@ export default function Section10({ section, questionsSection }: Section10Props)
                   style={{
                     fontFamily: "Inter, Arial, Helvetica, sans-serif",
                     fontWeight: 500,
-                    fontSize: 16,
+                    fontSize: "clamp(14px, 3.5vw, 16px)",
                     lineHeight: "24px",
                     color: "#101828",
+                    flex: 1,
+                    minWidth: 0,
                   }}
                 >
                   {faq.question}
@@ -207,7 +210,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
               {openIndex === idx && (
                 <div
                   style={{
-                    padding: "0 24px 20px 24px",
+                    padding: "0 clamp(14px, 4vw, 24px) 16px clamp(14px, 4vw, 24px)",
                     fontFamily: "Inter, Arial, Helvetica, sans-serif",
                     fontWeight: 400,
                     fontSize: 14,

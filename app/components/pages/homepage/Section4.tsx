@@ -3,6 +3,7 @@ import { richTextToPlain } from "./tuUtils";
 import { Star, BookOpen, Clock, Users } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import FocusCenterSlider from "./FocusCenterSlider";
 
 interface Section4Props {
   section: SectionContent;
@@ -157,10 +158,10 @@ export default function Section4({ section }: Section4Props) {
           className="text-center mb-4"
           style={{
             fontFamily: "Inter",
-            fontSize: "36px", // per spec
+            fontSize: "clamp(22px, 5.5vw, 36px)",
             fontWeight: 700,
             color: "#101828",
-            lineHeight: "40px", // per spec
+            lineHeight: "1.2",
           }}
         >
           {title}
@@ -168,22 +169,57 @@ export default function Section4({ section }: Section4Props) {
 
         {/* Subtitle */}
         <p
-          className="text-center mb-16 mx-auto"
+          className="text-center mb-8 md:mb-16 mx-auto px-4"
           style={{
             fontFamily: "Inter",
-            width: "672px", // per spec
-            height: "28px",
-            fontSize: "20px", // per spec
+            maxWidth: "672px",
+            width: "100%",
+            fontSize: "clamp(15px, 3vw, 20px)",
             fontWeight: 400,
             color: "#4A5565",
-            lineHeight: "28px", // per spec
+            lineHeight: "28px",
           }}
         >
           {subtitle}
         </p>
 
-        {/* Counselor Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* Counselor Cards — Mobile focus-center slider */}
+        <FocusCenterSlider className="mt-8 mb-8">
+          {counselors.map((counselor) => (
+            <div
+              key={counselor.id}
+              style={{ width: '100%', minHeight: 300, borderRadius: 16, border: '1px solid #E5E7EB', backgroundColor: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+            >
+              {/* Image */}
+              <div style={{ position: 'relative', width: '100%', height: 160, background: '#E5E7EB', flexShrink: 0 }}>
+                <Image src={counselor.image} alt={counselor.name} fill sizes="280px" style={{ objectFit: 'cover', objectPosition: 'top' }} />
+                <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(255,107,107,0.9)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Star size={12} fill="white" color="white" />
+                  <span style={{ color: '#fff', fontSize: 11, fontWeight: 700 }}>{counselor.rating.toFixed(1)} / {counselor.reviewCount} reviews</span>
+                </div>
+              </div>
+              {/* Content */}
+              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
+                <h3 style={{ fontFamily: 'Inter', fontSize: 15, fontWeight: 700, color: '#101828', lineHeight: '20px', margin: 0 }}>{counselor.name}</h3>
+                <p style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: '#4F39F6', lineHeight: '18px', margin: 0 }}>{counselor.title}</p>
+                <div style={{ borderTop: '1px solid #E5E7EB', marginTop: 6, paddingTop: 6, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  <div className="flex items-center gap-2" style={{ color: '#4A5565', fontSize: 13 }}>
+                    <BookOpen size={14} color="#4F39F6" /><span>{counselor.expertise}</span>
+                  </div>
+                  <div className="flex items-center gap-2" style={{ color: '#4A5565', fontSize: 13 }}>
+                    <Clock size={14} color="#4F39F6" /><span>{counselor.experience}</span>
+                  </div>
+                  <div className="flex items-center gap-2" style={{ color: '#4A5565', fontSize: 13 }}>
+                    <Users size={14} color="#4F39F6" /><span>{counselor.studentsGuided}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </FocusCenterSlider>
+
+        {/* Counselor Cards Grid — Desktop */}
+        <div className="hidden md:grid md:grid-cols-3 gap-8 mb-12">
           {counselors.map((counselor, idx) => (
             <div
               key={counselor.id}

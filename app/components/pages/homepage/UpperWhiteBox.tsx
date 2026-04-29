@@ -56,17 +56,17 @@ export default function UpperWhiteBox({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
         overflow: "hidden",
       }}
     >
       {title && (
         <h2
           style={{
-            fontSize: "36px",
+            fontSize: "clamp(22px, 5vw, 36px)",
             fontWeight: 700,
-            lineHeight: "40px",
+            lineHeight: "1.2",
             letterSpacing: "0px",
             color: "#101828",
             marginBottom: "20px",
@@ -82,8 +82,8 @@ export default function UpperWhiteBox({
           .logos-wrapper{overflow:hidden;width:100%;}
           /* no gap on the outer track so duplicated blocks sit flush */
           .logos-track{display:flex;align-items:center;gap:0}
-          /* internal gap between logos only — use a larger fixed gap for uniformity */
-          .logos-content{display:flex;gap:6rem;align-items:center;padding:0}
+          /* internal gap between logos — tighter so they feel like a cohesive band */
+          .logos-content{display:flex;gap:2rem;align-items:center;padding:0}
           /* give each logo a consistent container width so spacing looks uniform */
           .logo-item{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 0.5rem;width:clamp(120px,12vw,220px)}
           .logo-img{max-width:100%;height:auto;display:block;background:transparent}

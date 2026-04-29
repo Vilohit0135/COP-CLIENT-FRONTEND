@@ -4,6 +4,7 @@ import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import { useState, useEffect } from "react";
 import { Star, BookOpen, CheckCircle, TrendingUp } from "lucide-react";
+import FocusCenterSlider from "./FocusCenterSlider";
 
 interface Section6Props {
   section: SectionContent;
@@ -110,17 +111,45 @@ export default function Section6({ section }: Section6Props) {
   const emi = (amt = 0) => Math.round((amt || 0) / 12);
 
   return (
-    <section className="w-full bg-white py-16">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
+    <section className="w-full bg-white py-10 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="text-center mb-8 md:mb-12">
           <div className="inline-block mb-4">
-            <span style={{ background: '#EEF2FF', color: '#4F39F6', fontFamily: 'Inter', fontSize: 14, fontWeight: 700, lineHeight: '20px', letterSpacing: '0.7px', textTransform: 'uppercase', width: 253, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 9999 }}>{pill}</span>
+            <span style={{ background: '#EEF2FF', color: '#4F39F6', fontFamily: 'Inter', fontSize: 14, fontWeight: 700, lineHeight: '20px', letterSpacing: '0.7px', textTransform: 'uppercase', padding: '0 20px', height: 48, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 9999 }}>{pill}</span>
           </div>
-          {title && <h2 style={{ fontFamily: 'Inter', fontSize: 36, fontWeight: 800, color: '#101828', lineHeight: '40px', marginBottom: 8 }}>{title}</h2>}
-          {subtitle && <p style={{ fontFamily: 'Inter', fontSize: 16, fontWeight: 400, color: '#6A7282', lineHeight: '24px' }}>{subtitle}</p>}
+          {title && <h2 style={{ fontFamily: 'Inter', fontSize: 'clamp(22px,5vw,36px)', fontWeight: 800, color: '#101828', lineHeight: '1.2', marginBottom: 8 }}>{title}</h2>}
+          {subtitle && <p style={{ fontFamily: 'Inter', fontSize: 'clamp(13px,3vw,16px)', fontWeight: 400, color: '#6A7282', lineHeight: '24px' }}>{subtitle}</p>}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+        {/* Mobile focus-center slider */}
+        <FocusCenterSlider className="mt-8 mb-8">
+          {programs.map((p) => (
+            <div key={`m-${p._id}`} style={{ width: '100%', minHeight: 300, borderRadius: 16, border: '1px solid #E5E7EB', backgroundColor: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              {/* Image area */}
+              <div style={{ height: 140, position: 'relative', background: 'linear-gradient(180deg,#F3E8FF 0%,#EEF2FF 100%)', flexShrink: 0 }}>
+                {p.thumbnail && <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
+                {p.thumbnail && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom,rgba(0,0,0,0.1),rgba(0,0,0,0.3))' }} />}
+                {p.trending && <div style={{ position: 'absolute', right: 8, top: 8, background: 'linear-gradient(90deg,#6B46FF,#9B2CFF)', color: '#fff', padding: '4px 8px', borderRadius: 999, fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}><TrendingUp size={11} />Hot</div>}
+                {p.rating ? <div style={{ position: 'absolute', left: 8, bottom: 8, background: '#fff', padding: '4px 6px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 4 }}><Star size={11} className="text-yellow-500" fill="#EAB308" /><strong style={{ fontSize: 11 }}>{p.rating}</strong></div> : null}
+              </div>
+              {/* Content */}
+              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+                <h3 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 15, lineHeight: '20px', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.title}</h3>
+                <div style={{ display: 'flex', gap: 16, fontSize: 13, color: '#475569' }}>
+                  <div><div style={{ fontSize: 11, color: '#94A3B8' }}>Duration</div><div style={{ fontWeight: 600, color: '#0F172A' }}>{p.duration || '—'}</div></div>
+                  <div><div style={{ fontSize: 11, color: '#94A3B8' }}>Fee</div><div style={{ fontWeight: 600, color: '#0F172A' }}>{p.fees ? formatCurrency(p.fees) : '—'}</div></div>
+                </div>
+                {p.fees > 0 && <div style={{ background: '#ECFDF5', borderRadius: 8, padding: '6px 8px', color: '#065F46', fontWeight: 700, fontSize: 12 }}>EMI: {formatCurrency(emi(p.discountedFees || p.fees))}/mo</div>}
+                <div className="mt-auto">
+                  <a href={p.providerSlug ? `/universities/${p.providerSlug}` : '#'} style={{ display: 'block', padding: '10px 0', background: 'linear-gradient(90deg,#6B46FF,#9B2CFF)', color: '#fff', borderRadius: 8, fontSize: 13, fontWeight: 600, textAlign: 'center', textDecoration: 'none' }}>View Details</a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </FocusCenterSlider>
+
+        {/* Desktop grid */}
+        <div className="hidden md:grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
           {programs.slice(0, 3).map((p) => (
             <div key={p._id} style={{ background: '#fff', width: '100%', borderRadius: 24, border: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 6px 18px rgba(16,24,40,0.06)' }}>
               {/* Card image area */}
