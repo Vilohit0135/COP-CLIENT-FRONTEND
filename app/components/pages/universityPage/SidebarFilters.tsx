@@ -35,7 +35,10 @@ export default function SidebarFilters({
     const fetchCourses = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const response = await fetch(`${apiUrl}/api/public/provider-courses`);
+        const [response] = await Promise.all([
+          fetch(`${apiUrl}/api/public/provider-courses`),
+          new Promise((resolve) => setTimeout(resolve, 1500)),
+        ]);
         if (response.ok) {
           const data = await response.json();
           setCourses(data);
@@ -97,8 +100,8 @@ export default function SidebarFilters({
 
   return (
     <aside className="w-full lg:w-[340px] shrink-0">
-      <div className="bg-white rounded-[24px] p-6 lg:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#F3F4F6] sticky top-6">
-        <h2 className="text-[20px] lg:text-[24px] font-bold mb-2 text-[#0F172A] text-center lg:text-left">Explore Elite Universities</h2>
+      <div className="bg-white rounded-[24px] p-6 lg:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#F3F4F6]">
+        <h2 className="text-[20px] lg:text-[20px] font-bold mb-2 text-[#0F172A] text-center lg:text-left">Explore Elite Universities</h2>
         <p className="text-[14px] lg:text-[16px] text-[#94A3B8] mb-6 text-center lg:text-left">Course & Specializations</p>
 
         {/* University Search */}
@@ -113,7 +116,7 @@ export default function SidebarFilters({
         </div>
 
         {/* Mobile Filter Toggle */}
-        <button 
+        <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           className="lg:hidden w-full flex items-center justify-center gap-2 h-[52px] rounded-[14px] border-2 border-[#7C3AED] text-[#7C3AED] font-bold text-[16px] transition-all mb-4 active:scale-95"
         >

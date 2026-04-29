@@ -152,7 +152,8 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
         const [providerRes, coursesRes, reviewsRes] = await Promise.all([
           fetch(`${baseUrl}/api/public/providers/${id}`),
           fetch(`${baseUrl}/api/public/providers/${id}/courses`),
-          fetch(`${baseUrl}/api/public/providers/${id}/reviews`)
+          fetch(`${baseUrl}/api/public/providers/${id}/reviews`),
+          new Promise((resolve) => setTimeout(resolve, 1500)),
         ]);
 
         if (!providerRes.ok) {
@@ -207,10 +208,87 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8F9FD]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-500 font-bold animate-pulse">Loading University Details...</p>
+      <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-5 animate-pulse">
+        {/* Breadcrumb Skeleton */}
+        <div className="hidden md:flex justify-between items-center mb-2">
+          <div className="w-64 h-5 bg-gray-200 rounded"></div>
+          <div className="w-32 h-10 bg-gray-200 rounded-xl"></div>
+        </div>
+
+        {/* Hero Section Skeleton */}
+        <div className="relative overflow-hidden mx-auto rounded-3xl w-full h-[300px] md:h-[400px] bg-gray-200">
+          <div className="absolute top-6 right-6 w-12 h-12 rounded-2xl bg-gray-300"></div>
+          <div className="absolute bottom-10 left-6 md:left-20 flex flex-col items-center md:items-start text-center md:text-left">
+            <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-300 rounded-2xl mb-4"></div>
+            <div className="w-64 md:w-96 h-8 md:h-10 bg-gray-300 rounded-lg mb-3"></div>
+            <div className="w-48 md:w-80 h-5 bg-gray-300 rounded mb-6"></div>
+          </div>
+        </div>
+
+        {/* Compare Banner Skeleton */}
+        <div className="bg-gray-100 flex flex-col md:flex-row gap-4 p-5 md:px-6 md:py-4 rounded-3xl justify-between items-center border border-gray-200">
+          <div className="flex gap-4 items-center md:items-start w-full">
+            <div className="hidden sm:flex w-12 h-12 bg-gray-200 rounded-2xl"></div>
+            <div className="flex-1">
+              <div className="w-64 h-6 bg-gray-200 rounded mb-2"></div>
+              <div className="w-full max-w-md h-4 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+          <div className="w-full md:w-auto h-12 w-32 bg-gray-200 rounded-2xl"></div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="pb-8">
+          {/* Navigation Tabs Skeleton */}
+          <div className="mb-8 flex gap-4 overflow-hidden border-b border-gray-200 pb-2">
+            {[1, 2, 3, 4, 5, 6, 7].map(i => (
+              <div key={i} className="w-24 h-6 bg-gray-200 rounded shrink-0"></div>
+            ))}
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Left Column Skeleton */}
+            <div className="flex-1 lg:max-w-[calc(100%-360px)] space-y-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
+                  <div className="w-40 h-6 bg-gray-200 rounded-lg"></div>
+                </div>
+                <div className="space-y-2 mb-6">
+                  <div className="w-full h-4 bg-gray-200 rounded"></div>
+                  <div className="w-full h-4 bg-gray-200 rounded"></div>
+                  <div className="w-3/4 h-4 bg-gray-200 rounded"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="border border-gray-100 rounded-xl p-4 h-24 bg-gray-50"></div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div className="w-40 h-6 bg-gray-200 rounded-lg mb-6"></div>
+                <div className="flex flex-wrap gap-4">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="flex-1 min-w-[140px] h-24 bg-gray-50 rounded-2xl border border-gray-100"></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column (Sidebar) Skeleton */}
+            <aside className="w-full lg:w-[340px] shrink-0 space-y-4">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-4">
+                {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div key={i} className="flex justify-between items-center" >
+                    <div className="w-24 h-5 bg-gray-200 rounded"></div>
+                    <div className="w-16 h-5 bg-gray-200 rounded"></div>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-white rounded-xl p-5 border border-gray-100 h-32"></div>
+            </aside>
+          </div>
         </div>
       </div>
     );
@@ -276,7 +354,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-5">
+    <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-18">
       {/* Breadcrumb - Hidden on mobile for cleaner look */}
       <div className="hidden md:flex justify-between items-center">
         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -291,8 +369,8 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
           <button
             onClick={handleToggleShortlist}
             className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-xl transition-all shadow-md cursor-pointer ${isShortlisted
-                ? "bg-rose-100 text-rose-600 hover:bg-rose-200"
-                : "bg-[#7C3AED] text-white hover:bg-[#6D28D9]"
+              ? "bg-rose-100 text-rose-600 hover:bg-rose-200"
+              : "bg-[#7C3AED] text-white hover:bg-[#6D28D9]"
               }`}
           >
             {isShortlisted ? (
@@ -448,7 +526,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                 </div>
               </div>
             </section>
-            
+
             {/* Quick Overview Section */}
             <section className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
               <div className="flex items-center gap-2 mb-6">
@@ -660,7 +738,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                           <div className="text-xl font-black text-indigo-600">₹{course.fees?.toLocaleString() || "1,50,000"}</div>
                           <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">EMI ₹{(course.fees ? Math.round(course.fees / 18) : 8500).toLocaleString()}/sem</div>
                         </div>
-                        <Link 
+                        <Link
                           href={`/course-detail?id=${(course.courseId as any)?.slug || (course.courseId as any)?._id || course.courseId}`}
                           className="flex items-center gap-2 px-5 py-2.5 border-2 border-indigo-600 text-indigo-600 rounded-xl font-bold text-sm hover:bg-indigo-600 hover:text-white transition-all cursor-pointer"
                         >
