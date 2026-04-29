@@ -13,10 +13,6 @@ export interface University {
     studentRating: number;
     nationalRanking: string;
     accreditation: string;
-    placements: {
-        rate: string;
-        average: string;
-    };
     minRequirements: string;
     learningMode: string;
     specializations: string;
@@ -24,11 +20,19 @@ export interface University {
     keyHighlights: string[];
     emiOption?: string;
     bestROI?: boolean;
+    intake?: string;
+    recognition?: { ugc?: string; aicte?: string; naac?: string; nirf?: string };
+    ranking?: string;
+    placements: {
+        highest?: string;
+        rate: string;
+        average: string;
+    };
 }
 
 export const universities: University[] = [
     {
-        id: 1,
+        id: "1",
         name: "Amity University Online",
         location: "Noida, Uttar Pradesh",
         programType: "Online Degree",
@@ -54,7 +58,7 @@ export const universities: University[] = [
         minRequirements: "10+2 or equivalent"
     },
     {
-        id: 2,
+        id: "2",
         name: "Manipal University Online",
         location: "Manipal, Karnataka",
         programType: "Online Degree",
@@ -80,7 +84,7 @@ export const universities: University[] = [
         minRequirements: "10+2 or equivalent"
     },
     {
-        id: 3,
+        id: "3",
         name: "Chandigarh University",
         location: "Mohali, Punjab",
         programType: "Online Degree",
@@ -106,7 +110,7 @@ export const universities: University[] = [
         minRequirements: "10+2 or equivalent"
     },
     {
-        id: 4,
+        id: "4",
         name: "Amrita Vishwavidyapeetham",
         location: "Coimbatore, Tamil Nadu",
         programType: "Online Degree",

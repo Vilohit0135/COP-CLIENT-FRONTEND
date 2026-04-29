@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const explorePrograms = [
   {
@@ -40,15 +40,25 @@ const explorePrograms = [
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [promoText, setPromoText] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = () => {
+    const q = searchQuery.trim();
+    if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+    else router.push("/search");
+  };
 
   useEffect(() => {
     setIsClient(true);
     const token = localStorage.getItem('studentToken');
     setIsLoggedIn(!!token);
+    setIsMenuOpen(false);
   }, [pathname]);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -80,14 +90,16 @@ export default function Navbar() {
       .then((json) => {
         if (cancelled || !json) return;
         const items = Array.isArray(json?.content) ? json.content : [];
+        const uniquePromos = new Set<string>();
         for (const it of items) {
           const vals = it.values || {};
-          const key = Object.keys(vals).find((k) => k.toLowerCase().includes("promo"));
-          const promo = key ? vals[key] : null;
-          if (promo) {
-            setPromoText(String(promo));
-            return;
+          const keys = Object.keys(vals).filter((k) => k.toLowerCase().includes("promo"));
+          for (const k of keys) {
+            if (vals[k]) uniquePromos.add(String(vals[k]));
           }
+        }
+        if (uniquePromos.size > 0) {
+          setPromoText(Array.from(uniquePromos).join(" \u00A0\u00A0\u00A0 \u2022 \u00A0\u00A0\u00A0 "));
         }
       })
       .catch((err) => {
@@ -126,26 +138,42 @@ export default function Navbar() {
             <div style={{ overflow: "hidden" }}>
               <style>{`
                 .promo-wrapper{overflow:hidden;width:100%;}
-                .promo-track{display:flex;align-items:center;gap:24rem}
-                .promo-content{display:flex;gap:24rem;align-items:center;min-width:100%;padding:0}
-                .promo-item{display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
+                .promo-track{display:flex;align-items:center;gap:2.5rem;width:max-content}
+                .promo-content{display:flex;gap:2.5rem;align-items:center;padding:0;flex-shrink:0}
+                .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
                 @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
                 .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
+                .nav-glass {
+                  background: linear-gradient(90deg, rgba(157, 111, 221, 0.65) 0%, rgba(168, 132, 244, 0.65) 55%, rgba(139, 92, 246, 0.65) 100%);
+                  backdrop-filter: blur(16px);
+                  -webkit-backdrop-filter: blur(10px);
+                  border: 1px solid rgba(255, 255, 255, 0.4);
+                  box-shadow: 0 8px 32px rgba(157, 111, 221, 0.2);
+                  border-radius: 1.5rem;
+                }
+                @media (max-width: 768px) {
+                  .nav-glass {
+                    background: #A983F6;
+                    backdrop-filter: none;
+                    -webkit-backdrop-filter: none;
+                    border: none;
+                    box-shadow: none;
+                    border-radius: 0;
+                  }
+                }
               `}</style>
 
               <div className="promo-wrapper">
                 <div ref={trackRef} className="promo-track promo-animate" style={{ ['--marquee-distance' as any]: marqueeVars.distance, ['--marquee-duration' as any]: marqueeVars.duration } as React.CSSProperties}>
                   <div ref={contentRef} className="promo-content" aria-hidden={false}>
-                    <div className="promo-item item-1">{promoText}</div>
-                    <div className="promo-item item-2">{promoText}</div>
-                    <div className="promo-item item-3">{promoText}</div>
-                    <div className="promo-item item-4">{promoText}</div>
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="promo-item">{promoText}</div>
+                    ))}
                   </div>
                   <div className="promo-content" aria-hidden={true}>
-                    <div className="promo-item item-1">{promoText}</div>
-                    <div className="promo-item item-2">{promoText}</div>
-                    <div className="promo-item item-3">{promoText}</div>
-                    <div className="promo-item item-4">{promoText}</div>
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="promo-item">{promoText}</div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -154,21 +182,22 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="px-3 py-2.5 bg-transparent">
-        <div
-          className="w-full max-w-[1280px] mx-auto flex items-center justify-between px-4 h-[70px] text-white"
-          style={{
-            background: "linear-gradient(90deg, rgba(157, 111, 221, 0.65) 0%, rgba(168, 132, 244, 0.65) 55%, rgba(139, 92, 246, 0.65) 100%)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(10px)",
-            borderRadius: 16,
-            border: "1px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: "0 8px 32px rgba(157, 111, 221, 0.2)"
-          }}
-        >
+      <div className="md:fixed md:px-7 md:py-2.5 w-full bg-[#A983F6] md:bg-transparent border-b md:border-none border-purple-400/30">
+        <div className="nav-glass w-full mx-auto flex items-center justify-center md:justify-between px-4 h-16 md:h-[72px] text-white relative">
+          {/* Mobile Hamburger Button - Now on Left */}
+          <button
+            className="md:hidden absolute left-4 flex items-center justify-center p-2 text-white hover:bg-white/10 rounded-lg transition"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Open menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
 
           <Link href="/" className="flex items-center gap-1 flex-shrink-0">
-            <img src="logo.svg" alt="CollegeProgram logo" className="h-10 sm:h-16 w-auto object-contain" />
+            <img src="/logo.svg" alt="CollegeProgram logo" className="h-16 md:h-16 w-auto object-contain" />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -236,13 +265,23 @@ export default function Navbar() {
             <div className="hidden lg:flex items-center gap-0">
               <div className="w-px h-6 bg-white/30 mx-2" />
               <div className="flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 hover:bg-white/20 transition px-3 py-1.5">
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="flex-shrink-0 cursor-pointer focus:outline-none"
+                  aria-label="Search"
+                >
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
                 <input
                   type="text"
                   placeholder="Search programs..."
                   className="bg-transparent outline-none text-sm placeholder-white/70 text-white w-36"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 />
               </div>
               <div className="w-px h-6 bg-white/30 mx-2" />
@@ -264,7 +303,7 @@ export default function Navbar() {
 
             <Link
               href="/talk-to-experts"
-              className={`flex items-center gap-2 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow ${pathname.startsWith('/talk-to-experts')
+              className={`hidden sm:flex items-center gap-2 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow ${pathname.startsWith('/talk-to-experts')
                 ? 'bg-orange-600 text-white ring-2 ring-white/50'
                 : 'bg-orange-500 hover:bg-orange-600 text-white'
                 }`}
@@ -295,6 +334,149 @@ export default function Navbar() {
                   ? 'bg-white/30 border-white text-white shadow-sm'
                   : 'border-white/50 hover:bg-white/10 text-white'
                   }`}
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      <div
+        className={`fixed inset-0 z-[100] transition-opacity duration-500 md:hidden ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+      >
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/60 backdrop-blur-md"
+          onClick={() => setIsMenuOpen(false)}
+        />
+
+        {/* Drawer Content */}
+        <div
+          className={`absolute top-0 left-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col transition-transform duration-500 transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+          style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
+        >
+          {/* Header */}
+          <div className="px-6 py-5 flex items-center justify-between border-b border-purple-100 bg-[#A983F6] backdrop-blur-sm sticky top-0 z-10">
+            <div className="flex flex-col">
+              <img src="/logo.svg" alt="Logo" className="h-14 w-auto" />
+            </div>
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              className="w-10 h-10 flex items-center justify-center text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-2xl transition-all active:scale-90"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-6 py-8">
+            {/* Search */}
+            <div className="mb-10">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-purple-400 group-focus-within:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search programs..."
+                  className="w-full bg-white border border-purple-100 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 rounded-2xl py-4 pl-12 pr-4 text-sm text-gray-700 placeholder-purple-300 outline-none transition-all shadow-sm shadow-purple-50"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                />
+              </div>
+            </div>
+
+            <nav className="space-y-10">
+              <div>
+                <h3 className="text-[11px] font-black text-purple-400 uppercase tracking-[2.5px] mb-6 px-1">Explore Programs</h3>
+                <div className="space-y-3">
+                  {explorePrograms.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="flex items-center group p-3.5 rounded-2xl hover:bg-white hover:shadow-xl hover:shadow-purple-500/5 transition-all active:scale-[0.98] border border-transparent hover:border-purple-50"
+                    >
+                      <div className="w-12 h-12 flex items-center justify-center bg-purple-50 group-hover:bg-purple-600 rounded-xl transition-all duration-300">
+                        <span className="[&>svg]:w-6 [&>svg]:h-6 [&>svg]:transition-colors group-hover:[&>svg]:text-white">
+                          {item.icon}
+                        </span>
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <p className="text-[14px] font-bold text-gray-800 group-hover:text-purple-700 transition-colors">{item.label}</p>
+                      </div>
+                      <svg className="w-4 h-4 text-gray-300 group-hover:text-purple-400 transform group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-[11px] font-black text-purple-400 uppercase tracking-[2.5px] mb-6 px-1">Quick Links</h3>
+                <div className="space-y-3">
+                  {[
+                    {
+                      label: 'Top Universities', href: '/universities', icon: (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                      )
+                    },
+                    {
+                      label: 'Compare Universities', href: '/compareUniversities', icon: (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                      )
+                    }
+                  ].map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className="flex items-center group p-3.5 rounded-2xl hover:bg-white hover:shadow-xl hover:shadow-purple-500/5 transition-all active:scale-[0.98] border border-transparent hover:border-purple-50"
+                    >
+                      <div className="w-12 h-12 flex items-center justify-center bg-gray-50 group-hover:bg-purple-600 group-hover:text-white rounded-xl transition-all duration-300">
+                        {link.icon}
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <p className="text-[14px] font-bold text-gray-800 group-hover:text-purple-700 transition-colors">{link.label}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </nav>
+          </div>
+
+          {/* Footer CTAs */}
+          <div className="px-6 py-5 border-t border-purple-100 bg-white/50 space-y-3">
+            <Link
+              href="/talk-to-experts"
+              className="flex items-center justify-center gap-3 w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-black text-sm uppercase tracking-[1px] shadow-[0_10px_20px_-5px_rgba(249,115,22,0.4)] active:scale-95 transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              Talk to Expert
+            </Link>
+
+            {isClient && isLoggedIn ? (
+              <Link
+                href="/profile"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-white text-[#A983F6] rounded-2xl font-bold text-sm hover:bg-purple-50 transition-all active:scale-95 shadow-lg"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                Account Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="flex items-center justify-center w-full py-3 bg-white text-[#A983F6] rounded-2xl font-extrabold text-sm hover:bg-purple-50 transition-all active:scale-95 shadow-lg"
               >
                 Sign In
               </Link>

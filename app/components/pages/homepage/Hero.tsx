@@ -106,9 +106,9 @@ export default function Hero({ section }: HeroProps) {
       {/* Responsive container with proper scaling */}
       <div className="w-full pt-0 pb-6">
         <div className="max-w-7xl mx-auto">
-          <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16">
+          <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16 ">
             {/* Left column: text */}
-            <motion.div initial={{ scale: 0.9 }} className="w-full lg:w-1/2 text-center lg:text-left   relative">
+            <motion.div initial={{ scale: 0.85 }} className="w-full lg:w-1/2 text-center lg:text-left relative">
               {/* Privacy matters pill - text based (match CMS field if present) */}
               {(() => {
                 const privacyAliases = ["Above main heading pill", "Above main heading", "Privacy pill", "Your Privacy Matters", "privacy_pill"];
@@ -226,7 +226,7 @@ export default function Hero({ section }: HeroProps) {
               )}
 
               {/* Stats row - larger icons aligned to text */}
-              <div className="mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-10 items-center justify-center lg:justify-start flex-wrap">
+              <div className="mt-8 lg:mt-10 xl:mt-12 flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-10 items-center justify-center lg:justify-start ">
                 <div className="flex items-center gap-3 sm:gap-4">
                   <img src="/Container (47).png" alt="icon" className="object-contain flex-shrink-0" style={{ width: "clamp(32px, 3.2vw, 44px)", height: "clamp(32px, 3.2vw, 44px)" }} />
                   <div>
@@ -260,7 +260,7 @@ export default function Hero({ section }: HeroProps) {
               )}
 
               {/* 4-box group (100% Secure, 4.8 Rating, Certifications, Counselling) - RESPONSIVE and evenly spaced */}
-              <div className="mt-6 lg:mt-8 flex items-center gap-4 w-full lg:w-fit justify-center lg:justify-start flex-wrap">
+              <div className="mt-6 lg:mt-8 flex items-center gap-4 w-full lg:w-fit justify-center lg:justify-start">
                 <div className="flex items-center justify-center" style={{ width: "clamp(110px, 22vw, 150px)", height: "clamp(36px, 6vw, 44px)" }}>
                   <img src="/Stats.png" alt="100% Secure" className="w-full h-full object-contain" />
                 </div>
@@ -277,15 +277,15 @@ export default function Hero({ section }: HeroProps) {
             </motion.div>
 
             {/* Right column: image + decorative circle + overlays */}
-            <motion.div initial={{}} className="w-full lg:w-1/2 flex items-start justify-center pb-20 lg:pb-32 relative" style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px" }}>
+            <motion.div initial={{ scale: 0.85 }} className="w-full lg:w-1/2 flex items-start justify-center  relative" style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px" }}>
               {/* Decorative purple circle - responsive */}
-              <div className="absolute rounded-full bg-gradient-to-br from-purple-300 to-purple-600 opacity-30 -z-10" style={{
+              {/* <motion.div initial={{ scale: 0.85 }} className="absolute rounded-full bg-gradient-to-br from-purple-300 to-purple-600 opacity-30 -z-10" style={{
                 width: "clamp(300px, 50vw, 600px)",
                 height: "clamp(300px, 50vw, 600px)",
-                left: "clamp(-100px, -10vw, -50px)",
-                top: "50%",
+                left: "0%",
+                top: "0%",
                 transform: "translateY(-50%)"
-              }} />
+              }} /> */}
 
               {/* Main image - without white background box - responsive */}
               <img

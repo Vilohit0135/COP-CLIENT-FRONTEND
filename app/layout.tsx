@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Discover a world of knowledge and opportunities with our online education platform",
 };
 
+import { Toaster } from "react-hot-toast";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,9 +33,13 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <OAuthProvider>
-          <Layout>{children}</Layout>
+          <Layout>
+            <div className="lg:pt-10">{children}</div>
+          </Layout>
+          <Toaster position="top-center" />
         </OAuthProvider>
       </body>
     </html>
   );
 }
+

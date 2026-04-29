@@ -125,10 +125,10 @@ export default async function Home() {
   if (bestRoiIdx > -1 && chooseUsIdx > -1 && chooseUsIdx < bestRoiIdx) {
     // Extract the Choose Us section
     const chooseUsSection = sections.splice(chooseUsIdx, 1)[0];
-    
+
     // After removing choose_us, best_roi index shifts down by 1
     const newBestRoiIdx = bestRoiIdx - 1;
-    
+
     // Insert Choose Us after Best ROI
     sections.splice(newBestRoiIdx + 1, 0, chooseUsSection);
 

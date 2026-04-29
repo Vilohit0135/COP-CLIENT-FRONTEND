@@ -15,6 +15,9 @@ export default function UniversityPage({ sections, providers }: UniversityPagePr
   const [selectedToCompare, setSelectedToCompare] = useState<string[]>([]);
   const [shortlistedIds, setShortlistedIds] = useState<string[]>([]);
   const [isLoadingShortlist, setIsLoadingShortlist] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [allowedProviderIds, setAllowedProviderIds] = useState<string[] | null>(null);
+  const [filteredProviders, setFilteredProviders] = useState<Provider[]>(providers);
 
   // Load selection and shortlist from localStorage/API on mount
   useEffect(() => {
@@ -80,12 +83,32 @@ export default function UniversityPage({ sections, providers }: UniversityPagePr
     }
   };
 
+  useEffect(() => {
+    let filtered = providers;
+
+    if (searchTerm) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (allowedProviderIds) {
+      filtered = filtered.filter(p => allowedProviderIds.includes(p._id));
+    }
+
+    setFilteredProviders(filtered);
+  }, [searchTerm, allowedProviderIds, providers]);
+
+  const handleFilterByCourse = (providerIds: string[] | null) => {
+    setAllowedProviderIds(providerIds);
+  };
+
   // Pattern from homepage: pick out a specific section if needed
   // For now we'll just render the sections at the top/bottom and the listing in between
   // Or if there's no specific section setup, we render a default header.
 
   return (
-    <main className="min-h-screen bg-[#FDFCFE]">
+    <main className="min-h-screen bg-[#FDFCFE] lg:pt-7">
       {/* Dynamic Sections (like Hero for this page if it exists in CMS) */}
       {/* <SectionRenderer sections={sections.filter(s => s.sectionIndex === 0)} /> */}
 
@@ -104,15 +127,19 @@ export default function UniversityPage({ sections, providers }: UniversityPagePr
 
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Filters Sidebar */}
-          <SidebarFilters selectedToCompare={selectedToCompare} />
+          <SidebarFilters
+            selectedToCompare={selectedToCompare}
+            onSearchChange={setSearchTerm}
+            onFilterChange={handleFilterByCourse}
+          />
 
           {/* Results Grid */}
           <div className="flex-1">
-            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-8">
-              {providers.map((uni) => (
-                <UniversityCard 
-                  key={uni._id} 
-                  university={uni} 
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              {filteredProviders.map((uni) => (
+                <UniversityCard
+                  key={uni._id}
+                  university={uni}
                   isCompare={selectedToCompare.includes(uni._id)}
                   onToggleCompare={() => handleToggleCompare(uni._id)}
                   isShortlisted={shortlistedIds.includes(uni._id)}
@@ -121,9 +148,11 @@ export default function UniversityPage({ sections, providers }: UniversityPagePr
               ))}
 
               {/* Placeholder cards if no providers yet to match screenshot exactly */}
-              {providers.length === 0 && Array.from({ length: 6 }).map((_, i) => (
-                <UniversityCard key={i} university={{ _id: String(i), name: "NMIMS Global Access - School for Continuing Education", slug: "nmims", averageRating: 4.2 } as any} />
-              ))}
+              {filteredProviders.length === 0 && (
+                <div className="col-span-full py-20 text-center">
+                  <p className="text-gray-500 text-lg">No universities found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
