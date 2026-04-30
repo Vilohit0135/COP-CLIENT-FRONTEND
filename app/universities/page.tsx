@@ -56,7 +56,11 @@ export default async function UniversitiesRoute() {
 
   try {
     // Fetch the actual university data
-    providers = await getProviders();
+    const [fetchedProviders] = await Promise.all([
+      getProviders(),
+      new Promise((resolve) => setTimeout(resolve, 1500)),
+    ]);
+    providers = fetchedProviders;
   } catch (err) {
     console.error("Failed to load providers:", err);
   }

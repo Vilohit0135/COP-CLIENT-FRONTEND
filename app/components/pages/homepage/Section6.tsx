@@ -5,6 +5,7 @@ import { richTextToPlain } from "./tuUtils";
 import { useState, useEffect, useRef } from "react";
 import { Star, CheckCircle, TrendingUp, Clock, IndianRupee } from "lucide-react";
 import FocusCenterSlider from "./FocusCenterSlider";
+import Link from "next/link";
 
 interface Section6Props {
   section: SectionContent;
@@ -292,29 +293,31 @@ export default function Section6({ section }: Section6Props) {
         </div>{/* end fade wrapper */}
 
         <div className="text-center mt-12">
-          <button
-            style={{
-              width: 293,
-              height: 56,
-              borderRadius: 14,
-              background: 'linear-gradient(135deg,#4F39F6 0%,#9810FA 100%)',
-              color: '#FFFFFF',
-              fontWeight: 600,
-              fontSize: 16,
-              lineHeight: '24px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-              border: 'none',
-              padding: '0 20px',
-              cursor: 'pointer'
-            }}
-          >
-            <span>Browse All 2000+ Programs</span>
-            <img src="/Icon%20(3).png" alt="icon" style={{ width: 20, height: 20 }} />
-          </button>
+          <Link href="/explore-programs?type=all" style={{ textDecoration: 'none' }}>
+            <button
+              style={{
+                width: 293,
+                height: 56,
+                borderRadius: 14,
+                background: 'linear-gradient(135deg,#4F39F6 0%,#9810FA 100%)',
+                color: '#FFFFFF',
+                fontWeight: 600,
+                fontSize: 16,
+                lineHeight: '24px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 10,
+                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                border: 'none',
+                padding: '0 20px',
+                cursor: 'pointer'
+              }}
+            >
+              <span>Browse All 2000+ Programs</span>
+              <img src="/Icon%20(3).png" alt="icon" style={{ width: 20, height: 20 }} />
+            </button>
+          </Link>
         </div>
       </div>
     </section>

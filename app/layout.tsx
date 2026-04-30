@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <OAuthProvider>
           <Layout>
-            <div className="lg:pt-10">{children}</div>
+            {children}
           </Layout>
           <Toaster position="top-center" />
         </OAuthProvider>

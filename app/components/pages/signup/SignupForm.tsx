@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 const SignupForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -18,7 +18,7 @@ const SignupForm = () => {
         password: '',
         confirmPassword: ''
     });
-    
+
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
@@ -66,17 +66,17 @@ const SignupForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (formData.password !== formData.confirmPassword) {
             toast.error("Passwords do not match");
             return;
         }
-        
+
         if (formData.password.length < 6) {
             toast.error("Password must be at least 6 characters");
             return;
         }
-        
+
         if (!formData.email && !formData.phone) {
             toast.error("Email or phone number is required");
             return;
@@ -247,11 +247,10 @@ const SignupForm = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full py-4 text-white font-bold rounded-xl shadow-lg transform transition-all ${
-                            isLoading 
-                                ? 'bg-gray-400 cursor-not-allowed' 
-                                : 'bg-[#9810FA] shadow-[#9810FA]/30 hover:shadow-[#9810FA]/40 hover:-translate-y-0.5'
-                        }`}
+                        className={`w-full py-4 text-white font-bold rounded-xl shadow-lg transform transition-all ${isLoading
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-[#9810FA] shadow-[#9810FA]/30 hover:shadow-[#9810FA]/40 hover:-translate-y-0.5'
+                            }`}
                     >
                         {isLoading ? 'Creating Account...' : 'Create Account'}
                     </button>

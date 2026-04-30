@@ -161,7 +161,10 @@ export default function ExploreProgramsPage({
     setSelectedSpecializationId(specId);
     setIsLoadingProviders(true);
     try {
-      const data = await getAllProviderCourses(specId);
+      const [data] = await Promise.all([
+        getAllProviderCourses(specId),
+        new Promise((resolve) => setTimeout(resolve, 1500)),
+      ]);
       setProviderCoursesList(data);
     } catch (err) {
       console.error("Failed to load provider courses:", err);
@@ -250,10 +253,23 @@ export default function ExploreProgramsPage({
               {isUniversityView ? (
                 // Universities View
                 isLoadingProviders ? (
-                  <div className="col-span-full py-20 flex flex-col items-center justify-center text-gray-400">
-                    <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
-                    <p className="text-lg font-medium">Finding Universities...</p>
-                  </div>
+                  <>
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center text-center gap-4 animate-pulse max-w-80">
+                        {/* Logo Skeleton */}
+                        <div className="h-20 w-32 bg-gray-100 rounded-xl mb-1"></div>
+                        
+                        {/* Title Skeleton */}
+                        <div className="h-10 w-3/4 bg-gray-100 rounded-lg min-h-[2.5rem]"></div>
+                        
+                        {/* Link Skeleton */}
+                        <div className="h-5 w-28 bg-gray-100 rounded-md"></div>
+                        
+                        {/* Button Skeleton */}
+                        <div className="w-full mt-1 h-[46px] bg-gray-100 rounded-xl"></div>
+                      </div>
+                    ))}
+                  </>
                 ) : filteredProviderCourses.length > 0 ? (
                   filteredProviderCourses.map((pc) => (
                     <CompactUniversityCard

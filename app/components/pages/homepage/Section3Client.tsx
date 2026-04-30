@@ -119,20 +119,18 @@ export default function Section3Client({ courseGroups }: Props) {
   return (
     <>
       {/* Tabs + View All link */}
-      <div className="mt-8 md:mt-12">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-4">
-          <div className="flex-1 overflow-x-auto scrollbar-hide flex justify-center">
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2.5 md:px-5 md:py-3 w-max"
-              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)' }}>
+      <div className="mt-6 md:mt-10">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-2">
+          <div className="flex-1 overflow-x-auto scrollbar-hide flex justify-center pb-7">
+            <div className="inline-flex items-center gap-2 bg-white rounded-full shadow-lg px-3 py-1.5 md:px-4 md:py-2 w-max">
               {courseGroups.map((group) => (
                 <button
                   key={group.degreeType.slug}
                   onClick={() => setActiveTab(group.degreeType.slug)}
-                  className={`px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-medium rounded-full whitespace-nowrap transition-all ${
-                    activeTab === group.degreeType.slug
-                      ? "bg-purple-600 text-white shadow-md"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                  className={`px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-medium rounded-full whitespace-nowrap transition-all ${activeTab === group.degreeType.slug
+                    ? "bg-purple-600 text-white shadow-md"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
                 >
                   {group.degreeType.name}
                 </button>
@@ -224,7 +222,7 @@ export default function Section3Client({ courseGroups }: Props) {
                       <p style={{ color: '#7C3AED', fontSize: 13, fontWeight: 600, margin: 0 }}>Fees Starting from {formatFees(course.minFees)}</p>
                       <div className="mt-auto flex items-center justify-between" style={{ paddingTop: 8, borderTop: '1px solid #F1F5F9' }}>
                         <span style={{ color: '#374151', fontSize: 13, fontWeight: 500 }}>{course.providerCount > 0 ? `${course.providerCount}+ Universities` : '—'}</span>
-                        <Link href={`/course-detail?course=${course.slug}`} style={{ color: '#7C3AED', fontSize: 13, fontWeight: 600 }}>Explore →</Link>
+                        <Link href={`/course-detail?course=${course._id}`} style={{ color: '#7C3AED', fontSize: 13, fontWeight: 600 }}>Explore →</Link>
                       </div>
                     </>
                   )}
@@ -326,8 +324,8 @@ export default function Section3Client({ courseGroups }: Props) {
                     {course.providerCount > 0 ? `${course.providerCount}+ Universities` : '—'}
                   </span>
                   <Link
-                    href={`/course-detail?course=${course.slug}`}
-                    style={{ color: '#7C3AED', fontSize: 14, fontWeight: 700, textDecoration: 'none' }}
+                    href={`/course-detail?id=${course._id}`}
+                    className="text-purple-600 text-sm font-semibold hover:text-purple-800 transition-colors"
                   >
                     Explore →
                   </Link>
