@@ -41,7 +41,6 @@ export default function Section8({ section }: Section8Props) {
       name: "Rahul Sharma",
       degree: "MBA Student",
       university: "IIMS",
-      // use an existing public image as a safe placeholder to avoid 404s
       avatar: "/Girl.png",
     },
     {
@@ -63,6 +62,16 @@ export default function Section8({ section }: Section8Props) {
       degree: "BBA Student",
       university: "LPU",
       avatar: "/Container (40).png",
+    },
+    {
+      quote: getFieldValue(
+        ["Fourth Card", "fourth card", "Card 4", "card4"],
+        "The comparison tool helped me choose between 3 universities in under an hour. The counselor's follow-up was timely and extremely helpful. Highly recommended!"
+      ),
+      name: "Sneha Gupta",
+      degree: "MBA Student",
+      university: "Amity Online",
+      avatar: "/Girl.png",
     },
   ];
 
@@ -184,8 +193,8 @@ export default function Section8({ section }: Section8Props) {
             </svg>
           </button>
 
-          {/* Desktop: Cards */}
-          <div className="hidden md:grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
+          {/* Desktop: Cards — 4 columns */}
+          <div className="hidden md:grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: "24px" }}>
             {cards.map((card, idx) => (
               <div
                 key={idx}
@@ -350,8 +359,8 @@ export default function Section8({ section }: Section8Props) {
           </button>
         </div>
 
-        {/* Pagination Dots */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "6px", marginTop: "24px" }}>
+        {/* Pagination Dots — desktop only (mobile uses FocusCenterSlider dots) */}
+        <div className="hidden md:flex" style={{ justifyContent: "center", alignItems: "center", gap: "6px", marginTop: "24px" }}>
           {Array.from({ length: totalDots }).map((_, i) => (
             <button
               key={i}

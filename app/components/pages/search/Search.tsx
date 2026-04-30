@@ -1,18 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Search as SearchIcon, Mic, TrendingUp, Sparkles, ArrowLeft } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search as SearchIcon, TrendingUp, Sparkles, ArrowLeft } from "lucide-react";
 
-// ─── Dummy data (replace with CMS fetch later) ───────────────────────────────
-
-const TRENDING_COURSES = [
-  "Online MBA",
-  "Online BBA",
-  "Online BCA",
-  "1-year Online MBA",
-  "Dual MBA",
-];
+// ─── Fallback data ────────────────────────────────────────────────────────────
 
 const IN_DEMAND_SPECIALIZATIONS = [
   "Online MCA in Artificial Intelligence & Machine Learning",
@@ -32,6 +24,42 @@ const IN_DEMAND_SPECIALIZATIONS = [
 export default function SearchPage() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [trendingCourses, setTrendingCourses] = useState<{title: string; slug: string}[]>([]);
+
+  // Fetch trending courses from backend — only show CMS data, no fallback
+  useEffect(() => {
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    fetch(`${apiBase}/api/public/providers/programs/trending`, { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const courses = data
+            .slice(0, 8)
+            .map((p: any) => ({ title: p.title || p.name || "", slug: p.slug || "" }))
+            .filter((c) => c.title);
+          if (courses.length > 0) setTrendingCourses(courses);
+        }
+      })
+      .catch(() => {/* no fallback — only show CMS trending */});
+  }, []);
+
+  const handleSearch = (searchQuery?: string) => {
+    const q = (searchQuery ?? query).trim();
+    if (!q) return;
+    router.push(`/explore-programs?course=${encodeURIComponent(q)}`);
+  };
+
+  const handleTrendingClick = (course: {title: string; slug: string}) => {
+    if (course.slug) {
+      router.push(`/online-courses/${course.slug}`);
+    } else {
+      router.push(`/online-courses?search=${encodeURIComponent(course.title)}`);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSearch();
+  };
 
   return (
     <div
@@ -55,7 +83,7 @@ export default function SearchPage() {
           alignItems: "center",
         }}
       >
-      {/* ── Outer wrapper: Back + Heading above + inner search box ── */}
+      {/* ── Outer wrapper ── */}
       <div style={{ width: "100%" }}>
 
         {/* Back button */}
@@ -119,7 +147,7 @@ export default function SearchPage() {
             padding: "24px 28px",
           }}
         >
-          {/* Search bar */}
+          {/* Search bar — mic removed */}
           <div
             style={{
               display: "flex",
@@ -136,6 +164,7 @@ export default function SearchPage() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder='Search "University"'
               style={{
                 flex: 1,
@@ -147,41 +176,38 @@ export default function SearchPage() {
                 background: "transparent",
               }}
             />
-            <Mic style={{ width: 18, height: 18, color: "#9CA3AF", flexShrink: 0, cursor: "pointer" }} />
-          </div>
-
-          {/* Trending Courses */}
-          <div style={{ marginTop: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 12,
-              }}
-            >
-              <TrendingUp style={{ width: 16, height: 16, color: "#7C3AED" }} />
-              <span
+            {query.trim() && (
+              <button
+                onClick={() => handleSearch()}
                 style={{
+                  padding: "6px 16px",
+                  borderRadius: 8,
+                  background: "linear-gradient(135deg, #4F39F6 0%, #9810FA 100%)",
+                  color: "#fff",
+                  border: "none",
+                  fontSize: 13,
                   fontWeight: 600,
-                  fontSize: 14,
-                  color: "#111827",
+                  cursor: "pointer",
+                  flexShrink: 0,
                 }}
               >
-                Trending Courses
-              </span>
+                Search
+              </button>
+            )}
+          </div>
+
+          {/* Trending Courses — only from CMS */}
+          {trendingCourses.length > 0 && (
+          <div style={{ marginTop: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+              <TrendingUp style={{ width: 16, height: 16, color: "#7C3AED" }} />
+              <span style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>Trending Courses</span>
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 10,
-              }}
-            >
-              {TRENDING_COURSES.map((course) => (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+              {trendingCourses.map((course) => (
                 <button
-                  key={course}
-                  onClick={() => setQuery(course)}
+                  key={course.title}
+                  onClick={() => handleTrendingClick(course)}
                   style={{
                     border: "1px solid #D1D5DB",
                     borderRadius: 10,
@@ -195,44 +221,24 @@ export default function SearchPage() {
                     lineHeight: "20px",
                   }}
                 >
-                  {course}
+                  {course.title}
                 </button>
               ))}
             </div>
           </div>
+          )}
 
           {/* In-demand Specializations */}
           <div style={{ marginTop: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 12,
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <Sparkles style={{ width: 16, height: 16, color: "#7C3AED" }} />
-              <span
-                style={{
-                  fontWeight: 600,
-                  fontSize: 14,
-                  color: "#111827",
-                }}
-              >
-                In-demand Specializations
-              </span>
+              <span style={{ fontWeight: 600, fontSize: 14, color: "#111827" }}>In-demand Specializations</span>
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 10,
-              }}
-            >
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               {IN_DEMAND_SPECIALIZATIONS.map((spec) => (
                 <button
                   key={spec}
-                  onClick={() => setQuery(spec)}
+                  onClick={() => handleSearch(spec)}
                   style={{
                     border: "1px solid #D1D5DB",
                     borderRadius: 10,
@@ -256,28 +262,12 @@ export default function SearchPage() {
       </div>
       {/* ── end outer wrapper ── */}
 
-      {/* ── Browse categories: outside the search box, on lavender bg ── */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 12,
-          marginTop: 24,
-        }}
-      >
-        <p
-          style={{
-            fontWeight: 400,
-            fontSize: 13,
-            color: "#6B7280",
-            margin: 0,
-          }}
-        >
-          Or explore by category
-        </p>
+      {/* ── Browse categories ── */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, marginTop: 24 }}>
+        <p style={{ fontWeight: 400, fontSize: 13, color: "#6B7280", margin: 0 }}>Or explore by category</p>
         <div style={{ display: "flex", gap: 10 }}>
           <button
+            onClick={() => router.push("/explore-programs")}
             style={{
               padding: "8px 24px",
               borderRadius: 8,
@@ -294,6 +284,7 @@ export default function SearchPage() {
             Browse Programs
           </button>
           <button
+            onClick={() => router.push("/universities")}
             style={{
               padding: "8px 24px",
               borderRadius: 8,
@@ -311,7 +302,7 @@ export default function SearchPage() {
           </button>
         </div>
       </div>
-      </div>{/* ── end 70vw container ── */}
+      </div>{/* ── end 65vw container ── */}
     </div>
   );
 }
