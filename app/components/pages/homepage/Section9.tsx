@@ -66,6 +66,16 @@ const DEFAULT_ARTICLES = [
       "Everything you need to know about applying to top online MBA programs, from eligibility to entrance exams.",
     author: "Anita Desai",
   },
+  {
+    slug: "best-online-universities-india-2026",
+    category: "University Guide",
+    date: "February 28, 2026",
+    readTime: "7 min read",
+    title: "Best Online Universities in India 2026: Rankings & Reviews",
+    description:
+      "A comprehensive ranking of India's top online universities based on faculty, placement support, and student satisfaction.",
+    author: "Anita Desai",
+  },
 ];
 
 export default function Section9({ section }: Section9Props) {
@@ -104,6 +114,7 @@ export default function Section9({ section }: Section9Props) {
     ["First Article", "first article", "Article 1", "article1", "article_1"],
     ["Second Article", "second article", "Article 2", "article2", "article_2"],
     ["Third Article", "third article", "Article 3", "article3", "article_3"],
+    ["Fourth Article", "fourth article", "Article 4", "article4", "article_4"],
   ];
 
   // Collect raw article strings: try aliases first, then pick up any remaining
@@ -120,7 +131,7 @@ export default function Section9({ section }: Section9Props) {
       .filter((k) => !NON_ARTICLE_KEYS.has(k.toLowerCase()))
       .map((k) => richTextToPlain(v[k]).trim())
       .filter(Boolean)
-      .slice(0, 3);
+      .slice(0, 4);
   }
 
   const articles = rawArticleValues.length > 0
@@ -216,12 +227,12 @@ export default function Section9({ section }: Section9Props) {
           ))}
         </FocusCenterSlider>
 
-        {/* Desktop: Cards Grid */}
+        {/* Desktop: Cards Grid — 4 columns */}
         <div
           className="hidden md:grid"
           style={{
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "32px",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "24px",
             marginBottom: "48px",
           }}
         >
@@ -239,7 +250,7 @@ export default function Section9({ section }: Section9Props) {
               }}
             >
               {/* Image with category badge overlay */}
-              <div style={{ position: "relative", width: "100%", height: "240px", flexShrink: 0 }}>
+              <div style={{ position: "relative", width: "100%", height: "160px", flexShrink: 0 }}>
                 <Image
                   src="/Blogs.png"
                   alt={article.title}

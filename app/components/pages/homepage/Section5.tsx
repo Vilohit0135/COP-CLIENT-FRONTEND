@@ -3,7 +3,10 @@
 import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import { useState } from "react";
-import { Phone, Shield } from "lucide-react";
+import { Phone, Shield, CheckCircle, Clock, ChevronDown } from "lucide-react";
+import { auth } from "@/app/lib/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
+import toast from "react-hot-toast";
 
 interface Section5Props {
   section: SectionContent;
@@ -17,8 +20,14 @@ export default function Section5({ section }: Section5Props) {
     phoneNumber: "",
     otp: "",
     programOfInterest: "",
+    preferredTime: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   const get = (aliases: string[], fallback = ""): string => {
     for (const alias of aliases) {
@@ -51,9 +60,93 @@ export default function Section5({ section }: Section5Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!otpVerified) {
+      toast.error("Please verify your phone number first");
+      return;
+    }
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setLoading(false);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          phone: formData.phoneNumber,
+          courseOfInterest: formData.programOfInterest,
+          source: "homepage_section5",
+          message: formData.message || "Homepage counselor request",
+          preferredTime: formData.preferredTime,
+        }),
+      });
+      if (response.ok) {
+        toast.success("Request sent! Our counselors will be in touch soon.");
+        setFormData({ fullName: "", email: "", phoneNumber: "", otp: "", programOfInterest: "", preferredTime: "", message: "" });
+        setOtpSent(false);
+        setOtpVerified(false);
+      } else {
+        const err = await response.json();
+        toast.error(err.error || "Failed to send. Please try again.");
+      }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const setupRecaptcha = () => {
+    if (!(window as any).recaptchaVerifierS5) {
+      try {
+        (window as any).recaptchaVerifierS5 = new RecaptchaVerifier(auth, 'recaptcha-s5', {
+          size: 'invisible',
+          callback: () => {},
+          'expired-callback': () => { toast.error("Recaptcha expired. Please try again."); },
+        });
+      } catch (error) {
+        console.error("Recaptcha init error:", error);
+      }
+    }
+  };
+
+  const handleSendOtp = async () => {
+    if (!formData.phoneNumber || formData.phoneNumber.length < 10) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    setOtpLoading(true);
+    try {
+      setupRecaptcha();
+      const appVerifier = (window as any).recaptchaVerifierS5;
+      let phoneNumber = formData.phoneNumber;
+      if (!phoneNumber.startsWith('+')) phoneNumber = `+91${phoneNumber}`;
+      const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      setConfirmationResult(result);
+      setOtpSent(true);
+      toast.success("OTP sent successfully!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send OTP.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!formData.otp || formData.otp.length < 6) {
+      toast.error("Please enter a valid 6-digit OTP");
+      return;
+    }
+    if (!confirmationResult) { toast.error("Please request OTP first"); return; }
+    setOtpLoading(true);
+    try {
+      await confirmationResult.confirm(formData.otp);
+      setOtpVerified(true);
+      toast.success("Phone number verified!");
+    } catch {
+      toast.error("Invalid OTP. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
   // ─── shared input style ───────────────────────────────────────────────────────
@@ -205,33 +298,6 @@ export default function Section5({ section }: Section5Props) {
             boxShadow: "0px 8px 10px -6px rgba(0,0,0,0.10), 0px 20px 25px -5px rgba(0,0,0,0.10)",
             margin: "0 auto lg:margin-0",
           }}>
-            {/* No Spam Calls badge positioned above the form box */}
-            <div style={{
-              position: "absolute",
-              left: "50%",
-              top: "-18px",
-              transform: "translateX(-50%)",
-              zIndex: 20,
-            }}>
-              <div style={{
-                minHeight: "32px",
-                borderRadius: "8px",
-                backgroundColor: "#10B981",
-                border: "1px solid #059669",
-                padding: "6px 12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "6px",
-                boxShadow: "0px 4px 6px -4px rgba(0,0,0,0.10), 0px 10px 15px -3px rgba(0,0,0,0.10)",
-              }}>
-                <Shield size={14} color="#FFFFFF" />
-                <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>
-                  No Spam Calls
-                </span>
-              </div>
-            </div>
-
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
 
               {/* Full Name */}
@@ -260,7 +326,7 @@ export default function Section5({ section }: Section5Props) {
                 />
               </div>
 
-              {/* Phone Number */}
+              {/* Phone Number with inline Send OTP */}
               <div>
                 <label style={labelStyle}>Phone Number <span style={{ color: "#EF4444" }}>*</span></label>
                 <div style={{ position: "relative" }}>
@@ -270,47 +336,48 @@ export default function Section5({ section }: Section5Props) {
                     placeholder="98765 43210"
                     value={formData.phoneNumber}
                     onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                    style={{ ...inputStyle, paddingLeft: "42px" }}
+                    style={{ ...inputStyle, paddingLeft: "42px", paddingRight: "100px" }}
                     required
+                    disabled={otpVerified}
                   />
+                  {!otpVerified && (
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      disabled={otpLoading || !formData.phoneNumber}
+                      style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", backgroundColor: "transparent", color: "#9810FA", border: "none", fontSize: "12px", fontWeight: 600, cursor: "pointer", opacity: (otpLoading || !formData.phoneNumber) ? 0.5 : 1 }}
+                    >
+                      {otpSent ? "Resend OTP" : "Send OTP"}
+                    </button>
+                  )}
+                  {otpVerified && <CheckCircle size={18} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", color: "#10B981" }} />}
                 </div>
-                <p style={{ fontFamily: "Inter", fontSize: "12px", color: "#6B7280", marginTop: "4px" }}>
-                  We'll send an OTP to verify your phone number
-                </p>
+                {!otpVerified && <p style={{ fontFamily: "Inter", fontSize: "12px", color: "#6B7280", marginTop: "4px" }}>We'll send an OTP to verify your phone number</p>}
               </div>
 
-              {/* OTP + Verify */}
-              <div>
-                <label style={labelStyle}>OTP <span style={{ color: "#EF4444" }}>*</span></label>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <input
-                    type="text"
-                    placeholder="Enter OTP"
-                    value={formData.otp}
-                    onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
-                    style={{ ...inputStyle, flex: 1, width: "auto" }}
-                  />
-                  {/* Verify button — Figma: 89.78×50px, radius 10px, #9810FA */}
-                  <button
-                    type="button"
-                    style={{
-                      width: "89.78px",
-                      height: "50px",
-                      borderRadius: "10px",
-                      backgroundColor: "#9810FA",
-                      color: "#FFFFFF",
-                      fontFamily: "Inter",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      border: "none",
-                      cursor: "pointer",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {verifyBtn}
-                  </button>
+              {/* OTP — only shown after Send OTP is clicked */}
+              {otpSent && !otpVerified && (
+                <div>
+                  <label style={labelStyle}>OTP <span style={{ color: "#EF4444" }}>*</span></label>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    <input
+                      type="text"
+                      placeholder="Enter OTP"
+                      value={formData.otp}
+                      onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
+                      style={{ ...inputStyle, flex: 1, width: "auto" }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleVerifyOtp}
+                      disabled={otpLoading}
+                      style={{ padding: "12px 20px", borderRadius: "10px", backgroundColor: "#9810FA", color: "#FFFFFF", fontFamily: "Inter", fontSize: "14px", fontWeight: 600, border: "none", cursor: otpLoading ? "not-allowed" : "pointer", opacity: otpLoading ? 0.6 : 1, flexShrink: 0 }}
+                    >
+                      {otpLoading ? "..." : "Verify"}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Program of Interest */}
               <div>
@@ -325,14 +392,40 @@ export default function Section5({ section }: Section5Props) {
                     <option value="">Select Program</option>
                     {programs.map((p, i) => <option key={i} value={p}>{p}</option>)}
                   </select>
-                  {/* chevron */}
-                  <svg style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} width="16" height="16" fill="none" viewBox="0 0 24 24">
-                    <path d="M6 9l6 6 6-6" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <ChevronDown size={16} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#6B7280" }} />
                 </div>
               </div>
 
-              {/* Send button — Figma: 434×52px, radius 10px, #9810FA, 2× shadow #AD46FF 30% */}
+              {/* Preferred Time to Call */}
+              <div>
+                <label style={labelStyle}>Preferred Time to Call</label>
+                <div style={{ position: "relative" }}>
+                  <Clock size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF", pointerEvents: "none" }} />
+                  <select
+                    value={formData.preferredTime}
+                    onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
+                    style={{ ...inputStyle, paddingLeft: "34px", appearance: "none", cursor: "pointer" }}
+                  >
+                    <option value="">Select time slot</option>
+                    {["9 AM – 11 AM", "11 AM – 1 PM", "2 PM – 4 PM", "4 PM – 6 PM", "6 PM – 8 PM"].map((t, i) => <option key={i} value={t}>{t}</option>)}
+                  </select>
+                  <ChevronDown size={16} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#6B7280" }} />
+                </div>
+              </div>
+
+              {/* Message */}
+              <div>
+                <label style={labelStyle}>Your Message (Optional)</label>
+                <textarea
+                  placeholder="Tell us about your career goals..."
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  rows={3}
+                  style={{ ...inputStyle, resize: "vertical", minHeight: "80px" }}
+                />
+              </div>
+
+              {/* Submit button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -359,7 +452,6 @@ export default function Section5({ section }: Section5Props) {
                 {loading ? "Sending…" : (
                   <>
                     {sendBtn}
-                    {/* paper-plane icon */}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                       <path d="M22 2L11 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -368,21 +460,14 @@ export default function Section5({ section }: Section5Props) {
                 )}
               </button>
 
-              {/* badge moved above form */}
+              {/* No Spam Calls badge */}
+              <div style={{ height: "32px", borderRadius: "8px", backgroundColor: "#10B981", border: "1px solid #059669", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+                <Shield size={14} color="#FFFFFF" />
+                <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>No Spam Calls</span>
+              </div>
 
-              {/* Terms text — Figma: Inter 400, 12px, lh 19.5px, #6A7282, center, 398px wide */}
-              <p style={{
-                fontFamily: "Inter",
-                fontSize: "12px",
-                fontWeight: 400,
-                lineHeight: "19.5px",
-                color: "#6A7282",
-                textAlign: "center",
-                width: "100%",
-                maxWidth: "398px",
-                margin: "0 auto",
-                paddingBottom: "20px",
-              }}>
+              {/* Terms text */}
+              <p style={{ fontFamily: "Inter", fontSize: "12px", lineHeight: "19.5px", color: "#6A7282", textAlign: "center", width: "100%", maxWidth: "398px", margin: "0 auto", paddingBottom: "20px" }}>
                 By submitting, you agree to our{" "}
                 <a href="#" style={{ color: "#9810FA", textDecoration: "underline" }}>Terms & Conditions</a>
                 {" "}and{" "}
@@ -393,6 +478,7 @@ export default function Section5({ section }: Section5Props) {
           </div>
         </div>
       </div>
+      <div id="recaptcha-s5" />
     </section>
   );
 }

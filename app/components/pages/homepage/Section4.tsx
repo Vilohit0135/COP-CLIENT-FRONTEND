@@ -1,3 +1,5 @@
+'use client';
+import { useState, useRef, useEffect } from "react";
 import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
 import { Star, BookOpen, Clock, Users } from "lucide-react";
@@ -91,12 +93,14 @@ export default function Section4({ section }: Section4Props) {
     { name: "Dr. Priya Sharma", cmsKey: "Dr. Priya sharma", image: "/Image (Dr. Priya Sharma).png", rating: 4.9, reviewCount: 1250 },
     { name: "Rahul Mehta", cmsKey: "Rahul Mehta", image: "/Image (Rahul Mehta).png", rating: 4.9, reviewCount: 1250 },
     { name: "Anita Desai", cmsKey: "Anita Desai", image: "/Image (Anita Desai).png", rating: 5.0, reviewCount: 1250 },
+    { name: "Vikram Singh", cmsKey: "Vikram Singh", image: "/Image (Dr. Priya Sharma).png", rating: 4.8, reviewCount: 980 },
   ];
 
   const FALLBACK_LINES = [
     ["Senior Education Counselor", "MBA & Management Programs", "12 years experience", "3500+ students guided"],
     ["Career Guidance Expert", "Tech & Data Science", "10 years experience", "2800+ students guided"],
     ["Study Abroad Specialist", "International Programs", "15 years experience", "4200+ students guided"],
+    ["Online Education Expert", "Engineering & Technology", "8 years experience", "2100+ students guided"],
   ];
 
   const counselors: Counselor[] = COUNSELOR_DEFS.map((def, idx) => {
@@ -117,6 +121,25 @@ export default function Section4({ section }: Section4Props) {
       studentsGuided: lines[3] || fb[3],
     };
   });
+
+  const desktopSliderRef = useRef<HTMLDivElement>(null);
+  const [cardW, setCardW] = useState(0);
+  const [sliderPage, setSliderPage] = useState(0);
+  const GAP_DESKTOP = 32;
+
+  useEffect(() => {
+    const el = desktopSliderRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width;
+      if (w > 0) setCardW((w - GAP_DESKTOP * 2) / 3);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  const maxPage = Math.max(0, counselors.length - 3);
 
   return (
     <section className="w-full bg-white py-10 md:py-16 -mt-6 md:-mt-12">
@@ -193,7 +216,7 @@ export default function Section4({ section }: Section4Props) {
               {/* Image */}
               <div style={{ position: 'relative', width: '100%', height: 160, background: '#E5E7EB', flexShrink: 0 }}>
                 <Image src={counselor.image} alt={counselor.name} fill sizes="280px" style={{ objectFit: 'cover', objectPosition: 'top' }} />
-                <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(255,107,107,0.9)', borderRadius: 6, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(107,70,255,0.92)', borderRadius: 9999, padding: '4px 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
                   <Star size={12} fill="white" color="white" />
                   <span style={{ color: '#fff', fontSize: 11, fontWeight: 700 }}>{counselor.rating.toFixed(1)} / {counselor.reviewCount} reviews</span>
                 </div>
@@ -218,132 +241,99 @@ export default function Section4({ section }: Section4Props) {
           ))}
         </FocusCenterSlider>
 
-        {/* Counselor Cards Grid — Desktop */}
-        <div className="hidden md:grid md:grid-cols-3 gap-8 mb-12">
-          {counselors.map((counselor, idx) => (
+        {/* Counselor Cards Grid — Desktop (horizontal slider) */}
+        <div className="hidden md:block">
+          {/* Overflow-hidden viewport; inner flex row slides via translateX */}
+          <div ref={desktopSliderRef} style={{ overflow: 'hidden', width: '100%' }}>
             <div
-              key={counselor.id}
-              className="group rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl"
               style={{
-                backgroundColor: "#FFFFFF",
-                border: "1px solid #E5E7EB",
+                display: 'flex',
+                gap: GAP_DESKTOP + 'px',
+                transition: 'transform 0.6s cubic-bezier(0.4,0,0.2,1)',
+                transform: cardW > 0 ? `translateX(-${sliderPage * (cardW + GAP_DESKTOP)}px)` : 'none',
               }}
             >
-              {/* Image Container with Rating Badge */}
-              <div className="relative h-52 md:h-60 overflow-hidden bg-gray-200">
-                <Image
-                  src={counselor.image}
-                  alt={counselor.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  style={{ objectFit: "cover", objectPosition: "top" }}
-                />
-                {/* Rating Badge - Top Left */}
+              {counselors.map((counselor) => (
                 <div
-                  className="absolute top-3 left-3 px-3 py-1 rounded-md text-white font-semibold text-sm flex items-center gap-1"
-                  style={{ backgroundColor: "rgba(255, 107, 107, 0.9)", zIndex: 1 }}
-                >
-                  <Star size={14} fill="white" />
-                  <span>{counselor.rating.toFixed(1)} / {counselor.reviewCount} reviews</span>
-                </div>
-              </div>
-
-
-              {/* Content Section */}
-              <div className="p-4">
-                {/* Name */}
-                <h3
-                  className="font-bold mb-1"
+                  key={counselor.id}
                   style={{
-                    fontSize: "20px", // spec
-                    lineHeight: "28px",
-                    color: "#101828",
-                    fontFamily: "Inter",
-                    fontWeight: 700,
+                    flex: `0 0 ${cardW > 0 ? cardW + 'px' : 'calc(33.33% - 22px)'}`,
+                    minWidth: 0,
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: 24,
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                   }}
                 >
-                  {counselor.name}
-                </h3>
-
-                {/* Title/Role */}
-                <p
-                  className="mb-4"
-                  style={{
-                    fontSize: "16px", // spec
-                    lineHeight: "24px",
-                    color: "#4F39F6", // spec purple
-                    fontFamily: "Inter",
-                    fontWeight: 600,
-                  }}
-                >
-                  {counselor.title}
-                </p>
-
-                {/* Divider */}
-                <div className="w-12 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded mb-4" />
-
-                {/* Info Items */}
-                <div className="space-y-3">
-                  {/* Expertise */}
-                  <div className="flex items-start gap-3">
-                    <BookOpen
-                      size={18}
-                      className="flex-shrink-0 mt-0.5"
-                      style={{ color: "#4F39F6" }}
+                  <div className="relative overflow-hidden bg-gray-200" style={{ height: 240 }}>
+                    <Image
+                      src={counselor.image}
+                      alt={counselor.name}
+                      fill
+                      sizes="33vw"
+                      style={{ objectFit: 'cover', objectPosition: 'top' }}
                     />
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "#4A5565",
-                        fontFamily: "Inter",
-                        lineHeight: "20px",
-                      }}
+                    <div
+                      className="absolute top-3 left-3 px-3 py-1 rounded-full text-white font-semibold text-sm flex items-center gap-1"
+                      style={{ backgroundColor: 'rgba(107,70,255,0.92)', zIndex: 1 }}
                     >
-                      {counselor.expertise}
-                    </span>
+                      <Star size={14} fill="white" />
+                      <span>{counselor.rating.toFixed(1)} / {counselor.reviewCount} reviews</span>
+                    </div>
                   </div>
 
-                  {/* Experience */}
-                  <div className="flex items-start gap-3">
-                    <Clock
-                      size={18}
-                      className="flex-shrink-0 mt-0.5"
-                      style={{ color: "#4F39F6" }}
-                    />
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "#4A5565",
-                        fontFamily: "Inter",
-                        lineHeight: "20px",
-                      }}
-                    >
-                      {counselor.experience}
-                    </span>
-                  </div>
-
-                  {/* Students Guided */}
-                  <div className="flex items-start gap-3">
-                    <Users
-                      size={18}
-                      className="flex-shrink-0 mt-0.5"
-                      style={{ color: "#4F39F6" }}
-                    />
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "#4A5565",
-                        fontFamily: "Inter",
-                        lineHeight: "20px",
-                      }}
-                    >
-                      {counselor.studentsGuided}
-                    </span>
+                  <div className="p-4">
+                    <h3 className="font-bold mb-1" style={{ fontSize: '20px', lineHeight: '28px', color: '#101828', fontFamily: 'Inter', fontWeight: 700 }}>
+                      {counselor.name}
+                    </h3>
+                    <p className="mb-4" style={{ fontSize: '16px', lineHeight: '24px', color: '#4F39F6', fontFamily: 'Inter', fontWeight: 600 }}>
+                      {counselor.title}
+                    </p>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3">
+                        <BookOpen size={18} className="flex-shrink-0 mt-0.5" style={{ color: '#4F39F6' }} />
+                        <span style={{ fontSize: '14px', color: '#4A5565', fontFamily: 'Inter', lineHeight: '20px' }}>{counselor.expertise}</span>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <Clock size={18} className="flex-shrink-0 mt-0.5" style={{ color: '#4F39F6' }} />
+                        <span style={{ fontSize: '14px', color: '#4A5565', fontFamily: 'Inter', lineHeight: '20px' }}>{counselor.experience}</span>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <Users size={18} className="flex-shrink-0 mt-0.5" style={{ color: '#4F39F6' }} />
+                        <span style={{ fontSize: '14px', color: '#4A5565', fontFamily: 'Inter', lineHeight: '20px' }}>{counselor.studentsGuided}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Slide button — only when there are more than 3 counselors */}
+          {counselors.length > 3 && (
+            <div className="flex justify-center mt-8 mb-12">
+              <button
+                onClick={() => setSliderPage(p => p < maxPage ? p + 1 : 0)}
+                style={{
+                  height: 48,
+                  padding: '0 32px',
+                  borderRadius: 10,
+                  background: 'linear-gradient(to right, #9810FA, #8200DB)',
+                  color: '#FFFFFF',
+                  fontFamily: 'Inter',
+                  fontWeight: 600,
+                  fontSize: 16,
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0px 4px 6px -1px rgba(0,0,0,0.10)',
+                  transition: 'opacity 0.2s',
+                }}
+              >
+                {sliderPage < maxPage ? buttonText : 'View Less'}
+              </button>
+            </div>
+          )}
         </div>
 
 

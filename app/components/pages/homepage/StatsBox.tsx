@@ -29,7 +29,7 @@ export default function StatsBox({
       className="w-full"
       style={{
         background: "linear-gradient(90deg, #EAD8FF 0%, #E3CEFF 50%, #EAD8FF 100%)",
-        padding: "clamp(10px, 2.5vw, 20px) clamp(8px, 2vw, 16px)",
+        padding: "clamp(20px, 4vw, 36px) clamp(8px, 2vw, 16px)",
         borderBottomLeftRadius: 12,
         borderBottomRightRadius: 12,
       }}

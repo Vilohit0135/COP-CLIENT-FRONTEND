@@ -139,7 +139,7 @@ export default function Section3Client({ courseGroups }: Props) {
           </div>
 
           <div className="flex-shrink-0">
-            <Link href="/explore-programs" className="text-purple-600 underline whitespace-nowrap font-medium text-xs md:text-sm">
+            <Link href="/online-courses" className="text-purple-600 underline whitespace-nowrap font-medium text-xs md:text-sm">
               View all
             </Link>
           </div>
@@ -191,14 +191,11 @@ export default function Section3Client({ courseGroups }: Props) {
                   {!isEmpty && course.thumbnail ? (
                     <Image src={course.thumbnail} alt={course.name} fill className="object-cover" sizes="280px" />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-purple-100 to-indigo-100" />
+                    <Image src="/ProgramCategories (1).png" alt="program category" fill className="object-cover" sizes="280px" />
                   )}
-                  {/* Degree icon badge — white square, top-left */}
-                  <div style={{ position: 'absolute', left: 10, top: 10, width: 36, height: 36, borderRadius: 10, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}>
-                    <DegreeIcon slug={activeTab} cls="w-5 h-5 text-purple-600" />
-                  </div>
-                  {!isEmpty && course.isTrending && (
-                    <div className="absolute top-2 right-2 flex items-center gap-1 bg-white text-purple-600 rounded-full shadow" style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px' }}>
+
+                  {!isEmpty && course.isTrending && isActive && course.thumbnail && (
+                    <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full" style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', background: 'linear-gradient(90deg,#6B46FF,#9B2CFF)', color: '#fff' }}>
                       <TrendingUp className="w-3 h-3" />Trending
                     </div>
                   )}
@@ -275,17 +272,18 @@ export default function Section3Client({ courseGroups }: Props) {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-purple-100 to-indigo-100" />
+                  <Image
+                    src="/ProgramCategories (1).png"
+                    alt="program category"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                 )}
 
-                {/* Degree icon badge — top left */}
-                <div className="absolute top-3 left-3 bg-white rounded-full p-2 shadow">
-                  <DegreeIcon slug={activeTab} />
-                </div>
-
-                {/* Trending badge — top right */}
-                {course.isTrending && (
-                  <div className="absolute top-3 right-3 flex items-center gap-1 bg-white text-purple-600 text-xs font-semibold px-2 py-1 rounded-full shadow">
+                {/* Trending badge — top right (only when we have a real thumbnail, fallback image has badge baked in) */}
+                {course.isTrending && course.thumbnail && (
+                  <div className="absolute top-3 right-3 flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full" style={{ background: 'linear-gradient(90deg,#6B46FF,#9B2CFF)', color: '#fff' }}>
                     <TrendingUp className="w-3 h-3" />
                     Trending
                   </div>
@@ -295,35 +293,35 @@ export default function Section3Client({ courseGroups }: Props) {
               {/* Card body */}
               <div className="p-5 flex flex-col flex-1">
                 <h3
-                  className="font-bold text-gray-900 mb-1"
-                  style={{ fontFamily: "Inter", fontSize: "18px" }}
+                  className="font-bold text-gray-900 mb-2"
+                  style={{ fontFamily: "Inter", fontSize: "20px", lineHeight: "28px" }}
                 >
                   {course.name}
                 </h3>
 
                 {course.shortDescription && (
-                  <p className="text-gray-500 text-sm mb-3 line-clamp-2">
+                  <p style={{ color: '#6B7280', fontSize: 14, lineHeight: '20px', marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {course.shortDescription}
                   </p>
                 )}
 
                 {/* Duration */}
                 {course.duration && (
-                  <div className="flex items-center gap-1 text-gray-500 text-sm mb-2">
+                  <div className="flex items-center gap-1 mb-2" style={{ color: '#6B7280', fontSize: 14 }}>
                     <Clock className="w-4 h-4 flex-shrink-0" />
                     <span>{course.duration}</span>
                   </div>
                 )}
 
-                {/* Fees */}
-                <p className="text-amber-600 text-sm font-medium mb-3">
+                {/* Fees — purple to match design */}
+                <p style={{ color: '#7C3AED', fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
                   Fees Starting from {formatFees(course.minFees)}
                 </p>
 
                 {/* Footer */}
-                <div className="mt-auto flex items-center justify-between">
-                  <span className="text-gray-700 text-sm font-medium">
-                    {course.providerCount > 0 ? `${course.providerCount}+ Universities` : "—"}
+                <div className="mt-auto flex items-center justify-between" style={{ paddingTop: 8, borderTop: '1px solid #F1F5F9' }}>
+                  <span style={{ color: '#374151', fontSize: 14, fontWeight: 600 }}>
+                    {course.providerCount > 0 ? `${course.providerCount}+ Universities` : '—'}
                   </span>
                   <Link
                     href={`/course-detail?id=${course._id}`}

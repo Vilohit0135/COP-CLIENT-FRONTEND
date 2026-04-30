@@ -100,7 +100,7 @@ export default function Section7({ section }: Section7Props) {
         </div>
 
         {/* Desktop: Image left, Heading + 2x2 grid right */}
-        <div className="hidden lg:grid grid-cols-2 gap-10 items-start mb-6">
+        <div className="hidden lg:grid grid-cols-2 gap-10 items-start mb-4">
           {/* Left: Image */}
           <div className="w-full">
             <Image
@@ -133,19 +133,29 @@ export default function Section7({ section }: Section7Props) {
           </div>
         </div>
 
-        {/* Bottom: 3 boxes spanning full width — desktop only */}
-        <div className="hidden lg:grid grid-cols-3 gap-6">
-          {boxFields.slice(4, 7).map((box, idx) => (
-            <div key={`bottom-${idx}`} className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-6 flex flex-col gap-4 items-start">
+        {/* Bottom: boxes 5 & 6 same size as top cards, box 7 double-wide — desktop only */}
+        <div className="hidden lg:grid grid-cols-4 gap-4 items-stretch">
+          {boxFields.slice(4, 6).map((box, idx) => (
+            <div key={`bottom-${idx}`} className="col-span-1 bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-8 flex flex-col gap-3 items-start self-stretch">
               <div className="w-14 h-14 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
                 <Image src={box.icon} alt={`icon-bottom-${idx}`} width={28} height={28} />
               </div>
               <div>
-                <h3 className="text-[18px] leading-[24px] font-semibold text-[#1F2937] mb-2">{box.heading}</h3>
-                <p className="text-[14px] leading-[20px] text-[#6B7280]">{box.content}</p>
+                <h3 className="text-[16px] leading-[22px] font-semibold text-[#1F2937] mb-1">{box.heading}</h3>
+                <p className="text-[13px] leading-[18px] text-[#6B7280]">{box.content}</p>
               </div>
             </div>
           ))}
+          {/* Box 7: double-wide, content centred */}
+          <div className="col-span-2 bg-[#F9FAFB] border border-[#E5E7EB] rounded-[16px] p-8 flex flex-col gap-3 items-center justify-center self-stretch text-center">
+            <div className="w-14 h-14 rounded-lg bg-[#F3E8FF] flex items-center justify-center flex-shrink-0">
+              <Image src={boxFields[6].icon} alt="icon-partner" width={28} height={28} />
+            </div>
+            <div>
+              <h3 className="text-[16px] leading-[22px] font-semibold text-[#1F2937] mb-1">{boxFields[6].heading}</h3>
+              <p className="text-[13px] leading-[18px] text-[#6B7280]">{boxFields[6].content}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
