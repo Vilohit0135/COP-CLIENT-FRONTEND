@@ -160,7 +160,7 @@ export default function Navbar() {
               <style>{`
                 .promo-wrapper{overflow:hidden;width:100%;}
                 .promo-track{display:flex;align-items:center;gap:2.5rem;width:max-content}
-                .promo-content{display:flex;gap:2.5rem;align-items:center;padding:0;flex-shrink:0}
+                .promo-content{display:flex;gap:15rem;align-items:center;padding:0;flex-shrink:0}
                 .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
                 @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
                 .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
@@ -365,7 +365,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-0 z-[100] transition-opacity duration-500 md:hidden ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        className={`fixed inset-0 z-[100] transition-all duration-500 md:hidden ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
       >
         {/* Backdrop */}
         <div
