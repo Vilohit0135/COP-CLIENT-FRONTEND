@@ -51,7 +51,7 @@ export default function SidebarFilters({
           <div className="space-y-3">
             <button
               onClick={() => onSelectDegreeType(null)}
-              className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDegreeTypeId === null
+              className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 active:scale-[0.98] cursor-pointer ${selectedDegreeTypeId === null
                 ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
                 : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
                 }`}
@@ -68,7 +68,7 @@ export default function SidebarFilters({
               <button
                 key={type._id}
                 onClick={() => onSelectDegreeType(type._id)}
-                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDegreeTypeId === type._id
+                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 active:scale-[0.98] cursor-pointer ${selectedDegreeTypeId === type._id
                   ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
                   : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
                   }`}
@@ -89,7 +89,7 @@ export default function SidebarFilters({
             <div className="space-y-3">
               <button
                 onClick={() => onSelectSort(null)}
-                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedSort === null
+                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 active:scale-[0.98] cursor-pointer ${selectedSort === null
                   ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
                   : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
                   }`}
@@ -102,7 +102,7 @@ export default function SidebarFilters({
 
               <button
                 onClick={() => onSelectSort("roi")}
-                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedSort === "roi"
+                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 active:scale-[0.98] cursor-pointer ${selectedSort === "roi"
                   ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
                   : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
                   }`}
@@ -115,7 +115,7 @@ export default function SidebarFilters({
 
               <button
                 onClick={() => onSelectSort("trending")}
-                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedSort === "trending"
+                className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 active:scale-[0.98] cursor-pointer ${selectedSort === "trending"
                   ? "bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-200"
                   : "bg-white text-gray-700 border-gray-100 hover:bg-purple-50 hover:border-purple-200"
                   }`}
