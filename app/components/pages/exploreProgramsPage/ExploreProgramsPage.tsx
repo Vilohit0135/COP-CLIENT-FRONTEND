@@ -278,6 +278,9 @@ export default function ExploreProgramsPage({
             degreeTypes={degreeTypes}
             selectedDegreeTypeId={selectedDegreeTypeId}
             onSelectDegreeType={(id) => {
+              setSelectedDegreeTypeId(id);
+              setSelectedCourseId(null);
+              setSelectedSpecializationId(null);
               const match = degreeTypes.find(dt => dt._id === id);
               updateQueryParams({ type: match?.slug || id, course: null, spec: null, sort: null });
               setSearchQuery("");
@@ -285,8 +288,8 @@ export default function ExploreProgramsPage({
             }}
             selectedSort={selectedSort}
             onSelectSort={(sort) => {
-              updateQueryParams({ sort });
               setSelectedSort(sort);
+              updateQueryParams({ sort });
             }}
             showSort={isSpecializationView}
           />
