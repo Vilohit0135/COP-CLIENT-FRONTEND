@@ -29,9 +29,41 @@ export default function AutoSlider({
   const [animate, setAnimate] = useState(false);
   const indexRef = useRef(0);
 
+  // touch swipe support
+  const touchStartXRef = useRef<number | null>(null);
+  const isPausedRef = useRef(false);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    isPausedRef.current = true;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const delta = touchStartXRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 30) {
+      if (delta > 0) {
+        const next = indexRef.current + 1;
+        indexRef.current = next;
+        setAnimate(true);
+        setIndex(next);
+      } else {
+        const prev = Math.max(0, indexRef.current - 1);
+        indexRef.current = prev;
+        setAnimate(true);
+        setIndex(prev);
+      }
+    }
+    touchStartXRef.current = null;
+    isPausedRef.current = false;
+  };
+
   useEffect(() => {
     if (count === 0) return;
     const id = setInterval(() => {
+      if (isPausedRef.current) return;
       const next = indexRef.current + 1;
       indexRef.current = next;
       setAnimate(true);
@@ -61,6 +93,8 @@ export default function AutoSlider({
     <div
       className={`overflow-hidden pb-4 ${className}`}
       style={style}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         style={{

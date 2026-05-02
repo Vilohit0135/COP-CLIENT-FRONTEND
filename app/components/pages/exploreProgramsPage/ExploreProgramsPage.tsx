@@ -232,10 +232,10 @@ export default function ExploreProgramsPage({
   };
 
   return (
-    <main className="min-h-screen bg-[#F9FAFB] pt-7">
+    <main className="min-h-screen bg-[#F9FAFB] pt-0 md:pt-7">
       {/* Hero / Header Section */}
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-[87vw] mx-auto  py-8">
+        <div className="max-w-[87vw] mx-auto py-3 md:py-8">
           {(isSpecializationView || isUniversityView) ? (
             <button
               onClick={handleBack}
