@@ -69,26 +69,51 @@ export default function Section3Client({ courseGroups }: Props) {
     ? [effectiveCourses[sliderCount - 1], ...effectiveCourses, effectiveCourses[0]]
     : effectiveCourses;
 
+  // container ref must be declared before useEffects that reference it
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   // Reset slider when tab changes
   useEffect(() => { setOffset(1); setAnimated(false); }, [activeTab]);
 
-  // container-relative translate for proper centering
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [translatePx, setTranslatePx] = useState(0);
+  // Measure container width — translatePx is derived synchronously (no async state chain)
+  const [containerWidth, setContainerWidth] = useState(0);
   const step = 280 + 12;
-  const updateTranslate = () => {
+
+  useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    // center relative to container: container width / 2 minus half card width, then shift by offset*step
-    const value = Math.round(rect.width / 2 - 140 - offset * step);
-    setTranslatePx(value);
+    setContainerWidth(el.getBoundingClientRect().width);
+    const obs = new ResizeObserver((entries) => {
+      setContainerWidth(entries[0].contentRect.width);
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // translatePx derived synchronously — always in sync with offset in the same render
+  const translatePx = containerWidth > 0
+    ? Math.round(containerWidth / 2 - 140 - offset * step)
+    : 0;
+
+  // touch swipe support
+  const touchStartXRef = useRef<number | null>(null);
+  const isPausedRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    isPausedRef.current = true;
   };
-  useEffect(() => {
-    updateTranslate();
-    window.addEventListener('resize', updateTranslate);
-    return () => window.removeEventListener('resize', updateTranslate);
-  }, [offset]);
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const delta = touchStartXRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 30) {
+      setAnimated(true);
+      setOffset((prev) => prev + (delta > 0 ? 1 : -1));
+    }
+    touchStartXRef.current = null;
+    isPausedRef.current = false;
+  };
 
   // Re-enable animation one frame after a silent snap
   useEffect(() => {
@@ -102,6 +127,7 @@ export default function Section3Client({ courseGroups }: Props) {
   useEffect(() => {
     if (sliderCount === 0) return;
     const id = setInterval(() => {
+      if (isPausedRef.current) return;
       setAnimated(true);
       setOffset((prev) => prev + 1);
     }, 3200);
@@ -109,7 +135,8 @@ export default function Section3Client({ courseGroups }: Props) {
   }, [sliderCount]);
 
   // Seamless snap after landing on a clone
-  function handleTransitionEnd() {
+  function handleTransitionEnd(e: React.TransitionEvent) {
+    if (e.target !== e.currentTarget) return;
     setOffset((prev) => {
       if (prev === 0) { setAnimated(false); return sliderCount; }
       if (prev === sliderCount + 1) { setAnimated(false); return 1; }
@@ -148,7 +175,7 @@ export default function Section3Client({ courseGroups }: Props) {
       </div>
 
       {/* Course Cards — Mobile focus-center slider */}
-      <div ref={containerRef} className="md:hidden mt-8 relative" style={{ overflow: 'hidden' }}>
+      <div ref={containerRef} className="md:hidden mt-8 relative" style={{ overflow: 'hidden' }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div
           onTransitionEnd={handleTransitionEnd}
           style={{
