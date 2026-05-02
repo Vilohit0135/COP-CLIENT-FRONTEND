@@ -220,7 +220,7 @@ export default function Section8({ section }: Section8Props) {
           <button
             onClick={prev}
             aria-label="Previous"
-            className="hidden md:flex"
+            className="hidden md:flex hover:bg-gray-50 hover:shadow-md transition-all duration-200"
             style={{
               position: "absolute",
               left: -20,
@@ -412,7 +412,7 @@ export default function Section8({ section }: Section8Props) {
           <button
             onClick={next}
             aria-label="Next"
-            className="hidden md:flex"
+            className="hidden md:flex hover:bg-gray-50 hover:shadow-md transition-all duration-200"
             style={{
               position: "absolute",
               right: -20,
@@ -443,6 +443,7 @@ export default function Section8({ section }: Section8Props) {
               key={i}
               onClick={() => setActiveSlide(i)}
               aria-label={`Slide ${i + 1}`}
+              className="hover:opacity-70 transition-opacity duration-200"
               style={{
                 width: i === activeSlide ? 24 : 8,
                 height: 8,

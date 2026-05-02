@@ -458,7 +458,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
       {/* Main Content Area */}
       <div className="pb-8">
         {/* Navigation Tabs - Adjusted for mobile sticky header */}
-        <div className="sticky top-[80px] md:top-0 z-40 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg shadow-gray-100/50 mb-8 overflow-x-auto no-scrollbar lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0">
+        <div className="sticky top-[100px] md:top-0 z-40 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg shadow-gray-100/50 mb-8 overflow-x-auto no-scrollbar lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0">
           <div className="flex min-w-max">
             {tabs.map((tab) => (
               <button

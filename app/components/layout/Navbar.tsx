@@ -204,19 +204,7 @@ export default function Navbar() {
       </div>
 
       <div className="md:fixed md:px-7 md:py-2.5 w-full bg-[#A983F6] md:bg-transparent border-b md:border-none border-purple-400/30">
-        <div className="nav-glass w-full mx-auto flex items-center justify-center md:justify-between px-4 h-16 md:h-[72px] text-white relative">
-          {/* Mobile Hamburger Button - Now on Left */}
-          <button
-            className="md:hidden absolute left-4 flex items-center justify-center p-2 text-white hover:bg-white/10 rounded-lg transition"
-            onClick={() => setIsMenuOpen(true)}
-            aria-label="Open menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-
+        <div className="nav-glass w-full mx-auto flex items-center justify-between px-4 h-16 md:h-[72px] text-white relative">
           <Link href="/" className="flex items-center gap-1 flex-shrink-0">
             <img src="/logo.svg" alt="CollegeProgram logo" className="h-16 md:h-16 w-auto object-contain" />
           </Link>
@@ -359,6 +347,17 @@ export default function Navbar() {
                 Sign In
               </Link>
             )}
+
+            {/* Mobile Hamburger Button - Now on Right */}
+            <button
+              className="md:hidden flex items-center justify-center p-2 text-white hover:bg-white/10 rounded-lg transition"
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -375,7 +374,7 @@ export default function Navbar() {
 
         {/* Drawer Content */}
         <div
-          className={`absolute top-0 left-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col transition-transform duration-500 transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+          className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col transition-transform duration-500 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
           style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
         >
           {/* Header */}

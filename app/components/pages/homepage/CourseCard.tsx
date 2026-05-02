@@ -10,12 +10,16 @@ export interface CourseItem {
   courseId?: string; // Original course ID for linking
   name: string;
   slug: string;
-  thumbnail: string | null;
-  shortDescription: string;
+  thumbnail?: string | null;
+  icon?: string; // Field from Course model
+  shortDescription?: string;
+  description?: string; // Field from Course model
   duration: string;
-  minFees: number;
-  providerCount: number;
+  minFees?: number;
+  feeStarting?: number; // Field from Course model
+  providerCount?: number;
   providerName?: string; // University name
+  universities?: Array<{ name: string }>; // Populated universities from backend
   isTrending: boolean;
 }
 
@@ -56,9 +60,7 @@ export default function CourseCard({
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          boxShadow: isActive
-            ? "0 8px 32px rgba(107,70,255,0.18)"
-            : "0 2px 8px rgba(0,0,0,0.06)",
+          boxShadow: "none",
           opacity: isActive ? 1 : 0.45,
           filter: isActive ? "none" : "blur(1.5px)",
           transform: isActive ? "scale(1)" : "scale(0.93)",
@@ -76,9 +78,9 @@ export default function CourseCard({
             flexShrink: 0,
           }}
         >
-          {!isEmpty && course.thumbnail ? (
+          {!isEmpty && (course.icon || course.thumbnail) ? (
             <Image
-              src={course.thumbnail}
+              src={course.icon || course.thumbnail || ""}
               alt={course.name}
               fill
               className="object-cover"
@@ -97,8 +99,8 @@ export default function CourseCard({
           {!isEmpty &&
             course.isTrending &&
             isActive &&
-            course.thumbnail && (
-              <TrendingBadge className="absolute -bottom-3 -right-3" />
+            (course.icon || course.thumbnail) && (
+              <TrendingBadge className="absolute top-3 right-3" />
             )}
         </div>
         {/* Body */}
@@ -153,7 +155,7 @@ export default function CourseCard({
               >
                 {course.name}
               </h3>
-              {course.shortDescription && (
+              {(course.description || course.shortDescription) && (
                 <p
                   style={{
                     fontFamily: "Inter",
@@ -167,7 +169,7 @@ export default function CourseCard({
                     overflow: "hidden",
                   }}
                 >
-                  {course.shortDescription}
+                  {course.description || course.shortDescription}
                 </p>
               )}
               {course.duration && (
@@ -187,16 +189,18 @@ export default function CourseCard({
                   margin: 0,
                 }}
               >
-                Fees Starting from {formatFees(course.minFees)} Lakhs
+                Fees Starting from {formatFees(course.feeStarting || course.minFees || 0)}
               </p>
               <div
                 className="mt-auto flex items-center justify-between"
                 style={{ paddingTop: 8, borderTop: "1px solid #F1F5F9" }}
               >
                 <span style={{ color: "#374151", fontSize: 13, fontWeight: 500 }}>
-                  {course.providerName || (course.providerCount > 0
-                    ? `${course.providerCount}+ Universities`
-                    : "—")}
+                  {course.providerName || (course.universities && course.universities.length > 0
+                    ? `${course.universities.length}+ Universities`
+                    : course.providerCount && course.providerCount > 0
+                      ? `${course.providerCount}+ Universities`
+                      : "—")}
                 </span>
                 <Link
                   href={`/course-detail?id=${course.courseId || course._id}`}
@@ -235,9 +239,9 @@ export default function CourseCard({
     <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
       {/* Thumbnail */}
       <div className="relative w-full h-52 md:h-60 bg-gray-100">
-        {course.thumbnail ? (
+        {course.icon || course.thumbnail ? (
           <Image
-            src={course.thumbnail}
+            src={course.icon || course.thumbnail || ""}
             alt={course.name}
             fill
             className="object-cover"
@@ -254,7 +258,7 @@ export default function CourseCard({
         )}
 
         {/* Trending badge — top right (only when we have a real thumbnail, fallback image has badge baked in) */}
-        {course.isTrending && course.thumbnail && (
+        {course.isTrending && (course.icon || course.thumbnail) && (
           <TrendingBadge className="absolute top-3 right-3" />
         )}
       </div>
@@ -268,7 +272,7 @@ export default function CourseCard({
           {course.name}
         </h3>
 
-        {course.shortDescription && (
+        {(course.description || course.shortDescription) && (
           <p
             style={{
               color: "#6B7280",
@@ -281,7 +285,7 @@ export default function CourseCard({
               overflow: "hidden",
             }}
           >
-            {course.shortDescription}
+            {course.description || course.shortDescription}
           </p>
         )}
 
@@ -298,7 +302,7 @@ export default function CourseCard({
 
         {/* Fees — purple to match design */}
         <p style={{ color: "#7C3AED", fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
-          Fees Starting from {formatFees(course.minFees)} lakhs
+          Fees Starting from {formatFees(course.feeStarting || course.minFees || 0)}
         </p>
 
         {/* Footer */}
@@ -307,7 +311,11 @@ export default function CourseCard({
           style={{ paddingTop: 8, borderTop: "1px solid #F1F5F9" }}
         >
           <span style={{ color: "#374151", fontSize: 14, fontWeight: 600 }}>
-            {course.providerName || (course.providerCount > 0 ? `${course.providerCount}+ Universities` : "—")}
+            {course.providerName || (course.universities && course.universities.length > 0
+              ? `${course.universities.length}+ Universities`
+              : course.providerCount && course.providerCount > 0
+                ? `${course.providerCount}+ Universities`
+                : "—")}
           </span>
           <Link
             href={`/course-detail?id=${course.courseId || course._id}`}

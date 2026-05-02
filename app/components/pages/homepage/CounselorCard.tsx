@@ -52,7 +52,7 @@ export default function CounselorCard({ counselor, isMobile = false }: Counselor
             absolute top-3 left-3 z-10
             inline-flex items-center gap-1.5 px-4 py-1 rounded-full
             bg-purple-600/30 backdrop-blur-lg border border-white/20
-            shadow-[0_8px_32px_rgba(124,58,237,0.25)]
+            lg:shadow-[0_8px_32px_rgba(124,58,237,0.25)]
             text-white font-semibold
           `}
           style={{

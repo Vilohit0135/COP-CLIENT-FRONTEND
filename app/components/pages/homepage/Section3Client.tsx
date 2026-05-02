@@ -12,10 +12,14 @@ interface CourseItem {
   name: string;
   slug: string;
   thumbnail: string | null;
+  icon?: string; // From Course model
   shortDescription: string;
+  description?: string; // From Course model
   duration: string;
   minFees: number;
+  feeStarting?: number; // From Course model
   providerCount: number;
+  universities?: any[]; // From Course model
   isTrending: boolean;
 }
 
@@ -146,16 +150,15 @@ export default function Section3Client({ courseGroups }: Props) {
 
   return (
     <>
-      {/* Tabs + View All link */}
-      <div className="mt-6 md:mt-10">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-2">
-          <div className="flex-1 overflow-x-auto scrollbar-hide flex justify-center pb-7">
-            <div className="inline-flex items-center gap-2 bg-white rounded-full shadow-lg px-3 py-1.5 md:px-4 md:py-2 w-max">
+      <div className="mt-4 md:mt-10">
+        <div className="relative lg:max-w-7xl mx-auto lg:px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="w-full flex justify-center pb-4 md:pb-7  md:px-0">
+            <div className="flex items-center gap-2 bg-[#FFFFFF] border border-[#F3F4F6] rounded-full px-2 py-1.5 md:px-4 md:py-2 overflow-x-auto scrollbar-hide lg:max-w-[72%] shadow-sm">
               {courseGroups.map((group) => (
                 <button
                   key={group.degreeType.slug}
                   onClick={() => setActiveTab(group.degreeType.slug)}
-                  className={`px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-medium rounded-full whitespace-nowrap transition-all ${activeTab === group.degreeType.slug
+                  className={`px-4 md:px-6 py-2 md:py-3 text-xs md:text-sm font-medium rounded-full cursor-pointer whitespace-nowrap transition-all ${activeTab === group.degreeType.slug
                     ? "bg-purple-600 text-white shadow-md"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
@@ -166,9 +169,9 @@ export default function Section3Client({ courseGroups }: Props) {
             </div>
           </div>
 
-          <div className="flex-shrink-0">
-            <Link href="/online-courses" className="text-purple-600 underline whitespace-nowrap font-medium text-xs md:text-sm">
-              View all
+          <div className="absolute right-2 bottom-0 hidden md:block flex-shrink-0 mb-7">
+            <Link href="/online-courses" className="text-purple-600 underline whitespace-nowrap font-medium text-xs md:text-[16px] opacity-100 hover:opacity-70">
+              View all Courses
             </Link>
           </div>
         </div>
@@ -258,7 +261,7 @@ export default function Section3Client({ courseGroups }: Props) {
       <div className="mt-12 flex justify-center">
         <Link
           href={`/explore-programs?degreeType=${activeTab}`}
-          className="text-white font-semibold transition-all flex items-center justify-center"
+          className="text-white font-semibold transition-all duration-200 flex items-center justify-center hover:opacity-90 hover:scale-[1.02]"
           style={{
             width: "260px",
             height: "56px",
@@ -268,6 +271,7 @@ export default function Section3Client({ courseGroups }: Props) {
             textDecoration: "none",
             fontFamily: "Inter",
             fontSize: "16px",
+            cursor: "pointer",
           }}
         >
           View All {activeGroup?.degreeType?.name ?? "Courses"}

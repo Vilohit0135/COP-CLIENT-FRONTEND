@@ -252,7 +252,8 @@ export default function TalkToExpertsForm({
                 type="button"
                 onClick={handleSendOtp}
                 disabled={otpLoading || !formData.phoneNumber}
-                style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", backgroundColor: "#9810FA", color: "#FFFFFF", padding: "4px 12px", borderRadius: "6px", border: "none", fontSize: "11px", fontWeight: 600, cursor: "pointer", opacity: (otpLoading || !formData.phoneNumber) ? 0.5 : 1 }}
+                style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", backgroundColor: "#9810FA", color: "#FFFFFF", padding: "4px 12px", borderRadius: "6px", border: "none", fontSize: "11px", fontWeight: 600, cursor: "pointer", opacity: (otpLoading || !formData.phoneNumber) ? 0.5 : 1, transition: "opacity 0.2s ease" }}
+                className="hover:opacity-80"
               >
                 {otpSent ? "Resend OTP" : "Send OTP"}
               </button>
@@ -278,7 +279,8 @@ export default function TalkToExpertsForm({
                 type="button"
                 onClick={handleVerifyOtp}
                 disabled={otpLoading}
-                style={{ padding: "12px 20px", borderRadius: "10px", backgroundColor: "#9810FA", color: "#FFFFFF", fontFamily: "Inter", fontSize: "14px", fontWeight: 600, border: "none", cursor: otpLoading ? "not-allowed" : "pointer", opacity: otpLoading ? 0.6 : 1, flexShrink: 0 }}
+                style={{ padding: "12px 20px", borderRadius: "10px", backgroundColor: "#9810FA", color: "#FFFFFF", fontFamily: "Inter", fontSize: "14px", fontWeight: 600, border: "none", cursor: otpLoading ? "not-allowed" : "pointer", opacity: otpLoading ? 0.6 : 1, flexShrink: 0, transition: "opacity 0.2s ease" }}
+                className="hover:opacity-80"
               >
                 {otpLoading ? "..." : "Verify"}
               </button>
@@ -336,6 +338,7 @@ export default function TalkToExpertsForm({
         <button
           type="submit"
           disabled={loading}
+          className="hover:opacity-90 hover:scale-[1.01] transition-all duration-200"
           style={{
             width: "100%",
             height: "52px",

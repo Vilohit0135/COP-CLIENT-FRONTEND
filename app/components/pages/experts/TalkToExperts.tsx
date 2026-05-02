@@ -23,7 +23,7 @@ export default function TalkToExperts() {
       {/* ══════════════════════════════════════════════════════════
           MOBILE LAYOUT  (hidden on md and above)
       ══════════════════════════════════════════════════════════ */}
-      <div className="md:hidden" style={{ backgroundColor: "#F3F4F6", minHeight: "100vh", fontFamily: "Inter, sans-serif", paddingTop: 80, overflowX: "hidden" }}>
+      <div className="md:hidden" style={{ backgroundColor: "#F3F4F6", minHeight: "100vh", fontFamily: "Inter, sans-serif", overflowX: "hidden" }}>
 
         {/* 1. CONTACT METHOD CARDS */}
         <div style={{ backgroundColor: "#FFFFFF", padding: "20px 16px 10px" }}>

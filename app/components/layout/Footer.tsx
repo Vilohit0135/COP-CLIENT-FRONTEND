@@ -26,59 +26,57 @@ export default function Footer() {
 
         {/* Mobile layout */}
         <div className="md:hidden pb-10">
-          {/* Row 1: Logo full width */}
-          <div className="mb-6">
-            <img src="/logo.svg" alt="CollegeProgram logo" className="h-24 w-auto object-contain" />
+          {/* Logo & Description */}
+          <div className="mb-8">
+            <img src="/logo.svg" alt="CollegeProgram logo" className="h-16 w-auto object-contain mb-6" />
+            <p className="text-gray-300 text-[15px] leading-relaxed">
+              Discover a world of knowledge and opportunities
+              with our online education platform pursue a new
+              career.
+            </p>
           </div>
 
-          {/* Row 2: Social Media Links heading | icons horizontal */}
-          <div className="flex items-center justify-between mb-7">
-            <h3 className="font-bold text-white" style={{ fontSize: '5vw' }}>Social Media Links</h3>
-            <div className="flex items-center gap-5">
-              <Link href="#" aria-label="LinkedIn">
-                <img src="/LinkedIn.png" alt="LinkedIn" className="w-8 h-8" />
-              </Link>
-              <Link href="#" aria-label="Facebook">
-                <img src="/Facebook.png" alt="Facebook" className="w-8 h-8" />
-              </Link>
-              <Link href="#" aria-label="Instagram">
-                <img src="/Instagram.png" alt="Instagram" className="w-8 h-8" />
-              </Link>
-              <Link href="#" aria-label="Email">
-                <img src="/Gmail.png" alt="Gmail" className="w-8 h-8" />
-              </Link>
-            </div>
-          </div>
-
-          {/* Row 3: Address | Phone */}
-          <div className="grid gap-4 mb-7" style={{ gridTemplateColumns: '3fr 2fr' }}>
-            <div className="flex items-start gap-2">
-              <img src="/SVG.png" alt="Location icon" className="w-6 h-6 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300" style={{ fontSize: '3.5vw', lineHeight: '1.6' }}>
+          {/* Contact Info */}
+          <div className="space-y-4 mb-10">
+            <div className="flex items-start gap-3">
+              <img src="/SVG.png" alt="Location icon" className="w-5 h-5 mt-1 flex-shrink-0" />
+              <span className="text-gray-300 text-[15px] leading-relaxed">
                 C/54 Northwest Freeway,<br />Houston, USA 485
               </span>
             </div>
-            <div className="flex items-start gap-2">
-              <img src="/phone.png" alt="Phone icon" className="w-6 h-6 mt-0.5 flex-shrink-0" />
-              <span className="text-gray-300 whitespace-nowrap" style={{ fontSize: '3.5vw', lineHeight: '1.6' }}>+152 534-468-854</span>
+            <div className="flex items-center gap-3">
+              <img src="/phone.png" alt="Phone icon" className="w-5 h-5 flex-shrink-0" />
+              <span className="text-gray-300 text-[15px]">+152 534-468-854</span>
             </div>
           </div>
 
-          {/* Description */}
-          <p className="text-gray-300 mb-9" style={{ fontSize: '4.5vw', lineHeight: '1.7' }}>
-            Discover a world of knowledge and opportunities
-            with our online education platform pursue a new
-            career.
-          </p>
+          {/* Social Media */}
+          <div className="mb-10">
+            <h3 className="font-bold text-white text-lg mb-4">Social Media Links</h3>
+            <div className="flex items-center gap-5">
+              <Link href="#" aria-label="LinkedIn">
+                <img src="/LinkedIn.png" alt="LinkedIn" className="w-7 h-7 opacity-80 hover:opacity-100 transition" />
+              </Link>
+              <Link href="#" aria-label="Facebook">
+                <img src="/Facebook.png" alt="Facebook" className="w-7 h-7 opacity-80 hover:opacity-100 transition" />
+              </Link>
+              <Link href="#" aria-label="Instagram">
+                <img src="/Instagram.png" alt="Instagram" className="w-7 h-7 opacity-80 hover:opacity-100 transition" />
+              </Link>
+              <Link href="#" aria-label="Email">
+                <img src="/Gmail.png" alt="Gmail" className="w-7 h-7 opacity-80 hover:opacity-100 transition" />
+              </Link>
+            </div>
+          </div>
 
           {/* Useful Links */}
-          <div className="mb-9">
-            <h3 className="font-bold text-white mb-5" style={{ fontSize: '5vw' }}>Usefull Links</h3>
+          <div className="mb-10">
+            <h3 className="font-bold text-white text-lg mb-5">Useful Links</h3>
             <ul className="space-y-4">
               {usefulLinks.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="flex items-center gap-3 text-gray-300 hover:text-white transition" style={{ fontSize: '4.5vw' }}>
-                    <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <Link href={link.href} className="flex items-center gap-3 text-gray-300 hover:text-white transition text-[15px]">
+                    <svg className="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                     {link.label}
@@ -90,12 +88,12 @@ export default function Footer() {
 
           {/* Tools */}
           <div className="mb-2">
-            <h3 className="font-bold text-white mb-5" style={{ fontSize: '5vw' }}>Tools for making informed Choices</h3>
+            <h3 className="font-bold text-white text-lg mb-5">Tools for making informed Choices</h3>
             <ul className="space-y-4">
               {toolLinks.map((link, i) => (
                 <li key={i}>
-                  <Link href={link.href} className="flex items-center gap-3 text-gray-300 hover:text-white transition" style={{ fontSize: '4.5vw' }}>
-                    <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <Link href={link.href} className="flex items-center gap-3 text-gray-300 hover:text-white transition text-[15px]">
+                    <svg className="w-4 h-4 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                     {link.label}
@@ -130,12 +128,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-white text-base mb-5">Usefull Links</h3>
+            <h3 className="font-bold text-white text-base mb-5">Useful Links</h3>
             <ul className="space-y-3">
               {usefulLinks.map((link) => (
                 <li key={link.label}>
                   <Link href={link.href} className="flex items-center gap-2 text-gray-300 hover:text-white transition text-sm">
-                    <svg className="w-3 h-3 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                     {link.label}
@@ -151,7 +149,7 @@ export default function Footer() {
               {toolLinks.map((link, i) => (
                 <li key={i}>
                   <Link href={link.href} className="flex items-center gap-2 text-gray-300 hover:text-white transition text-sm">
-                    <svg className="w-3 h-3 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                     {link.label}
