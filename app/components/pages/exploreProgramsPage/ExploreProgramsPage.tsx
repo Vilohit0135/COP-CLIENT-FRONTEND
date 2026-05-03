@@ -36,9 +36,6 @@ export default function ExploreProgramsPage({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [selectedDegreeTypeId, setSelectedDegreeTypeId] = React.useState<string | null>(null);
-  const [selectedCourseId, setSelectedCourseId] = React.useState<string | null>(null);
-  const [selectedSpecializationId, setSelectedSpecializationId] = React.useState<string | null>(null);
   const [providerCoursesList, setProviderCoursesList] = React.useState<ProviderCourse[]>([]);
   const [isLoadingProviders, setIsLoadingProviders] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -84,13 +81,25 @@ export default function ExploreProgramsPage({
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [searchParams, pathname, router]);
 
-  React.useEffect(() => {
-    if (initialType && degreeTypes.length > 0) {
+  // Derive selection from URL parameters for instant UI updates
+  const currentTypeSlug = searchParams.get("type") || initialType;
+  const currentCourseSlugOrId = searchParams.get("course") || initialCourse;
+  const currentSpecializationId = searchParams.get("spec") || initialSpecialization;
+
+  const selectedDegreeTypeId = useMemo(() => {
+    // 1. If course is selected, use its degree type
+    if (currentCourseSlugOrId) {
+      const match = courses.find(c => c.slug === currentCourseSlugOrId || c._id === currentCourseSlugOrId);
+      const dId = typeof match?.degreeTypeId === "string" ? match?.degreeTypeId : match?.degreeTypeId?._id;
+      if (dId) return dId;
+    }
+
+    // 2. If type slug is in URL, match it
+    if (currentTypeSlug) {
+      const type = currentTypeSlug.toLowerCase();
       const match = degreeTypes.find((dt) => {
-        const type = initialType.toLowerCase();
         const name = dt.name.toLowerCase();
         const slug = dt.slug?.toLowerCase() || "";
-
         return (
           slug === type ||
           name.includes(type) ||
@@ -99,31 +108,26 @@ export default function ExploreProgramsPage({
           (type === "ug" && (name.includes("under graduate") || name.startsWith("bachelor")))
         );
       });
-      if (match) {
-        setSelectedDegreeTypeId(match._id);
-      }
-    } else if (!initialType) {
-      setSelectedDegreeTypeId(null);
+      return match?._id || null;
     }
+    return null;
+  }, [currentTypeSlug, currentCourseSlugOrId, degreeTypes, courses]);
 
-    if (initialCourse && courses.length > 0) {
-      const match = courses.find((c) => c.slug === initialCourse || c._id === initialCourse);
-      if (match) {
-        setSelectedCourseId(match._id);
-        const dId = typeof match.degreeTypeId === "string" ? match.degreeTypeId : match.degreeTypeId?._id;
-        if (dId) setSelectedDegreeTypeId(dId);
-      }
-    } else if (!initialCourse) {
-      setSelectedCourseId(null);
-    }
+  const selectedCourseId = useMemo(() => {
+    if (!currentCourseSlugOrId) return null;
+    const match = courses.find(c => c.slug === currentCourseSlugOrId || c._id === currentCourseSlugOrId);
+    return match?._id || null;
+  }, [currentCourseSlugOrId, courses]);
 
-    if (initialSpecialization) {
-      setSelectedSpecializationId(initialSpecialization);
-      // Automatically load provider courses if spec is in URL
+  const selectedSpecializationId = currentSpecializationId || null;
+
+  // Load provider courses when specialization changes
+  React.useEffect(() => {
+    if (selectedSpecializationId) {
       const loadProviderCourses = async () => {
         setIsLoadingProviders(true);
         try {
-          const data = await getAllProviderCourses(initialSpecialization);
+          const data = await getAllProviderCourses(selectedSpecializationId);
           setProviderCoursesList(data);
         } catch (err) {
           console.error("Failed to load provider courses:", err);
@@ -134,17 +138,14 @@ export default function ExploreProgramsPage({
       loadProviderCourses();
     } else {
       setProviderCoursesList([]);
-      setSelectedSpecializationId(null);
     }
+  }, [selectedSpecializationId]);
 
-    // Load sort from URL
+  // Sync sort state with URL
+  React.useEffect(() => {
     const sortParam = searchParams.get("sort");
-    if (sortParam) {
-      setSelectedSort(sortParam);
-    } else {
-      setSelectedSort(null);
-    }
-  }, [initialType, initialCourse, initialSpecialization, degreeTypes, courses, specializations, searchParams]);
+    setSelectedSort(sortParam || null);
+  }, [searchParams]);
 
   const filteredCourses = useMemo(() => {
     let list = courses;
@@ -278,13 +279,9 @@ export default function ExploreProgramsPage({
             degreeTypes={degreeTypes}
             selectedDegreeTypeId={selectedDegreeTypeId}
             onSelectDegreeType={(id) => {
-              setSelectedDegreeTypeId(id);
-              setSelectedCourseId(null);
-              setSelectedSpecializationId(null);
               const match = degreeTypes.find(dt => dt._id === id);
               updateQueryParams({ type: match?.slug || id, course: null, spec: null, sort: null });
               setSearchQuery("");
-              setSelectedSort(null);
             }}
             selectedSort={selectedSort}
             onSelectSort={(sort) => {

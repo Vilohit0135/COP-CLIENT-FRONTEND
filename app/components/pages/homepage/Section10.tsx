@@ -168,6 +168,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
               }}
             >
               <button
+                className="hover:bg-gray-50 transition-colors duration-200"
                 style={{
                   width: "100%",
                   display: "flex",
@@ -229,6 +230,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
         {hasMore && (
         <div style={{ width: "100%", display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
           <button
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
             onClick={() => setShowAll((prev) => !prev)}
             style={{
               width: 227,

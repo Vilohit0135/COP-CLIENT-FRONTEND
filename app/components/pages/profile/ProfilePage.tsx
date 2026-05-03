@@ -295,9 +295,9 @@ export default function ProfilePage() {
       <div className="w-full md:w-[70vw] min-h-screen md:min-h-[70vh] flex flex-col md:flex-row gap-4 md:gap-6">
 
         {/* ── Left Sidebar ──────────────────────────────────────────────── */}
-        <aside className="w-full md:w-64 flex-shrink-0 flex flex-col gap-4 bg-white px-4 md:px-0 relative">
+        <aside className="w-full md:w-64 flex-shrink-0 flex flex-col gap-4  px-4 md:px-0 relative">
           {/* Profile card */}
-          <div className="relative bg-white lg:bg-[#6C3FC5] rounded-b-[32px] md:rounded-2xl p-6 md:p-6 flex flex-col items-center shadow-xl shadow-purple-200/50">
+          <div className="relative bg-white lg:bg-[#6C3FC5] rounded-b-[32px] md:rounded-xl p-6 md:p-6 flex flex-col items-center shadow-xl shadow-purple-200/50">
             {/* Settings Icon Mobile */}
             <button
               onClick={() => setActiveNav("settings")}
@@ -322,7 +322,7 @@ export default function ProfilePage() {
                 <button
                   key={item.key}
                   onClick={() => setActiveNav(item.key)}
-                  className={`flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3 whitespace-nowrap px-2 md:px-3 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-sm font-semibold transition-all flex-shrink-0 flex-1 md:flex-none ${item.key === "settings" ? "hidden md:flex" : ""} ${activeNav === item.key
+                  className={`flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-0.5 md:gap-3 whitespace-nowrap px-2 md:px-3 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-sm font-semibold cursor-pointer transition-all flex-shrink-0 flex-1 md:flex-none ${item.key === "settings" ? "hidden md:flex" : ""} ${activeNav === item.key
                     ? "bg-[#6C3FC5] text-white lg:bg-white lg:text-[#6C3FC5] shadow-sm shadow-black/5 scale-100"
                     : "text-gray-600 lg:text-white/80 hover:bg-purple-50 lg:hover:bg-white/10"
                     }`}
@@ -338,16 +338,18 @@ export default function ProfilePage() {
 
               <button
                 onClick={handleLogout}
-                className="hidden md:flex flex-col md:flex-row items-center gap-1 md:gap-3 whitespace-nowrap px-4 md:px-3 py-2 md:py-2.5 rounded-xl text-[10px] md:text-sm font-semibold transition-colors text-red-600 lg:text-red-200 hover:bg-red-50 lg:hover:bg-red-500/20 hover:text-red-700 lg:hover:text-white flex-shrink-0"
+                className="cursor-pointer hidden md:flex items-center gap-3 whitespace-nowrap px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 text-red-600 lg:text-red-100 hover:bg-red-50 lg:hover:bg-white/10 hover:text-red-700 lg:hover:text-white flex-shrink-0 group"
               >
-                <LogoutIcon className="w-4 h-4" />
-                Logout
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 lg:bg-white/10 group-hover:bg-red-100 lg:group-hover:bg-red-500/20 transition-all duration-300">
+                  <LogoutIcon className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                </div>
+                <span>Logout</span>
               </button>
             </nav>
           </div>
 
           {/* Help card (Desktop only, mobile version moved to bottom of content) */}
-          <div className="hidden md:flex bg-[#5A2EA6] rounded-2xl p-5 text-white flex-col items-center text-center shadow-lg shadow-purple-900/10">
+          <div className="hidden md:flex bg-[#5A2EA6] rounded-xl p-5 text-white flex-col items-center text-center shadow-lg shadow-purple-900/10">
             <h3 className="font-extrabold text-base leading-tight mb-2">Need Help Deciding?</h3>
             <p className="text-xs text-white/80 mb-4 leading-relaxed">
               Our expert counselors can help you compare and choose the best university for your goals

@@ -223,7 +223,7 @@ export default function Section9({ section }: Section9Props) {
                 <span style={{ fontFamily: 'Inter', fontSize: 12, color: '#6B7280' }}>{article.date} · {article.readTime}</span>
                 <h3 style={{ fontFamily: 'Inter', fontSize: 15, fontWeight: 700, color: '#101828', lineHeight: '21px', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.title}</h3>
                 <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#6B7280', lineHeight: '19px', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.description}</p>
-                <Link href={`/articles/${article.slug}`} style={{ marginTop: 'auto', fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: '#4F39F6', textDecoration: 'none' }}>Read More →</Link>
+                <Link href={`/articles/${article.slug}`} className="hover:opacity-70 transition-opacity duration-200" style={{ marginTop: 'auto', fontFamily: 'Inter', fontSize: 13, fontWeight: 600, color: '#4F39F6', textDecoration: 'none', cursor: 'pointer' }}>Read More →</Link>
               </div>
             </div>
           ))}
@@ -368,6 +368,7 @@ export default function Section9({ section }: Section9Props) {
                   </span>
                   <Link
                     href={`/articles/${article.slug || "the-future-of-business-education"}`}
+                    className="hover:opacity-70 transition-opacity duration-200"
                     style={{
                       fontFamily: "Inter",
                       fontSize: 13,
@@ -377,6 +378,7 @@ export default function Section9({ section }: Section9Props) {
                       display: "flex",
                       alignItems: "center",
                       gap: "4px",
+                      cursor: "pointer",
                     }}
                   >
                     Read &#8594;
@@ -391,6 +393,7 @@ export default function Section9({ section }: Section9Props) {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Link
             href="/articles"
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
             style={{
               width: "240px",
               height: "56px",
@@ -406,6 +409,7 @@ export default function Section9({ section }: Section9Props) {
               alignItems: "center",
               justifyContent: "center",
               gap: "8px",
+              cursor: "pointer",
             }}
           >
             View All Articles &#8594;

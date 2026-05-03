@@ -87,8 +87,8 @@ function DetailedComparisonContent() {
 
     return (
         <div className="min-h-screen bg-[#FDFDFF] font-['Nunito']">
-            <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="mb-8 ml-4">
+            <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+                <div className="mb-2 ml-4">
                     <Breadcrumbs
                         items={[
                             { label: "Search Universities", href: "/universities" },

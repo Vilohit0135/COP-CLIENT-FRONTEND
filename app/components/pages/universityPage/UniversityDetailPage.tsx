@@ -206,6 +206,25 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
 
+  const categories = React.useMemo(() => {
+    const uniqueDegrees = courses.reduce((acc: any[], current) => {
+      const degree = current.degreeTypeId as any;
+      if (degree && degree.isActive !== false && degree.name && !acc.find(d => d._id === degree._id)) {
+        acc.push(degree);
+      }
+      return acc;
+    }, []);
+
+    // Sort by order field from the database
+    uniqueDegrees.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    return ["All", ...uniqueDegrees.map(d => d.name)];
+  }, [courses]);
+
+  const filteredCourses = activeCategory === "All"
+    ? courses
+    : courses.filter(c => (c.degreeTypeId as any)?.name === activeCategory);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-5 animate-pulse">
@@ -319,18 +338,6 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
     );
   }
 
-  const categories = ["All", "Post Graduate", "Under Graduate", "Diploma", "Certificate"];
-
-  const filteredCourses = activeCategory === "All"
-    ? courses
-    : courses.filter(c => {
-      const degreeName = (c.degreeTypeId as any)?.name || "";
-      if (activeCategory === "Post Graduate") return degreeName.includes("Masters") || degreeName.includes("MBA") || degreeName.includes("PG");
-      if (activeCategory === "Under Graduate") return degreeName.includes("Bachelors") || degreeName.includes("BBA") || degreeName.includes("UG");
-      if (activeCategory === "Diploma") return degreeName.includes("Diploma");
-      if (activeCategory === "Certificate") return degreeName.includes("Certificate");
-      return true;
-    });
 
   const tabs = [
     { id: "about", label: "About University" },
@@ -458,7 +465,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
       {/* Main Content Area */}
       <div className="pb-8">
         {/* Navigation Tabs - Adjusted for mobile sticky header */}
-        <div className="sticky top-[80px] md:top-0 z-40 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg shadow-gray-100/50 mb-8 overflow-x-auto no-scrollbar lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0">
+        <div className="sticky top-[100px] md:top-0 z-40 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg shadow-gray-100/50 mb-8 overflow-x-auto no-scrollbar lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0">
           <div className="flex min-w-max">
             {tabs.map((tab) => (
               <button
@@ -514,7 +521,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-amber-400 fill-current" />
                     <span className="text-sm font-bold text-gray-900">{provider.averageRating || 0}/5</span>
-                    <span className="text-xs text-gray-400 ml-1">({reviews.length} reviews)</span>
+                    <span className="text-xs text-gray-400 ml-1">({provider.reviewCount || reviews.length} reviews)</span>
                   </div>
                 </div>
                 <div className="border border-gray-100 rounded-xl p-4">
@@ -991,7 +998,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                       <Star key={i} className={`w-4 h-4 ${i < Math.floor(Number(provider.averageRating) || 4) ? "fill-current" : ""}`} />
                     ))}
                   </div>
-                  <span className="text-gray-400 text-xs font-medium">Based on {reviews.length} reviews</span>
+                  <span className="text-gray-400 text-xs font-medium">Based on {provider.reviewCount || reviews.length} reviews</span>
                 </div>
                 <div className="flex-1 space-y-3">
                   {[
@@ -1160,7 +1167,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                       <Star className="w-5 h-5 text-[#6366F1]" />
                       <span className="text-sm font-medium text-gray-500">Student Rating</span>
                     </div>
-                    <span className="text-sm font-bold text-gray-900">{provider.averageRating || "4.1"} / 5</span>
+                    <span className="text-sm font-bold text-gray-900">{provider.averageRating || 0} / 5</span>
                   </div>
                 </div>
               </div>

@@ -86,9 +86,11 @@ export default function UniversityCard({
         />
 
         {/* Admission Badge */}
-        <div className="absolute top-4 right-0 bg-purple-600 text-white text-[10px] font-bold px-4 py-1.5 rounded-l-full shadow-lg transform translate-x-1 group-hover:translate-x-0 transition-transform">
-          ADMISSIONS CLOSING SOON
-        </div>
+        {university.admissionOpen?.isOpen && (
+          <div className="absolute top-4 right-0 bg-purple-600 text-white text-[10px] font-bold px-4 py-1.5 rounded-l-full shadow-lg transform translate-x-1 group-hover:translate-x-0 transition-transform">
+            {university.admissionOpen.text || "ADMISSIONS OPEN"}
+          </div>
+        )}
 
         {/* Shortlist Button */}
         <button
@@ -103,7 +105,7 @@ export default function UniversityCard({
         {/* Location Badge */}
         <div className="absolute bottom-4 right-4 bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg">
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
-          {university.location || "Mumbai"}
+          {university.comparison?.location || "India"}
         </div>
 
         {/* Logo Overlay */}
@@ -134,7 +136,7 @@ export default function UniversityCard({
             <span className="text-sm font-bold text-gray-900">
               {university.averageRating || 4.2}
               <span className="text-gray-500 font-medium ml-1">
-                (620 Reviews)
+                ({university.reviewCount || 0} Reviews)
               </span>
             </span>
           </div>

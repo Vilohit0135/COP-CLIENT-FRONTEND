@@ -150,6 +150,7 @@ export default function Section6({ section }: Section6Props) {
       <div className="text-center mt-12">
         <Link href="/explore-programs?type=all" style={{ textDecoration: 'none' }}>
           <button
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
             style={{
               width: 293,
               height: 56,

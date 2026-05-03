@@ -36,6 +36,176 @@ export default function TalkToExpertsForm({
   const [otpLoading, setOtpLoading] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
+  const [courseOptions, setCourseOptions] = useState<string[]>(programs);
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/provider-courses/home-summary`);
+        if (response.ok) {
+          const data = await response.json();
+          // Extract names from grouped courses
+          const allCourses = data.flatMap((group: any) => group.courses?.map((c: any) => c.name) || []);
+          const uniqueCourses = Array.from(new Set(allCourses)).filter(Boolean) as string[];
+          
+          if (uniqueCourses.length > 0) {
+            setCourseOptions([...uniqueCourses, "Others"]);
+          } else {
+            // If API returns nothing, use prop and add Others
+            setCourseOptions([...programs, "Others"]);
+          }
+        } else {
+          setCourseOptions([...programs, "Others"]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch programs for selector", err);
+        setCourseOptions([...programs, "Others"]);
+      }
+    };
+    fetchPrograms();
+  }, [programs]);
+
+  // Click outside handler for custom selects
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!(event.target as Element).closest(".custom-select-container")) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const CustomSelect = ({ 
+    label, 
+    value, 
+    options, 
+    onChange, 
+    placeholder, 
+    required = false, 
+    id,
+    icon: Icon
+  }: { 
+    label: string, 
+    value: string, 
+    options: string[], 
+    onChange: (val: string) => void, 
+    placeholder: string, 
+    required?: boolean,
+    id: string,
+    icon?: any
+  }) => {
+    const isOpen = activeDropdown === id;
+    const filteredOptions = options.filter(opt => 
+      opt.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+      <div className="custom-select-container" style={{ position: "relative" }}>
+        <label style={labelStyle}>{label} {required && <span style={{ color: "#EF4444" }}>*</span>}</label>
+        <div 
+          onClick={() => {
+            if (isOpen) {
+              setActiveDropdown(null);
+            } else {
+              setActiveDropdown(id);
+              setSearchTerm("");
+            }
+          }}
+          style={{ 
+            ...inputStyle, 
+            cursor: "pointer", 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "space-between",
+            paddingLeft: Icon ? "38px" : "16px",
+            borderColor: isOpen ? "#9810FA" : "#D1D5DB",
+            boxShadow: isOpen ? "0 0 0 2px rgba(152, 16, 250, 0.1)" : "none"
+          }}
+        >
+          {Icon && <Icon size={16} style={{ position: "absolute", left: "12px", color: "#9CA3AF" }} />}
+          <span style={{ color: value ? "#374151" : "#9CA3AF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            {value || placeholder}
+          </span>
+          <ChevronDown size={16} style={{ color: "#6B7280", transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "none" }} />
+        </div>
+
+        {isOpen && (
+          <div style={{ 
+            position: "absolute", 
+            top: "calc(100% + 4px)", 
+            left: 0, 
+            right: 0, 
+            backgroundColor: "#FFFFFF", 
+            border: "1px solid #E5E7EB", 
+            borderRadius: "8px", 
+            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", 
+            zIndex: 50,
+            maxHeight: "280px",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden"
+          }}>
+            {options.length > 8 && (
+              <div style={{ padding: "8px", borderBottom: "1px solid #F3F4F6" }}>
+                <input 
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ 
+                    width: "100%", 
+                    padding: "8px 12px", 
+                    borderRadius: "6px", 
+                    border: "1px solid #E5E7EB",
+                    fontSize: "13px",
+                    outline: "none",
+                    fontFamily: "Inter"
+                  }}
+                />
+              </div>
+            )}
+            <div style={{ overflowY: "auto", flex: 1 }}>
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map((opt, i) => (
+                  <div 
+                    key={i}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChange(opt);
+                      setActiveDropdown(null);
+                    }}
+                    style={{ 
+                      padding: "10px 16px", 
+                      fontSize: "14px", 
+                      color: "#374151", 
+                      cursor: "pointer",
+                      backgroundColor: value === opt ? "#F9FAFB" : "transparent",
+                      fontWeight: value === opt ? 600 : 400,
+                      transition: "background-color 0.1s"
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#F3F4F6"}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = value === opt ? "#F9FAFB" : "transparent"}
+                  >
+                    {opt}
+                  </div>
+                ))
+              ) : (
+                <div style={{ padding: "12px 16px", fontSize: "14px", color: "#9CA3AF", textAlign: "center" }}>
+                  No results found
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -252,7 +422,8 @@ export default function TalkToExpertsForm({
                 type="button"
                 onClick={handleSendOtp}
                 disabled={otpLoading || !formData.phoneNumber}
-                style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", backgroundColor: "#9810FA", color: "#FFFFFF", padding: "4px 12px", borderRadius: "6px", border: "none", fontSize: "11px", fontWeight: 600, cursor: "pointer", opacity: (otpLoading || !formData.phoneNumber) ? 0.5 : 1 }}
+                style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", backgroundColor: "#9810FA", color: "#FFFFFF", padding: "4px 12px", borderRadius: "6px", border: "none", fontSize: "11px", fontWeight: 600, cursor: "pointer", opacity: (otpLoading || !formData.phoneNumber) ? 0.5 : 1, transition: "opacity 0.2s ease" }}
+                className="hover:opacity-80"
               >
                 {otpSent ? "Resend OTP" : "Send OTP"}
               </button>
@@ -278,7 +449,8 @@ export default function TalkToExpertsForm({
                 type="button"
                 onClick={handleVerifyOtp}
                 disabled={otpLoading}
-                style={{ padding: "12px 20px", borderRadius: "10px", backgroundColor: "#9810FA", color: "#FFFFFF", fontFamily: "Inter", fontSize: "14px", fontWeight: 600, border: "none", cursor: otpLoading ? "not-allowed" : "pointer", opacity: otpLoading ? 0.6 : 1, flexShrink: 0 }}
+                style={{ padding: "12px 20px", borderRadius: "10px", backgroundColor: "#9810FA", color: "#FFFFFF", fontFamily: "Inter", fontSize: "14px", fontWeight: 600, border: "none", cursor: otpLoading ? "not-allowed" : "pointer", opacity: otpLoading ? 0.6 : 1, flexShrink: 0, transition: "opacity 0.2s ease" }}
+                className="hover:opacity-80"
               >
                 {otpLoading ? "..." : "Verify"}
               </button>
@@ -287,38 +459,26 @@ export default function TalkToExpertsForm({
         )}
 
         {/* Program of Interest */}
-        <div>
-          <label style={labelStyle}>Program of Interest <span style={{ color: "#EF4444" }}>*</span></label>
-          <div style={{ position: "relative" }}>
-            <select
-              value={formData.programOfInterest}
-              onChange={(e) => setFormData({ ...formData, programOfInterest: e.target.value })}
-              style={{ ...inputStyle, appearance: "none", cursor: "pointer" }}
-              required
-            >
-              <option value="">Select Program</option>
-              {programs.map((p, i) => <option key={i} value={p}>{p}</option>)}
-            </select>
-            <ChevronDown size={16} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#6B7280" }} />
-          </div>
-        </div>
+        <CustomSelect 
+          id="program"
+          label="Program of Interest"
+          placeholder="Select Program"
+          value={formData.programOfInterest}
+          options={courseOptions}
+          onChange={(val) => setFormData({ ...formData, programOfInterest: val })}
+          required
+        />
 
         {/* Preferred Time to Call */}
-        <div>
-          <label style={labelStyle}>Preferred Time to Call</label>
-          <div style={{ position: "relative" }}>
-            <Clock size={16} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#9CA3AF", pointerEvents: "none" }} />
-            <select
-              value={formData.preferredTime}
-              onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-              style={{ ...inputStyle, paddingLeft: "34px", appearance: "none", cursor: "pointer" }}
-            >
-              <option value="">Select time slot</option>
-              {["9 AM – 11 AM", "11 AM – 1 PM", "2 PM – 4 PM", "4 PM – 6 PM", "6 PM – 8 PM"].map((t, i) => <option key={i} value={t}>{t}</option>)}
-            </select>
-            <ChevronDown size={16} style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", color: "#6B7280" }} />
-          </div>
-        </div>
+        <CustomSelect 
+          id="time"
+          label="Preferred Time to Call"
+          placeholder="Select time slot"
+          value={formData.preferredTime}
+          options={["9 AM – 11 AM", "11 AM – 1 PM", "2 PM – 4 PM", "4 PM – 6 PM", "6 PM – 8 PM"]}
+          onChange={(val) => setFormData({ ...formData, preferredTime: val })}
+          icon={Clock}
+        />
 
         {/* Message */}
         <div>
@@ -336,6 +496,7 @@ export default function TalkToExpertsForm({
         <button
           type="submit"
           disabled={loading}
+          className="hover:opacity-90 hover:scale-[1.01] transition-all duration-200"
           style={{
             width: "100%",
             height: "52px",
