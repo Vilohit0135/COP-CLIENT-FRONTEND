@@ -79,7 +79,7 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
     };
 
     return (
-        <div className="animate-in fade-in duration-700 mx-auto px-4 py-8">
+        <div className="animate-in fade-in duration-700 mx-auto px-4 lg:pt-10 pb-8">
             <button
                 onClick={() => router.back()}
                 className="flex items-center gap-2 text-[#803AF2] font-bold mb-8 hover:gap-3 transition-all cursor-pointer"
@@ -97,7 +97,7 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                         <p className="text-gray-500 font-medium">Compare universities side-by-side • Research Freely Mode ON 🌟</p>
                     </div>
                 </div>
-                <button 
+                <button
                     onClick={() => {
                         localStorage.removeItem('selectedToCompare');
                         router.push('/compareUniversities');
@@ -108,7 +108,7 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                 </button>
             </div>
 
-            <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden mb-12">
+            <div className="bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] shadow overflow-hidden mb-12">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -121,14 +121,14 @@ const DetailedComparisonTable = ({ universities }: DetailedComparisonTableProps)
                                 {universities.map((uni) => (
                                     <th key={uni.id} className="p-8 min-w-[350px]">
                                         <div className="bg-white border-2 border-gray-50 rounded-2xl p-6 relative group hover:border-purple-100 transition-all duration-300">
-                                            <button 
+                                            <button
                                                 onClick={() => {
                                                     const remainingIds = universities
                                                         .filter(u => u.id !== uni.id)
                                                         .map(u => u.id);
                                                     const newIdsString = remainingIds.join(',');
                                                     localStorage.setItem('selectedToCompare', JSON.stringify(remainingIds));
-                                                    
+
                                                     if (newIdsString) {
                                                         router.push(`/compareUniversities/detailed?ids=${newIdsString}`);
                                                     } else {

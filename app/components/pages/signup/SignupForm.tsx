@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, User, Phone, GraduationCap } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Phone, GraduationCap, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
 
@@ -124,9 +124,17 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="w-full lg:w-1/2 flex justify-center p-6 bg-white min-h-screen relative">
-            <Toaster position="bottom-right" />
-            <div className="w-full max-w-md mt-10">
+        <div className="w-full lg:w-1/2 flex justify-center lg:items-start items-center p-6 lg:pt-20 bg-white min-h-screen relative">
+            <div className="w-full max-w-md">
+                {/* Back to Home - Mobile Only */}
+                <Link
+                    href="/"
+                    className="inline-flex lg:hidden items-center gap-1.5 mb-8 text-sm font-medium text-gray-500 hover:text-purple-600 transition-colors group"
+                >
+                    <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                    Back to Home
+                </Link>
+
                 {/* Logo and Brand */}
                 <div className="flex items-center gap-3 mb-8">
                     <div className="w-10 h-10 bg-[#9810FA] rounded-xl flex items-center justify-center text-white">

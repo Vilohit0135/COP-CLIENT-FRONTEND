@@ -5,6 +5,7 @@ import { ProviderCourse, Course } from "@/app/lib/types";
 
 import { Breadcrumbs, Breadcrumb } from "@/app/components/Breadcrumbs";
 import TalkToExperts from "../components/pages/experts/TalkToExperts";
+import { IconAward, IconBriefcase, IconClockCheck, IconCurrencyRupee, IconVideo, IconFileText, IconUsers, IconDownload, IconArtboardFilled, IconCircleCheckFilled, IconArrowRight } from "@tabler/icons-react";
 
 interface CourseDetailResponse {
   course: Course;
@@ -78,7 +79,7 @@ export default async function CourseDetailPage({
   return (
     <main className="min-h-screen bg-white font-sans text-gray-900 overflow-x-hidden">
       {/* 1. Hero Section */}
-      <section className="max-w-[1240px] mx-auto px-4 pt-12 md:pt-16 pb-12 flex flex-col md:flex-row items-center gap-12">
+      <section className="max-w-[90vw] mx-auto px-4 pt-12 md:pt-16 pb-12 flex flex-col md:flex-row items-center gap-12">
         <div className="flex-1 space-y-6">
           <Breadcrumbs
             items={breadcrumbItems}
@@ -86,28 +87,18 @@ export default async function CourseDetailPage({
           />
 
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1A1A2E] leading-[1.1] uppercase tracking-tighter text-balance">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1A1A2E] leading-[1.1] tracking-tighter text-balance">
               {course.name}
             </h1>
             <p className="text-gray-500 text-sm md:text-base max-w-xl leading-relaxed">
               {firstProgram.shortDescription || `Master the essentials of ${course.name} with our comprehensive online programs. Gain industry-relevant skills and advance your career with top-tier university credentials.`}
             </p>
           </div>
-
-          <div className="flex flex-wrap gap-4 pt-4">
-            <button className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-8 py-3.5 rounded-full font-black text-xs uppercase tracking-widest shadow-lg shadow-purple-200 transition-all active:scale-95">
-              Apply Now
-            </button>
-            <button className="group border-2 border-gray-100 hover:border-[#8B5CF6] text-gray-400 hover:text-[#8B5CF6] px-8 py-3.5 rounded-full font-black text-xs uppercase tracking-widest transition-all inline-flex items-center gap-2">
-              Download Brochure
-              <svg className="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-            </button>
-          </div>
         </div>
 
-        <div className="md:w-1/2 relative lg:w-[45%]">
+        <div className="md:w-1/2 relative lg:w-[47%]">
           <div className="absolute -inset-4 bg-purple-50 rounded-[40px] -z-10" />
-          <div className="relative rounded-[32px] overflow-hidden shadow-2xl">
+          <div className="relative rounded-xl overflow-hidden shadow-2xl">
             <img
               src={provider?.coverImage || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=60"}
               alt={course.name}
@@ -119,43 +110,106 @@ export default async function CourseDetailPage({
       </section>
 
       {/* 2. Top Highlights Row */}
-      <section className="bg-gray-50/50 py-12">
-        <div className="max-w-[1240px] mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <section className="py-12">
+        <div className="max-w-[90vw] mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: "Duration", value: firstProgram.duration || "24 Months", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
-            { label: "Eligibility", value: firstProgram.eligibility || "Graduation", icon: "M12 14l9-5-9-5-9 5 9 5z" },
-            { label: "Level", value: firstProgram.difficultyLevel || "Advanced", icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" },
-            { label: "Mode", value: firstProgram.mode || "Online", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" }
+            {
+              label: "Program Fee",
+              value: firstProgram.discountedFees ? `₹${firstProgram.discountedFees.toLocaleString()}` : (firstProgram.fees ? `₹${firstProgram.fees.toLocaleString()}` : "₹1,20,000"),
+              footer: "EMI Options Available",
+              icon: (
+                <IconCurrencyRupee stroke={2} />
+              )
+            },
+            {
+              label: "Duration",
+              value: firstProgram.duration || "24 Months",
+              footer: "Flexible Learning",
+              icon: (
+                <IconClockCheck stroke={2} />
+              )
+            },
+            {
+              label: "Recognition",
+              value: provider?.approvals?.[0]?.name || "UGC Approved",
+              footer: "NAAC Accredited",
+              icon: (
+                <IconAward stroke={2} />
+              )
+            },
+            {
+              label: "Avg. Salary",
+              value: provider?.comparison?.averageSalary ? `₹${provider.comparison.averageSalary} LPA` : "₹8.5 LPA",
+              footer: "Post Completion",
+              icon: (
+                <IconBriefcase stroke={2} />
+              )
+            }
           ].map((item, i) => (
-            <div key={i} className="bg-white p-6 rounded-3xl border border-gray-100 flex items-center gap-4 transition-all hover:shadow-xl hover:shadow-purple-100 group">
-              <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-[#8B5CF6] group-hover:bg-[#8B5CF6] group-hover:text-white transition-all">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} /></svg>
+            <div key={i} className="bg-[#FAF5FF] py-6 px-7  rounded-2xl border border-[#E9D4FF] flex flex-col items-start gap-6 transition-all hover:shadow-xl hover:shadow-purple-100/50 group">
+              <div className="p-3 bg-[#7C3AED] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-purple-200">
+                {item.icon}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-1">{item.label}</p>
-                <p className="font-black text-gray-900 truncate">{item.value}</p>
+              <div className="space-y-1">
+                <p className="font-semibold ">{item.label}</p>
+                <p className="text-3xl font-black text-[#1A1A2E] leading-tight">{item.value}</p>
+                <p className="text-sm text-gray-600 font-medium pt-1">{item.footer}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 3. Program Key Highlights */}
       <section className="py-24">
-        <div className="max-w-[1240px] mx-auto px-4 text-center">
-          <h2 className="text-3xl font-black text-[#1A1A2E] uppercase tracking-tight mb-4">Key Highlights of the Program</h2>
-          <div className="w-20 h-1.5 bg-[#8B5CF6] mx-auto rounded-full mb-16" />
+        <div className="max-w-[1240px] mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-[#1A1A2E] tracking-tight mb-4">Program Highlights</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Our {course.name} programs are designed to provide you with comprehensive business education and practical skills needed to excel in your career
+            </p>
+          </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              "Highly Industry Relevant", "Live Interaction Session", "Flexible Learning Options",
-              "Dedicated Career Support", "Networking Opportunities", "Self Paced Learning"
-            ].map((text, i) => (
-              <div key={i} className="p-8 bg-[#F8F9FF] rounded-3xl flex flex-col items-center gap-4 border border-gray-50 hover:bg-white hover:shadow-xl transition-all group">
-                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#8B5CF6] shadow-sm group-hover:bg-[#8B5CF6] group-hover:text-white transition-all">
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+              {
+                title: "Live Interactive Classes",
+                desc: "Attend live sessions with industry experts and faculty",
+                icon: <IconVideo className="w-6 h-6" stroke={2} />
+              },
+              {
+                title: "Industry-Relevant Curriculum",
+                desc: "Updated syllabus aligned with current market needs",
+                icon: <IconFileText className="w-6 h-6" stroke={2} />
+              },
+              {
+                title: "Global Peer Network",
+                desc: "Connect with professionals from diverse backgrounds",
+                icon: <IconUsers className="w-6 h-6" stroke={2} />
+              },
+              {
+                title: "Recognized Certification",
+                desc: "Degree equivalent to on-campus programs",
+                icon: <IconAward className="w-6 h-6" stroke={2} />
+              },
+              {
+                title: "Career Support",
+                desc: "Placement assistance and career counseling",
+                icon: <IconBriefcase className="w-6 h-6" stroke={2} />
+              },
+              {
+                title: "Lifetime Access",
+                desc: "Access to learning materials even after completion",
+                icon: <IconDownload className="w-6 h-6" stroke={2} />
+              }
+            ].map((item, i) => (
+              <div key={i} className="bg-[#FAF5FF] p-6 rounded-2xl border border-[#F3E8FF] flex items-center gap-5 transition-all shadow hover:shadow-xl hover:-translate-y-1 group">
+                <div className="w-12 h-12 bg-[#7C3AED] rounded-xl flex items-center justify-center text-white shrink-0 shadow-lg shadow-purple-100">
+                  {item.icon}
                 </div>
-                <h3 className="font-black text-gray-800 uppercase text-xs tracking-widest">{text}</h3>
+                <div className="text-left">
+                  <h3 className="font-bold text-gray-900 text-lg mb-1">{item.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -164,18 +218,24 @@ export default async function CourseDetailPage({
 
       {/* 4. Specializations Offered */}
       {specializations.length > 0 && (
-        <section className="bg-[#FAF9FF] py-24">
-          <div className="max-w-[1240px] mx-auto px-4 text-center">
-            <h2 className="text-3xl font-black text-[#1A1A2E] uppercase tracking-tight mb-4">Specializations Offered</h2>
-            <div className="w-20 h-1.5 bg-[#8B5CF6] mx-auto rounded-full mb-16" />
+        <section className=" py-24">
+          <div className="max-w-[1240px] mx-auto px-4">
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-black text-[#1A1A2E] tracking-tight mb-4">Available Specializations</h2>
+              <p>Choose from a wide range of specializations to align with your career goals and interests, Choose from a wide range of specializations to align with your career goals and interestsChoose from a wide range of specializations to align with your career goals and interestsChoose from a wide range of specializations to align with your career goals and interests</p>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4">
               {specializations.map((spec, i) => (
-                <div key={i} className="bg-white p-6 rounded-2xl flex items-center gap-3 border border-gray-100 hover:scale-[1.02] transition-transform cursor-pointer">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-500">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                <div
+                  key={i}
+                  className="basis-[calc(50%-1rem)] md:basis-[calc(33.33%-1rem)] lg:basis-[calc(25%-1rem)] bg-[#FAF5FF] p-6 rounded-xl flex flex-col items-center gap-3 border border-[#E9D4FF] hover:scale-[1.02] transition-transform cursor-pointer"
+                >
+                  <div className="flex items-center justify-center">
+                    <IconArtboardFilled color="#9810FA" size={36} />
                   </div>
-                  <span className="font-bold text-gray-700 text-[11px] text-left uppercase">{spec}</span>
+                  <span className="font-bold text-gray-700 text-lg text-center">{spec}</span>
                 </div>
               ))}
             </div>
@@ -186,22 +246,53 @@ export default async function CourseDetailPage({
       {/* 5. Eligibility Criteria */}
       <section className="py-24">
         <div className="max-w-[1240px] mx-auto px-4 text-center">
-          <h2 className="text-3xl font-black text-[#1A1A2E] uppercase tracking-tight mb-4">Eligibility Criteria</h2>
-          <div className="w-20 h-1.5 bg-[#8B5CF6] mx-auto rounded-full mb-16" />
+          <div className="mb-16">
+            <h2 className="text-4xl font-black text-[#1A1A2E] tracking-tight mb-4">Eligibility Criteria</h2>
+            <p className="text-gray-500 max-w-4xl mx-auto text-sm leading-relaxed">
+              Check if you meet the requirements to apply for our MBA programs Check if you meet the requirements to apply for our MBA programCheck if you meet the requirements to apply for our MBA programs Check if you meet the requirements to apply for our MBA programsCheck if you meet the requirements to apply for our MBA programs Check if you meet the requirements to apply for our MBA programss
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { title: "Academic Qualification", desc: firstProgram.eligibility || "Bachelor's degree with minimum 50% marks from a recognized university." },
-              { title: "Course Level", desc: `This is a ${degreeType?.name || 'Academic'} level program designed for ${degreeType?.name === 'Post Graduate' ? 'graduates' : 'professionals'}.` },
-              { title: "Experience", desc: "No prior work experience is mandatory, though preference is given to professionals with 2+ years of exposure." }
+              {
+                title: "Educational Qualification",
+                points: [
+                  firstProgram.eligibility || "Bachelor's degree from a recognized university",
+                  `This is a ${degreeType?.name || 'Academic'} level program`,
+                  `Designed for ${degreeType?.name === 'Post Graduate' ? 'graduates' : 'professionals'}`
+                ]
+              },
+              {
+                title: "Work Experience",
+                points: [
+                  "No prior work experience is mandatory",
+                  "Preference given to professionals with 2+ years of exposure",
+                  "Relevant industry experience is an advantage"
+                ]
+              },
+              {
+                title: "Entrance Exam",
+                points: [
+                  firstProgram.examPattern || "CAT / MAT / XAT / CMAT scores accepted",
+                  "University entrance exam may be required",
+                  "Valid scores are mandatory for admission"
+                ]
+              }
             ].map((item, i) => (
-              <div key={i} className="p-10 rounded-[32px] border-2 border-gray-50 flex flex-col items-center text-center space-y-6 hover:border-[#8B5CF6]/20 transition-all bg-white shadow-sm hover:shadow-xl">
-                <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center text-[#8B5CF6]">
-                  <span className="text-2xl font-black">0{i + 1}</span>
+              <div key={i} className="p-8 md:p-12 rounded-xl border border-[#F3E8FF] shadow flex flex-col items-center bg-[#FAF5FF] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(139,92,246,0.1)] transition-all group">
+                <div className="w-16 h-16 bg-[#8B5CF6] rounded-full flex items-center justify-center text-white mb-8 shadow-lg shadow-purple-100">
+                  <IconCircleCheckFilled size={32} />
                 </div>
-                <h4 className="font-black text-[#1A1A2E] uppercase text-sm tracking-widest">{item.title}</h4>
-                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
-                <div className="h-1 w-12 bg-gray-100 rounded-full" />
+                <h4 className="font-black text-[#1A1A2E] text-xl mb-8">{item.title}</h4>
+                <ul className="space-y-5 text-left w-full">
+                  {item.points.map((point, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <IconArrowRight className="w-4 h-4 text-[#8B5CF6] mt-1 shrink-0" stroke={3} />
+                      <span className="text-gray-500 text-sm font-medium leading-relaxed">{point}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -216,16 +307,21 @@ export default async function CourseDetailPage({
       {/* 7. Course Curriculum */}
       <section className="py-24">
         <div className="max-w-[1240px] mx-auto px-4 text-center">
-          <h2 className="text-3xl font-black text-[#1A1A2E] uppercase tracking-tight mb-4">Course Curriculum</h2>
-          <div className="w-20 h-1.5 bg-[#8B5CF6] mx-auto rounded-full mb-16" />
+          <div className="text-center mb-12">
+
+            <h1 className="text-4xl font-black text-[#1A1A2E] tracking-tight mb-2">Curriculum Structure</h1>
+            <p>
+              Comprehensive curriculum designed to provide in-depth knowledge across all management domains
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((sem) => (
-              <div key={sem} className="bg-[#FAF9FF] p-8 rounded-[32px] border border-gray-100 text-left hover:bg-white hover:shadow-2xl transition-all group">
+              <div key={sem} className="bg-[#FAF5FF] p-8 rounded-xl border border-[#E9D4FF] shadow text-left  hover:shadow-2xl transition-all group">
                 <div className="w-10 h-10 bg-[#8B5CF6] text-white rounded-xl flex items-center justify-center font-black mb-6 text-sm">
                   S{sem}
                 </div>
-                <h4 className="font-black text-[#1A1A2E] uppercase text-xs tracking-widest mb-6">Semester {sem}</h4>
+                <h4 className="font-black text-[#1A1A2E] uppercase text-lg tracking-widest mb-6">Semester {sem}</h4>
                 <ul className="space-y-4">
                   {["Core Foundations", "Advanced Strategies", "Elective Specialization", "Project & Case Study"].map((sub, j) => (
                     <li key={j} className="flex items-start gap-3 text-xs text-gray-500 font-medium">

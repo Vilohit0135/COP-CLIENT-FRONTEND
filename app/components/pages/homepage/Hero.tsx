@@ -105,7 +105,7 @@ export default function Hero({ section }: HeroProps) {
     <section className="relative w-full bg-white text-gray-900 overflow-visible">
       {/* Responsive container with proper scaling */}
       {/* pt accounts for sticky promo bar (~36px) + fixed navbar pill (~92px) minus the outer pt-10 (40px) = ~88px needed */}
-      <div className="w-full pt-[88px] lg:pt-[32px] pb-6">
+      <div className="w-full pt-5 lg:pt-[32px] pb-6">
         <div className="max-w-7xl mx-auto">
           <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16">
             {/* Left column: text */}
@@ -123,17 +123,16 @@ export default function Hero({ section }: HeroProps) {
 
                 return (
                   <div
-                    className="mb-4 sm:mb-6 inline-flex items-center rounded-full"
+                    className="mb-3 sm:mb-6 inline-flex items-center rounded-full max-w-full"
                     style={{
                       background: "linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)",
                       color: "white",
-                      paddingLeft: "clamp(10px, 2.4vw, 18px)",
-                      paddingRight: "clamp(14px, 3vw, 22px)",
-                      paddingTop: "clamp(6px, 0.8vw, 8px)",
-                      paddingBottom: "clamp(6px, 0.8vw, 8px)",
-                      gap: "clamp(8px, 1.2vw, 12px)",
+                      paddingLeft: "clamp(8px, 2.4vw, 18px)",
+                      paddingRight: "clamp(10px, 3vw, 22px)",
+                      paddingTop: "clamp(5px, 0.8vw, 8px)",
+                      paddingBottom: "clamp(5px, 0.8vw, 8px)",
+                      gap: "clamp(6px, 1.2vw, 12px)",
                       alignItems: "center",
-                      width: "auto",
                       display: "inline-flex",
                     }}
                   >
@@ -141,17 +140,18 @@ export default function Hero({ section }: HeroProps) {
                       src="/SVG%20(2).png"
                       alt="icon"
                       className="object-contain flex-shrink-0"
-                      style={{ width: "clamp(18px, 2.4vw, 22px)", height: "clamp(18px, 2.4vw, 22px)" }}
+                      style={{ width: "clamp(14px, 2.4vw, 22px)", height: "clamp(14px, 2.4vw, 22px)" }}
                     />
                     <span
                       title={privacyText}
                       style={{
-                        fontSize: "clamp(11px, 3.2vw, 18px)",
+                        fontSize: "clamp(10px, 2.8vw, 18px)",
                         fontWeight: 600,
                         lineHeight: 1.3,
-                        whiteSpace: "normal",
-                        display: "block",
-                        wordBreak: "break-word",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        minWidth: 0,
                       }}
                     >
                       {privacyText}
@@ -242,14 +242,14 @@ export default function Hero({ section }: HeroProps) {
               </div>
 
               {/* Stats row */}
-              <div className="mt-6 lg:mt-10 xl:mt-12 flex flex-row gap-3 sm:gap-8 lg:gap-10 items-start justify-center lg:justify-start">
+              <div className="mt-4 sm:mt-6 lg:mt-10 xl:mt-12 flex flex-row gap-2 sm:gap-8 lg:gap-10 items-start justify-center lg:justify-start">
                 {[
                   { icon: '/Container (47).png', label: statUniversities, sub: 'Partnerships' },
                   { icon: '/Container (48).png', label: statPrograms, sub: 'Available' },
                   { icon: '/Container (49).png', label: statStudents, sub: 'Enrolled' },
                 ].map((stat, i) => (
-                  <div key={i} className="flex items-start gap-2" style={{ flex: 1, minWidth: 0 }}>
-                    <img src={stat.icon} alt="icon" style={{ width: 36, height: 36, objectFit: 'contain', flexShrink: 0 }} />
+                  <div key={i} className="flex flex-col items-center lg:flex-row lg:items-start gap-1.5 sm:gap-2 text-center lg:text-left" style={{ flex: 1, minWidth: 0 }}>
+                    <img src={stat.icon} alt="icon" className="flex-shrink-0" style={{ width: 'clamp(24px, 5vw, 36px)', height: 'clamp(24px, 5vw, 36px)', objectFit: 'contain' }} />
                     <div style={{ minWidth: 0 }}>
                       {(() => {
                         const lbl = String(stat.label || "").trim();
@@ -287,11 +287,11 @@ export default function Hero({ section }: HeroProps) {
 
                         return (
                           <>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: '#161C2D', lineHeight: '1.05', whiteSpace: 'nowrap' }}>{numberPart}</div>
+                            <div style={{ fontSize: 'clamp(12px, 3.2vw, 15px)', fontWeight: 700, color: '#161C2D', lineHeight: '1.05', whiteSpace: 'nowrap' }}>{numberPart}</div>
                             {textPart ? (
-                              <div style={{ fontSize: 13, fontWeight: 700, color: '#161C2D', lineHeight: '1.2' }}>{textPart}</div>
+                              <div style={{ fontSize: 'clamp(11px, 2.8vw, 13px)', fontWeight: 700, color: '#161C2D', lineHeight: '1.2' }}>{textPart}</div>
                             ) : null}
-                            <div style={{ fontSize: 11, color: '#6A7282', marginTop: 6 }}>{stat.sub}</div>
+                            <div style={{ fontSize: 'clamp(9px, 2.4vw, 11px)', color: '#6A7282', marginTop: 'clamp(3px, 1vw, 6px)' }}>{stat.sub}</div>
                           </>
                         );
                       })()}

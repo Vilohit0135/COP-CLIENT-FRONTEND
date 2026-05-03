@@ -13,6 +13,11 @@ const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
     const router = useRouter();
 
     const handleDetailedComparison = () => {
+        const token = localStorage.getItem('studentToken');
+        if (!token) {
+            router.push('/login?message=comparison');
+            return;
+        }
         const ids = selectedData.map(u => u.id).join(',');
         router.push(`/compareUniversities/detailed?ids=${ids}`);
     };
@@ -34,7 +39,7 @@ const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
 
     return (
         <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="bg-white rounded-xl border border-gray-100 shadow-xl overflow-hidden mb-12 w-full">
+            <div className="bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] shadow overflow-hidden mb-12 w-full">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -82,7 +87,9 @@ const ComparisonTable = ({ selectedData, onRemove }: ComparisonTableProps) => {
                                                     ))}
                                                 </ul>
                                             ) : feature.isActions ? (
-                                                <button className="w-full py-2 border-2 border-[#803AF2] text-[#803AF2] rounded-xl font-bold hover:bg-purple-50 transition-colors">
+                                                <button
+                                                    onClick={handleDetailedComparison}
+                                                    className="w-full py-2 border-2 border-[#803AF2] text-[#803AF2] rounded-xl font-bold hover:bg-purple-50 transition-colors cursor-pointer">
                                                     View Details
                                                 </button>
                                             ) : (

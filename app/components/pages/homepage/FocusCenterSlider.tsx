@@ -23,6 +23,28 @@ export default function FocusCenterSlider({
   const [offset, setOffset] = useState(1);
   const [animated, setAnimated] = useState(true);
 
+  // Measure container width — translatePx is then derived synchronously (no async state chain)
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    setContainerWidth(el.getBoundingClientRect().width);
+    const obs = new ResizeObserver((entries) => {
+      setContainerWidth(entries[0].contentRect.width);
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // translatePx is a derived value — always in sync with offset in the same render
+  const step = cardWidth + gap;
+  const translatePx =
+    containerWidth > 0
+      ? Math.round(containerWidth / 2 - cardWidth / 2 - offset * step)
+      : 0;
+
   // real dot index (0-based)
   const realIndex = count > 0 ? ((offset - 1) % count + count) % count : 0;
 
@@ -31,32 +53,61 @@ export default function FocusCenterSlider({
     ? [children[count - 1], ...children, children[0]]
     : children;
 
+  // touch swipe support
+  const touchStartXRef = useRef<number | null>(null);
+  const isPausedRef = useRef(false);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    isPausedRef.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return;
+    const delta = touchStartXRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 30) {
+      setAnimated(true);
+      setOffset((prev) => prev + (delta > 0 ? 1 : -1));
+    }
+    touchStartXRef.current = null;
+    isPausedRef.current = false;
+  };
+
   // auto-advance
   useEffect(() => {
     if (count === 0) return;
     const id = setInterval(() => {
+      if (isPausedRef.current) return;
       setAnimated(true);
       setOffset((prev) => prev + 1);
     }, interval);
     return () => clearInterval(id);
   }, [count, interval]);
 
-  // after the CSS transition ends, silently snap if we landed on a clone
-  const handleTransitionEnd = useCallback(() => {
-    setOffset((prev) => {
-      if (prev === 0) {
-        setAnimated(false);
-        return count;
-      }
-      if (prev === count + 1) {
-        setAnimated(false);
-        return 1;
-      }
-      return prev;
-    });
-  }, [count]);
+  // After CSS transition ends, silently snap if we landed on a clone.
+  // setAnimated(false) + setOffset() batch in the same React render.
+  // Because translatePx is derived synchronously, the correct snap position
+  // is already computed in that render — no visible backward jump.
+  const handleTransitionEnd = useCallback(
+    (e: React.TransitionEvent) => {
+      // Ignore bubbled events from inner card transitions
+      if (e.target !== e.currentTarget) return;
+      setOffset((prev) => {
+        if (prev === 0) {
+          setAnimated(false);
+          return count;
+        }
+        if (prev === count + 1) {
+          setAnimated(false);
+          return 1;
+        }
+        return prev;
+      });
+    },
+    [count]
+  );
 
-  // re-enable animation one frame after a silent snap
+  // Re-enable animation one frame after a silent snap
   useEffect(() => {
     if (!animated) {
       const id = requestAnimationFrame(() => setAnimated(true));
@@ -64,28 +115,14 @@ export default function FocusCenterSlider({
     }
   }, [animated]);
 
-  // compute translate relative to container center (handles container padding)
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [translatePx, setTranslatePx] = useState(0);
-
-  const updateTranslate = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const step = cardWidth + gap;
-    // Compute translate relative to container left: center of container minus half card width, then shift by offset*step
-    const value = Math.round(rect.width / 2 - cardWidth / 2 - offset * step);
-    setTranslatePx(value);
-  }, [cardWidth, gap, offset]);
-
-  useEffect(() => {
-    updateTranslate();
-    window.addEventListener("resize", updateTranslate);
-    return () => window.removeEventListener("resize", updateTranslate);
-  }, [updateTranslate]);
-
   return (
-    <div ref={containerRef} className={`md:hidden relative ${className}`} style={{ overflow: "hidden" }}>
+    <div
+      ref={containerRef}
+      className={`md:hidden relative ${className}`}
+      style={{ overflow: "hidden" }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div
         onTransitionEnd={handleTransitionEnd}
         style={{

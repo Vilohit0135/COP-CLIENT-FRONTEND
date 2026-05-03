@@ -67,7 +67,6 @@ export default async function ExploreProgramsRoute({ searchParams }: { searchPar
       getDegreeTypes(),
       getCourses(),
       getSpecializations(),
-      new Promise((resolve) => setTimeout(resolve, 1500)),
     ]);
     degreeTypes = fetchedDegreeTypes;
     courses = fetchedCourses;

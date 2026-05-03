@@ -47,8 +47,15 @@ export interface Provider {
   isFeatured?: boolean;
   bestROI?: boolean;
   trending?: boolean;
-  isActive?: "active" | "inactive";
+  publicationStatus?: "draft" | "published";
   averageRating?: number;
+  reviewCount?: number;
+  ratingBreakdown?: {
+    averageRating: number;
+    digitalInfrastructure: number;
+    curriculum: number;
+    valueForMoney: number;
+  };
   aboutContent?: any;
   admissionProcess?: any;
   financialAid?: any;
@@ -94,6 +101,14 @@ export interface Provider {
     text: string;
     description?: any;
   };
+  admissionOpenDescription?: any;
+  campuses?: {
+    city: string;
+    state: string;
+    country: string;
+    _id?: string;
+  }[];
+  isActive?: "active" | "inactive";
   faq?: {
     question: string;
     answer: string;

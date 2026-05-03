@@ -35,7 +35,7 @@ export default function CompactUniversityCard({
       {/* View Details Link */}
       <Link
         href={`/universities/${university.slug}${courseId ? `?courseId=${courseId}#fees-breakdown` : ""}`}
-        className="text-[#9333EA] font-bold text-base flex items-center gap-1 hover:gap-2 transition-all"
+        className="text-[#9333EA] font-bold text-base flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
       >
         View Details <IconArrowRight size={18} />
       </Link>

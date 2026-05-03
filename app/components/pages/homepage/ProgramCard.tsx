@@ -57,7 +57,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
         {/* Content */}
         <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
           <h3 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 14, lineHeight: '18px', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', color: '#1E293B' }}>{p.title}</h3>
-          
+
           {/* Duration and Fee */}
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -109,19 +109,21 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
           </div>
 
           <div className="mt-auto pt-2">
-            <a 
-              href={p.slug ? `/online-courses/${p.slug}` : (p.providerSlug ? `/universities/${p.providerSlug}` : '#')} 
-              style={{ 
-                display: 'block', 
-                padding: '10px 0', 
-                background: '#4F46E5', 
-                color: '#fff', 
-                borderRadius: 10, 
-                fontSize: 13, 
-                fontWeight: 600, 
-                textAlign: 'center', 
+            <a
+              href={p.providerSlug ? `/universities/${p.providerSlug}?courseId=${p._id}#fees-breakdown` : '#'}
+              className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+              style={{
+                display: 'block',
+                padding: '10px 0',
+                background: '#4F46E5',
+                color: '#fff',
+                borderRadius: 10,
+                fontSize: 13,
+                fontWeight: 600,
+                textAlign: 'center',
                 textDecoration: 'none',
-                boxShadow: '0 2px 4px rgba(79, 70, 229, 0.15)'
+                boxShadow: '0 2px 4px rgba(79, 70, 229, 0.15)',
+                cursor: 'pointer'
               }}
             >
               View Details
@@ -167,7 +169,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
       </div>
 
       <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
-        
+
         {/* Duration and Fee Section */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
@@ -220,37 +222,41 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
 
         {/* Action Buttons */}
         <div style={{ display: 'flex', gap: 10, marginTop: 'auto', paddingTop: 10 }}>
-          <a 
-            href={p.slug ? `/online-courses/${p.slug}` : (p.providerSlug ? `/universities/${p.providerSlug}` : '#')} 
-            style={{ 
-              flex: 1.5, 
-              padding: '12px', 
-              background: '#4F46E5', 
-              color: '#fff', 
-              borderRadius: 12, 
-              fontWeight: 600, 
-              textAlign: 'center', 
-              textDecoration: 'none', 
+          <a
+            href={p.providerSlug ? `/universities/${p.providerSlug}?courseId=${p._id}#fees-breakdown` : '#'}
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+            style={{
+              flex: 1.5,
+              padding: '12px',
+              background: '#4F46E5',
+              color: '#fff',
+              borderRadius: 12,
+              fontWeight: 600,
+              textAlign: 'center',
+              textDecoration: 'none',
               fontSize: 14,
-              boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.2)'
+              boxShadow: '0 4px 6px -1px rgba(79, 70, 229, 0.2)',
+              cursor: 'pointer'
             }}
           >
             View Details
           </a>
-          <button 
-            style={{ 
-              flex: 1, 
-              padding: '12px', 
-              borderRadius: 12, 
-              border: '2px solid #4F46E5', 
-              background: 'transparent', 
-              color: '#4F46E5', 
-              fontWeight: 600, 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
+          <button
+            className="hover:bg-indigo-50 transition-all duration-200"
+            style={{
+              flex: 1,
+              padding: '12px',
+              borderRadius: 12,
+              border: '2px solid #4F46E5',
+              background: 'transparent',
+              color: '#4F46E5',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               gap: 6,
-              fontSize: 14
+              fontSize: 14,
+              cursor: 'pointer'
             }}
           >
             <ClipboardList size={16} />

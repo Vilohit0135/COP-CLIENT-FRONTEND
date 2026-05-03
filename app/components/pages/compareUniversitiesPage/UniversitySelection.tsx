@@ -33,7 +33,7 @@ const UniversitySelection = ({ universities, selectedUniversities, onToggle, onC
     });
 
     return (
-        <section className="bg-white border border-gray-100 rounded-2xl p-4 sm:p-8 mb-8 sm:mb-12 shadow-sm max-w-[1240px] mx-auto">
+        <section className="bg-[#FFFFFF] border border-[#E5E7EB] rounded-xl p-4 sm:p-8 mb-8 sm:mb-12 shadow-sm max-w-[1240px] mx-auto">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 mb-6 sm:mb-10 border-b-[1px] border-[#E5E7EB]">
                 <div className="flex items-center gap-3">
                     <div className="bg-[#EEF2FF] p-2 rounded-xl text-white flex-shrink-0">

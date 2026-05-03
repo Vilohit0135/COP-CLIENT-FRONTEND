@@ -80,7 +80,7 @@ export default function ProgramCard({
           </div>
         </div>
 
-        <button className="text-sm font-bold text-purple-600 flex items-center group/btn">
+        <button className="text-sm font-bold text-purple-600 flex items-center group/btn cursor-pointer">
           View Universities
           <svg className="w-4 h-4 ml-1 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
