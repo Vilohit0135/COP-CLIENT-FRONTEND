@@ -124,7 +124,7 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="w-full lg:w-1/2 flex justify-center items-center p-6 bg-white min-h-screen relative">
+        <div className="w-full lg:w-1/2 flex justify-center lg:items-start items-center p-6 lg:pt-20 bg-white min-h-screen relative">
             <div className="w-full max-w-md">
                 {/* Back to Home - Mobile Only */}
                 <Link

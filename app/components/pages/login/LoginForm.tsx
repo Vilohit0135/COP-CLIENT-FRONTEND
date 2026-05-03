@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -15,6 +15,8 @@ const LoginForm = () => {
         password: ''
     });
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const message = searchParams.get('message');
 
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
@@ -101,7 +103,7 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="w-full lg:w-1/2 flex justify-center items-center p-6 bg-white min-h-screen relative">
+        <div className="w-full lg:w-1/2 flex justify-center lg:items-start items-center p-6 lg:pt-20 bg-white min-h-screen relative">
             <div className="w-full max-w-md">
                 {/* Back to Home - Mobile Only */}
                 <Link
@@ -127,6 +129,19 @@ const LoginForm = () => {
 
                 {/* Header */}
                 <div className="mb-6">
+                    {message === 'comparison' && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-500 shadow-sm">
+                            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <Lock className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-red-900 text-sm">Action Required</h3>
+                                <p className="text-red-700 text-xs mt-0.5 font-medium leading-relaxed">
+                                    Please Login for seeing full comparison table
+                                </p>
+                            </div>
+                        </div>
+                    )}
                     <h2 className="text-2xl font-extrabold text-gray-900 mb-1">Welcome Back</h2>
                     <p className="text-gray-500">Sign in to continue your learning journey</p>
                 </div>

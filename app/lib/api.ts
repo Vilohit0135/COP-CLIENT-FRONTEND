@@ -115,3 +115,22 @@ export async function getBestROIPrograms() {
   if (!res.ok) throw new Error("Failed to fetch best ROI programs");
   return res.json();
 }
+
+export async function getReviews() {
+  const res = await fetch(`${API_BASE}/api/public/reviews`, {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Failed to fetch reviews");
+  return res.json();
+}
+
+export async function submitReview(data: any) {
+  const res = await fetch(`${API_BASE}/api/public/reviews`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}

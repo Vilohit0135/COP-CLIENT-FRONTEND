@@ -15,7 +15,9 @@ function LoginPage() {
                 <span className="text-sm lg:text-base">Back to Home</span>
             </Link>
             <LoginBanner />
-            <LoginForm />
+            <React.Suspense fallback={<div className="w-full lg:w-1/2 flex justify-center items-center bg-white min-h-screen">Loading...</div>}>
+                <LoginForm />
+            </React.Suspense>
         </main>
     );
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Search as SearchIcon } from "lucide-react";
 
 const getIconForSlug = (slug: string) => {
   const s = slug.toLowerCase();
@@ -52,11 +53,90 @@ export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [degreeTypes, setDegreeTypes] = useState<{ label: string; href: string; icon: React.ReactNode }[]>([]);
+  const [trendingCourses, setTrendingCourses] = useState<{ title: string; slug: string }[]>([]);
+  const [providers, setProviders] = useState<{ name: string; slug: string }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const suggestionRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = () => {
-    const q = searchQuery.trim();
-    if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
-    else router.push("/search");
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [searchQuery]);
+
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const lowerQuery = searchQuery.toLowerCase();
+    const matches = new Set<string>();
+
+    providers.forEach((p) => {
+      if (p.name.toLowerCase().includes(lowerQuery)) {
+        matches.add(p.name);
+      }
+    });
+
+    trendingCourses.forEach((c) => {
+      if (c.title.toLowerCase().includes(lowerQuery)) {
+        matches.add(c.title);
+      }
+    });
+
+    return Array.from(matches).slice(0, 5);
+  }, [searchQuery, trendingCourses, providers]);
+
+  const handleSearch = (qOverride?: string) => {
+    const q = (qOverride ?? searchQuery).trim();
+    if (!q) {
+      router.push("/search");
+      return;
+    }
+
+    const matchedProvider = providers.find(p => p.name.toLowerCase() === q.toLowerCase());
+    if (matchedProvider && matchedProvider.slug) {
+      router.push(`/universities/${matchedProvider.slug}`);
+      setShowSuggestions(false);
+      return;
+    }
+
+    const matchedCourse = trendingCourses.find(c => c.title.toLowerCase() === q.toLowerCase());
+    if (matchedCourse && matchedCourse.slug) {
+      router.push(`/online-courses/${matchedCourse.slug}`);
+      setShowSuggestions(false);
+      return;
+    }
+
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+    setShowSuggestions(false);
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchQuery(suggestion);
+    setShowSuggestions(false);
+    handleSearch(suggestion);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (showSuggestions && suggestions.length > 0) {
+        setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : prev));
+      } else {
+        setShowSuggestions(true);
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (showSuggestions && suggestions.length > 0) {
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+      }
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (showSuggestions && selectedIndex >= 0 && selectedIndex < suggestions.length) {
+        handleSuggestionClick(suggestions[selectedIndex]);
+      } else {
+        handleSearch();
+      }
+    } else if (e.key === "Escape") {
+      setShowSuggestions(false);
+    }
   };
 
   useEffect(() => {
@@ -73,6 +153,9 @@ export default function Navbar() {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
+      }
+      if (suggestionRef.current && !suggestionRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -127,6 +210,30 @@ export default function Navbar() {
         }
       })
       .catch(err => console.error("Error fetching degree types:", err));
+
+    // Fetch trending courses and providers for search suggestions
+    fetch(`${apiBase}/api/public/providers/programs/trending`, { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const courses = data
+            .slice(0, 8)
+            .map((p: any) => ({ title: p.title || p.name || "", slug: p.slug || "" }))
+            .filter((c) => c.title);
+          if (courses.length > 0) setTrendingCourses(courses);
+        }
+      })
+      .catch(() => { });
+
+    fetch(`${apiBase}/api/public/providers`, { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const provs = data.map((p: any) => ({ name: p.name || "", slug: p.slug || "" })).filter((p: any) => p.name);
+          setProviders(provs);
+        }
+      })
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -271,29 +378,49 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-6">
-            <div className="hidden lg:flex items-center gap-0">
+            <div className="hidden lg:flex items-center gap-0 relative" ref={suggestionRef}>
               <div className="w-px h-6 bg-white/30 mx-2" />
-              <div className="flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 hover:bg-white/20 transition px-3 py-1.5">
+              <div className="flex items-center gap-2 rounded-lg border border-white/40 bg-white/10 hover:bg-white/20 transition px-3 py-1.5 focus-within:bg-white/20">
                 <button
                   type="button"
-                  onClick={handleSearch}
+                  onClick={() => handleSearch()}
                   className="flex-shrink-0 cursor-pointer focus:outline-none"
                   aria-label="Search"
                 >
-                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+                  <SearchIcon className="w-4 h-4 text-white/80" />
                 </button>
                 <input
                   type="text"
                   placeholder="Search programs..."
                   className="bg-transparent outline-none text-sm placeholder-white/70 text-white w-36"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onKeyDown={handleKeyDown}
                 />
               </div>
               <div className="w-px h-6 bg-white/30 mx-2" />
+
+              {/* Suggestion Box Desktop */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-2 right-2 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-[60]">
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition text-sm ${index === selectedIndex ? 'bg-purple-50 text-purple-700' : 'text-gray-700 hover:bg-purple-50 hover:text-purple-700'
+                        }`}
+                      onMouseEnter={() => setSelectedIndex(index)}
+                    >
+                      <SearchIcon className="w-4 h-4 text-gray-400" />
+                      <span className="truncate">{suggestion}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <Link
@@ -394,22 +521,47 @@ export default function Navbar() {
 
           <div className="flex-1 overflow-y-auto px-6 py-8">
             {/* Search */}
-            <div className="mb-10">
+            <div className="mb-10 relative">
               <div className="relative group">
-                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-purple-400 group-focus-within:text-purple-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleSearch()}
+                  className="absolute inset-y-0 left-4 flex items-center cursor-pointer focus:outline-none z-10"
+                  aria-label="Search"
+                >
+                  <SearchIcon className="w-5 h-5 text-purple-400 group-focus-within:text-purple-600 transition-colors" />
+                </button>
                 <input
                   type="text"
                   placeholder="Search programs..."
                   className="w-full bg-white border border-purple-100 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 rounded-2xl py-4 pl-12 pr-4 text-sm text-gray-700 placeholder-purple-300 outline-none transition-all shadow-sm shadow-purple-50"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onKeyDown={handleKeyDown}
                 />
               </div>
+
+              {/* Suggestion Box Mobile */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-purple-50 overflow-hidden z-[60]">
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className={`flex items-center gap-3 px-5 py-4 cursor-pointer transition text-sm ${index === selectedIndex ? 'bg-purple-50 text-purple-700' : 'text-gray-700 hover:bg-purple-50 hover:text-purple-700'
+                        } border-b border-purple-50 last:border-none`}
+                      onMouseEnter={() => setSelectedIndex(index)}
+                    >
+                      <SearchIcon className="w-4 h-4 text-purple-300" />
+                      <span className="truncate font-medium">{suggestion}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <nav className="space-y-10">
