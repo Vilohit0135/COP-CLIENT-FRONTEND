@@ -115,16 +115,14 @@ const LoginForm = () => {
                 </Link>
 
                 {/* Logo */}
-                <div className="flex items-center gap-2 mb-6">
-                    <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center text-white">
-                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
-                        </svg>
-                    </div>
-                    <span className="text-2xl font-bold bg-gradient-to-r from-purple-700 to-purple-500 bg-clip-text text-transparent">
-                        CollegeProgram
-                    </span>
+                <div className="mb-6">
+                    <Link href="/">
+                        <img
+                            src="/logoDark.svg"
+                            alt="CollegeProgram Logo"
+                            className="h-26 mx-auto"
+                        />
+                    </Link>
                 </div>
 
                 {/* Header */}
@@ -142,7 +140,7 @@ const LoginForm = () => {
                             </div>
                         </div>
                     )}
-                    <h2 className="text-2xl font-extrabold text-gray-900 mb-1">Welcome Back</h2>
+                    <h2 className="text-xl font-extrabold text-gray-900 mb-1">Welcome Back</h2>
                     <p className="text-gray-500">Sign in to continue your learning journey</p>
                 </div>
 

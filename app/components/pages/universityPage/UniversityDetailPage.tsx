@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { IconPlus } from '@tabler/icons-react';
@@ -465,21 +466,33 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
       {/* Main Content Area */}
       <div className="pb-8">
         {/* Navigation Tabs - Adjusted for mobile sticky header */}
-        <div className="sticky top-[100px] md:top-0 z-40 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg shadow-gray-100/50 mb-8 overflow-x-auto no-scrollbar lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0">
-          <div className="flex min-w-max">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => scrollToSection(tab.id)}
-                className={`px-5 py-3 text-sm font-semibold whitespace-nowrap transition-all border-b-2 cursor-pointer ${activeTab === tab.id
-                  ? "border-purple-600 text-purple-600"
-                  : "border-transparent text-gray-500 hover:text-gray-900"
-                  }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+        <div className="sticky top-[70px] md:top-0 z-40 bg-white/80 backdrop-blur-xl border border-gray-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0 overflow-hidden ring-1 ring-black/[0.02]">
+          <div className="overflow-x-auto no-scrollbar flex items-center p-1.5 scroll-smooth">
+            <div className="flex gap-1.5 min-w-max">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => scrollToSection(tab.id)}
+                  className={`relative px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all duration-300 rounded-2xl cursor-pointer group ${activeTab === tab.id
+                    ? "text-purple-700"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50/50"
+                    }`}
+                >
+                  {activeTab === tab.id && (
+                    <motion.div
+                      layoutId="activeTabPill"
+                      className="absolute inset-0 bg-purple-50 border border-purple-100/50 rounded-xl z-0"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
+          {/* Mobile Scroll Indicators */}
+          <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-white to-transparent pointer-events-none z-20 md:hidden" />
+          <div className="absolute left-0 top-0 bottom-0 w-10 bg-gradient-to-r from-white to-transparent pointer-events-none z-20 md:hidden opacity-0" />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
@@ -487,7 +500,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
           <div className="flex-1 lg:max-w-[calc(100%-360px)]">
 
             {/* About Section */}
-            <section id="about" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-16">
+            <section id="about" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-[160px] md:scroll-mt-24">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
                   <IconChartHistogram stroke={2} color="#6366F1" />
@@ -654,7 +667,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
             )}
 
             {/* Programs / Online Courses Table */}
-            <section id="programs" className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-16">
+            <section id="programs" className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-[160px] md:scroll-mt-24">
               <div className="flex items-center gap-2 mb-6">
                 <FileText className="w-6 h-6 text-[#6366F1]" />
                 <h2 className="text-xl font-bold text-gray-900">Courses & Fees</h2>
@@ -805,7 +818,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
                   {/* EMI Available Banner */}
                   <div className="bg-[#ECFDF5] border border-emerald-100 rounded-2xl p-5 flex items-center gap-4">
-                    <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm border border-emerald-100">
+                    <div className="p-2 bg-white rounded-xl flex items-center justify-center shadow-sm border border-emerald-100">
                       <CreditCard className="w-5 h-5 text-emerald-600" />
                     </div>
                     <p className="text-sm font-medium text-emerald-900 leading-relaxed">
@@ -837,7 +850,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
             )}
 
             {/* Admission Process */}
-            <section id="admission" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6 scroll-mt-16">
+            <section id="admission" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6 scroll-mt-[160px] md:scroll-mt-24">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
                   <Users className="w-5 h-5" color="#6366F1" />
@@ -865,7 +878,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
             </section>
 
             {/* Eligibility Section */}
-            <section id="eligibility" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-16">
+            <section id="eligibility" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-[160px] md:scroll-mt-24">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
                   <CheckCircle2 className="w-5 h-5" color="#6366F1" />
@@ -937,7 +950,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
             {/* Placements & Partners */}
             {(provider.placementPartners && provider.placementPartners.length > 0) && (
-              <section id="placements" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-16">
+              <section id="placements" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-[160px] md:scroll-mt-24">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
                     <Briefcase className="w-5 h-5" color="#6366F1" />
@@ -983,7 +996,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
             )}
 
             {/* Reviews */}
-            <section id="reviews" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6 scroll-mt-16">
+            <section id="reviews" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6 scroll-mt-[160px] md:scroll-mt-24">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
                   <Star className="w-5 h-5" color="#6366F1" />
@@ -1051,7 +1064,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
             {/* FAQs */}
             {provider.faq && provider.faq.length > 0 && (
-              <section id="faq" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-16">
+              <section id="faq" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-[160px] md:scroll-mt-24">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
                     <MessageCircle className="w-5 h-5" color="#6366F1" />
@@ -1088,7 +1101,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
           {/* Right Column (Sidebar) */}
           <aside className="w-full lg:w-[340px] shrink-0">
-            <div className="flex flex-col gap-4">
+            <div className="lg:sticky lg:top-24  flex flex-col gap-4">
 
               {/* Apply Now Card */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -1188,9 +1201,9 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                   <h4 className="font-bold">Need Admission Guidance?</h4>
                 </div>
                 <p className="text-[#64748B] text-sm">Have questions? Our counselors can help you choose the right program.</p>
-                <button className="bg-[#7C3AED] text-white px-6 py-2 rounded-lg font-bold text-xs hover:bg-purple-50 transition-colors w-full cursor-pointer">
+                <Link href="/talk-to-experts" className="bg-[#7C3AED] text-white px-6 py-2 rounded-lg font-bold text-xs hover:bg-purple-700  transition-colors w-full cursor-pointer">
                   Request a Callback
-                </button>
+                </Link>
               </div>
 
             </div>

@@ -565,12 +565,11 @@ function ReviewModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
             initial={{ scale: 0.95, opacity: 0, y: 10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 10 }}
-            className="custom-scrollbar-hide"
+            className="custom-scrollbar-hide p-6 sm:p-10"
             style={{
               position: "relative",
               background: "#FFFFFF",
               borderRadius: "28px",
-              padding: "40px",
               width: "100%",
               maxWidth: "520px",
               boxShadow: "0 32px 64px -12px rgba(16, 24, 40, 0.2)",
@@ -603,7 +602,7 @@ function ReviewModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
 
-            <h3 style={{ fontFamily: "Inter", fontSize: 28, fontWeight: 800, color: "#101828", marginBottom: 8, letterSpacing: "-0.02em" }}>Write a Review</h3>
+            <h3 className="text-2xl sm:text-[28px] font-extrabold text-[#101828] mb-2 tracking-tight" style={{ fontFamily: "Inter" }}>Write a Review</h3>
             <p style={{ fontFamily: "Inter", fontSize: 15, color: "#667085", marginBottom: 36, lineHeight: "1.5" }}>We value your feedback. Tell us about your learning journey.</p>
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -620,7 +619,7 @@ function ReviewModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
               </div>
 
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "#344054", marginBottom: 8 }}>Name</label>
                   <input
