@@ -304,7 +304,7 @@ export default function ProfilePage() {
       <div className="w-full md:w-[70vw] min-h-screen md:min-h-[70vh] flex flex-col md:flex-row gap-4 md:gap-6">
 
         {/* ── Left Sidebar ──────────────────────────────────────────────── */}
-        <aside className="w-full md:w-72 flex-shrink-0 flex flex-col gap-6 px-2 md:px-0 relative">
+        <aside className="w-full md:w-72 flex-shrink-0 flex flex-col gap-6 px-2 md:px-0 relative pt-5 md:pt-0">
           {/* Profile card */}
           <div className="bg-white rounded-xl overflow-hidden shadow-2xl shadow-purple-200/40 flex flex-col border border-gray-100/50">
             {/* Top Section: Purple Background */}
