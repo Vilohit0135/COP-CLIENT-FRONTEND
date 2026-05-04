@@ -40,6 +40,14 @@ function BookmarkIcon({ className }: { className?: string }) {
   );
 }
 
+function BookIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+    </svg>
+  );
+}
+
 function SettingsIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
@@ -151,9 +159,9 @@ function LogoutIcon({ className }: { className?: string }) {
 type NavKey = "profile" | "shortlisted" | "settings";
 
 const navItems: { key: NavKey; label: string; icon: React.ReactNode }[] = [
-  { key: "profile", label: "My Profile", icon: <UserIcon className="w-4 h-4" /> },
-  { key: "shortlisted", label: "Shortlisted Universities", icon: <BookmarkIcon className="w-4 h-4" /> },
-  { key: "settings", label: "Settings", icon: <SettingsIcon className="w-4 h-4" /> },
+  { key: "profile", label: "My Profile", icon: <UserIcon className="w-5 h-5" /> },
+  { key: "shortlisted", label: "Shortlisted Universities", icon: <BookIcon className="w-5 h-5" /> },
+  { key: "settings", label: "Settings", icon: <SettingsIcon className="w-5 h-5" /> },
 ];
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -210,6 +218,7 @@ export default function ProfilePage() {
             email: data.email || dummyUser.email,
             phone: data.phone || dummyUser.phone,
             dateOfBirth: data.dateOfBirth || dummyUser.dateOfBirth,
+            idNo: data._id || data.id || dummyUser.idNo,
             city: data.city || dummyUser.city,
             state: data.state || dummyUser.state,
             country: data.country || dummyUser.country,
@@ -295,68 +304,78 @@ export default function ProfilePage() {
       <div className="w-full md:w-[70vw] min-h-screen md:min-h-[70vh] flex flex-col md:flex-row gap-4 md:gap-6">
 
         {/* ── Left Sidebar ──────────────────────────────────────────────── */}
-        <aside className="w-full md:w-64 flex-shrink-0 flex flex-col gap-4  px-4 md:px-0 relative">
+        <aside className="w-full md:w-72 flex-shrink-0 flex flex-col gap-6 px-2 md:px-0 relative pt-5 md:pt-0">
           {/* Profile card */}
-          <div className="relative bg-white lg:bg-[#6C3FC5] rounded-b-[32px] md:rounded-xl p-6 md:p-6 flex flex-col items-center shadow-xl shadow-purple-200/50">
-            {/* Settings Icon Mobile */}
-            <button
-              onClick={() => setActiveNav("settings")}
-              className="md:hidden absolute top-6 right-6 text-gray-400 hover:text-[#6C3FC5] transition-colors p-2"
-            >
-              <SettingsIcon className="w-6 h-6" />
-            </button>
-            <div className="w-20 h-20 rounded-full bg-purple-100 lg:bg-white/20 flex items-center justify-center mb-3 ring-4 ring-purple-50 lg:ring-white/10">
-              <UserIcon className="w-10 h-10 text-[#6C3FC5] lg:text-white" />
-            </div>
-            <h2 className="font-bold text-lg md:text-xl leading-tight text-gray-900 lg:text-white">
-              {userData.firstName} {userData.lastName}
-            </h2>
-            <p className="text-xs text-gray-500 lg:text-white/70 mt-1">{userData.occupation}</p>
+          <div className="bg-white rounded-xl overflow-hidden shadow-2xl shadow-purple-200/40 flex flex-col border border-gray-100/50">
+            {/* Top Section: Purple Background */}
+            <div className="bg-[#7C3AED] p-6 pb-8 flex flex-col items-center text-white text-center relative">
+              {/* Settings Icon Mobile */}
+              <button
+                onClick={() => setActiveNav("settings")}
+                className="md:hidden absolute top-6 right-6 text-white/70 hover:text-white transition-colors p-2"
+              >
+                <SettingsIcon className="w-6 h-6" />
+              </button>
 
-            <nav className="w-full mt-6 flex flex-row md:flex-col justify-center md:justify-start gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
-              <style jsx>{`
-                .no-scrollbar::-webkit-scrollbar { display: none; }
-                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-              `}</style>
-              {navItems.map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => setActiveNav(item.key)}
-                  className={`flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-0.5 md:gap-3 whitespace-nowrap px-2 md:px-3 py-1.5 md:py-2.5 rounded-lg md:rounded-xl text-[10px] md:text-sm font-semibold cursor-pointer transition-all flex-shrink-0 flex-1 md:flex-none ${item.key === "settings" ? "hidden md:flex" : ""} ${activeNav === item.key
-                    ? "bg-[#6C3FC5] text-white lg:bg-white lg:text-[#6C3FC5] shadow-sm shadow-black/5 scale-100"
-                    : "text-gray-600 lg:text-white/80 hover:bg-purple-50 lg:hover:bg-white/10"
-                    }`}
-                >
-                  {item.icon}
-                  {item.label}
-                </button>
-              ))}
-
-              <div className="hidden md:block">
-                <hr className="border-gray-100 lg:border-white/20 my-2" />
+              {/* Avatar Circle */}
+              <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-5 shadow-xl ring-8 ring-white/10 transition-transform hover:scale-105 duration-300">
+                <UserIcon className="w-12 h-12 text-[#7C3AED]" />
               </div>
 
-              <button
-                onClick={handleLogout}
-                className="cursor-pointer hidden md:flex items-center gap-3 whitespace-nowrap px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 text-red-600 lg:text-red-100 hover:bg-red-50 lg:hover:bg-white/10 hover:text-red-700 lg:hover:text-white flex-shrink-0 group"
-              >
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 lg:bg-white/10 group-hover:bg-red-100 lg:group-hover:bg-red-500/20 transition-all duration-300">
-                  <LogoutIcon className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+              <h2 className="font-bold text-lg md:text-xl leading-tight mb-1 tracking-tight">
+                {userData.firstName} {userData.lastName}
+              </h2>
+            </div>
+
+            {/* Bottom Section: White Background with Nav */}
+            <div className="p-4 bg-white">
+              <nav className="flex flex-col gap-2">
+                {navItems.map((item) => {
+                  const isActive = activeNav === item.key;
+                  return (
+                    <button
+                      key={item.key}
+                      onClick={() => setActiveNav(item.key)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 group cursor-pointer ${isActive
+                        ? "bg-[#F9F5FF] text-[#7C3AED] shadow-sm"
+                        : "text-[#4B5563] hover:bg-gray-50 hover:text-[#7C3AED]"
+                        }`}
+                    >
+                      <div className={`transition-colors duration-300 ${isActive ? "text-[#7C3AED]" : "text-[#9CA3AF] group-hover:text-[#7C3AED]"
+                        }`}>
+                        {item.icon}
+                      </div>
+                      {item.label}
+                    </button>
+                  );
+                })}
+
+                <div className="my-1 px-4">
+                  <hr className="border-gray-100/80" />
                 </div>
-                <span>Logout</span>
-              </button>
-            </nav>
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all duration-300 group cursor-pointer"
+                >
+                  <div className="text-red-400 group-hover:text-red-500 transition-colors">
+                    <LogoutIcon className="w-5 h-5" />
+                  </div>
+                  Logout
+                </button>
+              </nav>
+            </div>
           </div>
 
           {/* Help card (Desktop only, mobile version moved to bottom of content) */}
-          <div className="hidden md:flex bg-[#5A2EA6] rounded-xl p-5 text-white flex-col items-center text-center shadow-lg shadow-purple-900/10">
+          <div className="hidden md:flex bg-gradient-to-br from-[#AD46FF] to-[#4F39F6] rounded-xl p-5  text-white flex-col items-center text-center shadow-lg shadow-purple-900/10">
             <h3 className="font-extrabold text-base leading-tight mb-2">Need Help Deciding?</h3>
             <p className="text-xs text-white/80 mb-4 leading-relaxed">
               Our expert counselors can help you compare and choose the best university for your goals
             </p>
             <Link
               href="/talk-to-experts"
-              className="bg-white text-[#6C3FC5] hover:bg-gray-100 font-bold text-sm px-5 py-2.5 rounded-full transition-colors"
+              className="bg-[#FDC700] text-[#6C3FC5] hover:opacity-90 font-bold text-sm px-5 py-2.5 rounded-full transition-colors"
             >
               Talk to an Expert
             </Link>
@@ -476,7 +495,7 @@ function PersonalInfoPanel({ userData, onUpdate }: { userData: UserData, onUpdat
         ) : (
           <button
             onClick={() => setEditMode(true)}
-            className="flex items-center gap-2 bg-[#6C3FC5] hover:bg-[#5A2EA6] text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+            className="flex items-center gap-2 bg-gradient-to-br from-[#9810FA] to-[#4F39F6]  text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer hover:opacity-90"
           >
             <PencilIcon className="w-4 h-4" />
             Edit Profile

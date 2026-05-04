@@ -4,9 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { IconPlus } from '@tabler/icons-react';
-import { IconChartHistogram } from '@tabler/icons-react';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconPlus, IconChartHistogram, IconInfoCircle, IconAward } from '@tabler/icons-react';
 import {
   Star, MapPin, Share2, Award, CheckCircle2,
   ChevronRight, Calendar, BookOpen, GraduationCap,
@@ -21,6 +19,8 @@ import {
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Provider, ProviderCourse, Review } from "@/app/lib/types";
+
+
 
 interface UniversityDetailPageProps {
   id: string;
@@ -329,7 +329,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
             </Link>
             <button
               onClick={() => window.location.reload()}
-              className="px-8 py-4 bg-white border-2 border-gray-100 text-gray-600 font-black rounded-2xl hover:border-indigo-100 hover:text-indigo-600 transition-all"
+              className="px-8 py-4 bg-white border-2 border-gray-100 text-gray-600 font-black rounded-2xl hover:border-indigo-100 hover:text-[#6366F1] transition-all"
             >
               Try Again
             </button>
@@ -444,10 +444,10 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
       <div className="bg-gradient-to-br from-[#E9DDFF] via-[#D9C3FF] to-[#E9DDFF] flex flex-col md:flex-row gap-4 p-5 md:px-6 md:py-4 rounded-3xl justify-between items-center border border-purple-200/50 shadow-sm">
         <div className="flex gap-4 items-center md:items-start text-center md:text-left">
           <div className="hidden sm:flex w-12 h-12 bg-white/50 rounded-2xl items-center justify-center shrink-0 shadow-inner">
-            <IconChartHistogram stroke={2} color="#4F46E5" className="w-6 h-6" />
+            <IconChartHistogram stroke={2} color="#6366F1" className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-[#4F46E5] font-bold text-base md:text-lg">Want to compare with other universities?</h1>
+            <h1 className="text-[#6366F1] font-bold text-base md:text-lg">Want to compare with other universities?</h1>
             <h2 className="text-[#64748B] text-xs md:text-sm font-medium mt-1">Side-by-side fee, exam, employer, and ROI data — all visible without entering your number.</h2>
           </div>
         </div>
@@ -655,11 +655,17 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                 {provider.factsDescription && (
                   <div className="text-gray-600 text-sm leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: provider.factsDescription }} />
                 )}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   {provider.facts.slice(0, 8).map((item: any, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-purple-200 transition-all">
-                      <span className="text-lg">{item.icon || "✓"}</span>
-                      <span className="text-sm font-medium text-gray-700">{typeof item.text === 'string' ? item.text : 'Highlight'}</span>
+                    <div key={i} className="flex items-start md:items-center gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:border-purple-200 transition-all h-full group/fact">
+                      <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-50 text-purple-600 shrink-0 transition-colors group-hover/fact:bg-purple-100">
+                        <IconAward className="w-5 h-5" stroke={2} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-gray-800 leading-tight">
+                          {typeof item.text === 'string' ? item.text : 'Highlight'}
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -675,8 +681,8 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
               {/* Alert Banner */}
               <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 flex items-center gap-3 mb-8">
-                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm border border-emerald-100">
-                  <Lock className="w-4 h-4 text-emerald-600" />
+                <div className="p-2 bg-white rounded-lg flex items-center justify-center shadow-sm border border-emerald-100">
+                  <Lock className="text-emerald-600" />
                 </div>
                 <p className="text-sm font-medium text-emerald-800">
                   All fee details below are visible without entering your phone number — always.
@@ -690,7 +696,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
                     className={`px-6 py-2.5 rounded-full text-sm font-bold border transition-all whitespace-nowrap cursor-pointer ${activeCategory === cat
-                      ? "bg-indigo-50 border-indigo-200 text-indigo-600 shadow-sm"
+                      ? "bg-indigo-50 border-indigo-200 text-[#6366F1] shadow-sm"
                       : "bg-white border-gray-100 text-gray-500 hover:border-gray-200"
                       }`}
                   >
@@ -729,7 +735,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                                 <GraduationCap className="w-6 h-6" />}
                         </div>
                         <div>
-                          <h3 className="text-lg font-extrabold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors">
+                          <h3 className="text-lg font-extrabold text-gray-900 mb-1 group-hover:text-[#6366F1] transition-colors">
                             {course.title.includes('Online') ? course.title : `Online ${course.title}`}
                           </h3>
                           <p className="text-sm text-gray-400 font-medium">
@@ -755,12 +761,12 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
                       <div className="flex items-center justify-between lg:justify-end gap-8 pt-4 lg:pt-0 border-t lg:border-t-0 border-gray-50">
                         <div className="text-right">
-                          <div className="text-xl font-black text-indigo-600">₹{course.fees?.toLocaleString() || "1,50,000"}</div>
+                          <div className="text-xl font-black text-[#6366F1]">₹{course.fees?.toLocaleString() || "1,50,000"}</div>
                           <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">EMI ₹{(course.fees ? Math.round(course.fees / 18) : 8500).toLocaleString()}/sem</div>
                         </div>
                         <Link
                           href={`/course-detail?id=${(course.courseId as any)?.slug || (course.courseId as any)?._id || course.courseId}`}
-                          className="flex items-center gap-2 px-5 py-2.5 border-2 border-indigo-600 text-indigo-600 rounded-xl font-bold text-sm hover:bg-indigo-600 hover:text-white transition-all cursor-pointer"
+                          className="flex items-center gap-2 px-5 py-2.5 border-2 border-indigo-600 text-[#6366F1] rounded-xl font-bold text-sm hover:bg-indigo-600 hover:text-white transition-all cursor-pointer"
                         >
                           View Details
                           <ExternalLink className="w-4 h-4" />
@@ -786,7 +792,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                 <section id="fees-breakdown" className="bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-gray-100 mb-6 transition-all animate-in fade-in slide-in-from-bottom-4 duration-500 scroll-mt-24">
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center">
-                      <CircleDollarSign className="w-6 h-6 text-indigo-600" />
+                      <CircleDollarSign className="w-6 h-6 text-[#6366F1]" />
                     </div>
                     <h2 className="text-xl font-bold text-gray-900">
                       Detailed Fees Breakdown ({selectedCourse.title.includes('MBA') ? 'MBA' : selectedCourse.title.split(' ').pop()})
@@ -810,8 +816,8 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
                   {/* Total Program Cost Banner */}
                   <div className="bg-[#F5F3FF] rounded-xl py-5 px-8 flex justify-between items-center mb-6">
-                    <span className="text-base font-black text-indigo-600">Total Program Cost</span>
-                    <span className="text-xl font-black text-indigo-600">
+                    <span className="text-base font-black text-[#6366F1]">Total Program Cost</span>
+                    <span className="text-xl font-black text-[#6366F1]">
                       ₹{(selectedCourse.fees || 175000).toLocaleString()}
                     </span>
                   </div>
