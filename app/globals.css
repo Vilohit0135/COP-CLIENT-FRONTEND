@@ -32,11 +32,13 @@ body {
   animation: bounce-slow 4s ease-in-out infinite;
 }
 
-/* Scrollbar hide for mobile sliders */
-.scrollbar-hide::-webkit-scrollbar {
+/* Scrollbar hide utility */
+.scrollbar-hide::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-.scrollbar-hide {
+.scrollbar-hide,
+.no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

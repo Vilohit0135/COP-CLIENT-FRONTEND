@@ -28,7 +28,7 @@ export default function OnlineCoursesPage({ degreeTypes, courses }: OnlineCourse
       />
 
       {/* Degree Type Sections */}
-      <div className="max-w-[90vw] mx-auto px-4 pb-20 space-y-16">
+      <div className="max-w-[95vw] md:max-w-[90vw] mx-auto px-4 pb-12 md:pb-20 space-y-10 md:space-y-16">
         {sortedDegreeTypes.map((type) => {
           const typeCourses = courses.filter((c) => {
             const dId = typeof c.degreeTypeId === "string" ? c.degreeTypeId : c.degreeTypeId?._id;
@@ -38,28 +38,28 @@ export default function OnlineCoursesPage({ degreeTypes, courses }: OnlineCourse
           if (typeCourses.length === 0) return null;
 
           return (
-            <section key={type._id} className="space-y-8">
-              <div className="border-b border-gray-100 pb-4 flex items-center justify-between">
+            <section key={type._id} className="space-y-6 md:space-y-8">
+              <div className="border-b border-gray-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="text-purple-600 bg-purple-50 p-2 rounded-lg">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <div className="text-purple-600 bg-purple-50 p-2 rounded-lg shrink-0">
+                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147L12 14.654l7.74-4.507m-15.48 0L12 5.64l7.74 4.507m-15.48 0v4.75c0 1.035.84 1.875 1.875 1.875h11.73c1.035 0 1.875-.84 1.875-1.875v-4.75m-15.48 0L12 14.654l7.74-4.507" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">
+                  <h2 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight uppercase">
                     {type.name.toLowerCase().includes("course") ? type.name : `${type.name} Courses`}
                   </h2>
                 </div>
                 <Link
                   href={`/online-courses/${type.slug}`}
-                  className="text-xs font-bold text-purple-600 hover:text-purple-700 uppercase tracking-widest flex items-center gap-1 group"
+                  className="text-[10px] md:text-xs font-bold text-purple-600 hover:text-purple-700 uppercase tracking-widest flex items-center gap-1 group w-fit"
                 >
                   View All {type.name} Programs
                   <span className="transition-transform group-hover:translate-x-1">→</span>
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {/* Image has 2 rows in mockup for some reason or just repeated items */}
                 {/* I'll just map the courses we have */}
                 {typeCourses.map((course) => (
@@ -72,7 +72,7 @@ export default function OnlineCoursesPage({ degreeTypes, courses }: OnlineCourse
       </div>
 
       {/* Bottom CTA */}
-      <div className="max-w-[90vw] mx-auto mb-10">
+      <div className="max-w-[95vw] md:max-w-[90vw] mx-auto mb-10 md:mb-16">
         <TalkToCounselor isSpecializationView={false} />
       </div>
     </main>

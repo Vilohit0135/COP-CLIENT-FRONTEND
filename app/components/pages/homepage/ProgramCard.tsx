@@ -44,6 +44,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
     return (
       <div style={{ 
         width: '100%', 
+        minHeight: 420,
         borderRadius: 24, 
         border: '1px solid #F1F5F9', 
         backgroundColor: '#fff', 
@@ -84,6 +85,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
             fontWeight: 700, 
             fontSize: 15, 
             lineHeight: '20px', 
+            minHeight: '40px',
             margin: 0, 
             display: '-webkit-box', 
             WebkitLineClamp: 2, 

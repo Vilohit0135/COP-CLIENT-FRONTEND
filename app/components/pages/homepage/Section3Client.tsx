@@ -168,9 +168,12 @@ export default function Section3Client({ courseGroups }: Props) {
                 </button>
               ))}
               {courseGroups.length > 4 && (
-                <div className="px-4 py-2 text-sm font-bold text-purple-600 bg-purple-50 rounded-full border border-purple-100 whitespace-nowrap">
+                <Link
+                  href="/online-courses"
+                  className="px-4 py-2 text-sm font-bold text-purple-600 bg-purple-50 rounded-full border border-purple-100 whitespace-nowrap cursor-pointer hover:bg-purple-100 transition-colors"
+                >
                   {courseGroups.length - 4}+
-                </div>
+                </Link>
               )}
             </div>
 
@@ -189,9 +192,12 @@ export default function Section3Client({ courseGroups }: Props) {
                 </button>
               ))}
               {courseGroups.length > 2 && (
-                <div className="px-3 py-1.5 text-xs font-bold text-purple-600 bg-purple-50 rounded-full border border-purple-100 whitespace-nowrap">
+                <Link
+                  href="/online-courses"
+                  className="px-3 py-1.5 text-xs font-bold text-purple-600 bg-purple-50 rounded-full border border-purple-100 whitespace-nowrap cursor-pointer hover:bg-purple-100 transition-colors"
+                >
                   {courseGroups.length - 2}+
-                </div>
+                </Link>
               )}
             </div>
           </div>
