@@ -42,22 +42,22 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
 
   if (variant === "mobile") {
     return (
-      <div style={{ 
-        width: '100%', 
+      <div style={{
+        width: '100%',
         minHeight: 420,
-        borderRadius: 24, 
-        border: '1px solid #F1F5F9', 
-        backgroundColor: '#fff', 
-        overflow: 'hidden', 
-        display: 'flex', 
-        flexDirection: 'column', 
+        borderRadius: 24,
+        border: '1px solid #F1F5F9',
+        backgroundColor: '#fff',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
         boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
       }}>
         {/* Image area */}
         <div style={{ height: 130, position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg,#F3E8FF 0%,#EEF2FF 100%)', flexShrink: 0 }}>
           {p.thumbnail && <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4) 100%)' }} />
-          
+
           {p.trending && (
             <div style={{ position: 'absolute', right: 8, top: 8 }}>
               <TrendingBadge className="scale-75 origin-top-right" />
@@ -79,19 +79,19 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
               {p.providerName}
             </div>
           )}
-          
-          <h3 style={{ 
-            fontFamily: 'Inter, system-ui, sans-serif', 
-            fontWeight: 700, 
-            fontSize: 15, 
-            lineHeight: '20px', 
+
+          <h3 style={{
+            fontFamily: 'Inter, system-ui, sans-serif',
+            fontWeight: 700,
+            fontSize: 15,
+            lineHeight: '20px',
             minHeight: '40px',
-            margin: 0, 
-            display: '-webkit-box', 
-            WebkitLineClamp: 2, 
-            WebkitBoxOrient: 'vertical', 
-            overflow: 'hidden', 
-            color: '#1E293B' 
+            margin: 0,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            color: '#1E293B'
           }}>
             {p.title}
           </h3>
@@ -240,7 +240,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 4 }}>
           {(p.features && p.features.length > 0 ? p.features.slice(0, 3) : ['Job Assistance', 'Flexible Learning', 'Industry Projects']).map((feature, i) => (
             <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-              <div style={{ width: 18, height: 18, borderRadius: '50%', backgroundColor: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="p-1" style={{ borderRadius: '50%', backgroundColor: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <CheckCircle2 size={12} color="#16A34A" />
               </div>
               <div style={{ fontSize: 14, color: '#334155', fontWeight: 500 }}>{feature}</div>
