@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, User, Phone, GraduationCap, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Phone, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -136,18 +136,19 @@ const SignupForm = () => {
                 </Link>
 
                 {/* Logo and Brand */}
-                <div className="flex items-center gap-3 mb-8">
-                    <div className="w-10 h-10 bg-[#9810FA] rounded-xl flex items-center justify-center text-white">
-                        <GraduationCap className="w-6 h-6" />
-                    </div>
-                    <span className="text-2xl font-bold text-[#9810FA]">
-                        CollegeProgram
-                    </span>
+                <div className="mb-8">
+                    <Link href="/">
+                        <img
+                            src="/logoDark.svg"
+                            alt="CollegeProgram Logo"
+                            className="h-26 w-auto mx-auto"
+                        />
+                    </Link>
                 </div>
 
                 {/* Header */}
                 <div className="mb-6">
-                    <h2 className="text-3xl font-bold text-gray-900 mb-1">Start Your Journey</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mb-1">Start Your Journey</h2>
                     <p className="text-gray-500 text-sm">Create an account to explore 1000+ college programs</p>
                 </div>
 
