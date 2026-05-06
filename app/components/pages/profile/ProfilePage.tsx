@@ -1,9 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { getPageContent } from "@/app/lib/api";
+import { SectionContent } from "@/app/lib/types";
+import { CheckCircle, Clock, Star, MessageSquare, Calendar } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ── Dummy data ────────────────────────────────────────────────────────────────
 const dummyUser = {
@@ -182,6 +186,111 @@ const navItems: { key: NavKey; label: string; icon: React.ReactNode }[] = [
   { key: "settings", label: "Settings", icon: <SettingsIcon className="w-5 h-5" /> },
 ];
 
+// ── Mentor Card Component ───────────────────────────────────────────────────
+interface Mentor {
+  name: string;
+  role: string;
+  image: string;
+  stats: string;
+  nextAvailable: string;
+  expertise: string[];
+}
+
+function MentorCarouselCard({ mentors }: { mentors: Mentor[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (mentors.length <= 1) return;
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % mentors.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [mentors]);
+
+  if (!mentors.length) return null;
+
+  return (
+    <div className="bg-[#FFFFFF] rounded-xl p-6 shadow  border border-[#E5E7EB] flex flex-col gap-5 relative overflow-hidden group min-h-[440px]">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="flex flex-col gap-5"
+        >
+          {/* Top Section */}
+          <div className="flex items-center gap-4">
+            {/* Avatar with Badge */}
+            <div className="relative flex-shrink-0">
+              <div className="w-20 h-20 rounded-full border-4 border-purple-100 overflow-hidden bg-gray-50">
+                <img src={mentors[index].image} alt={mentors[index].name} className="w-full h-full object-cover" />
+              </div>
+              <div className="absolute -bottom-1 -right-1 bg-yellow-400 text-white p-1 rounded-full border-2 border-white shadow-sm">
+                <Star className="w-3 h-3 fill-current" />
+              </div>
+            </div>
+
+            {/* Name and Role */}
+            <div className="flex flex-col gap-1 pt-1">
+              <div className="bg-[#57FFAD] text-[10px] font-bold px-3 py-1 rounded-full self-start mb-1 uppercase tracking-wider font-bold">
+                Expert Mentor
+              </div>
+              <h3 className="font-extrabold text-gray-900  tracking-tight leading-tight">
+                I'm {mentors[index].name}
+              </h3>
+              <p className="text-gray-500 text-xs font-medium">
+                {mentors[index].role}
+              </p>
+            </div>
+          </div>
+
+          {/* Info Rows */}
+          <div className="flex flex-col gap-3 mt-1">
+            <div className="flex items-center gap-3 text-gray-700">
+              <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="w-4 h-4 text-purple-600" />
+              </div>
+              <span className="text-sm font-semibold">{mentors[index].stats}</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-700">
+              <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 text-purple-600" />
+              </div>
+              <span className="text-sm font-semibold">
+                Next available: <span className="text-gray-900">{mentors[index].nextAvailable}</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Expertise */}
+          <div className="flex flex-col gap-3">
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Expertise</p>
+            <div className="flex flex-wrap gap-2">
+              {mentors[index].expertise.map((exp, i) => (
+                <span key={i} className="bg-purple-50 text-purple-600 text-xs font-bold px-3 py-1.5 rounded-full border border-purple-100/50">
+                  {exp}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-2">
+            <button className="flex items-center justify-center gap-2 bg-gradient-to-br from-[#9810FA] to-[#4F39F6] text-white font-bold py-3 rounded-xl hover:brightness-90 transition-all shadow-lg shadow-purple-200 text-sm cursor-pointer w-full">
+              Book a call
+            </button>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Subtle background decoration */}
+      <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-purple-50 rounded-full blur-3xl opacity-50" />
+    </div>
+  );
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 export default function ProfilePage() {
   const [activeNav, setActiveNav] = useState<NavKey>("profile");
@@ -189,6 +298,7 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<UserData>(dummyUser);
   const [hasPassword, setHasPassword] = useState<boolean>(true);
   const [shortlisted, setShortlisted] = useState<any[]>([]);
+  const [mentors, setMentors] = useState<Mentor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isShortlistLoading, setIsShortlistLoading] = useState(false);
   const router = useRouter();
@@ -254,8 +364,67 @@ export default function ProfilePage() {
         setIsLoading(false);
       }
     };
+    const fetchMentors = async () => {
+      try {
+        const data = await getPageContent("home-page");
+        const section5 = data?.content?.find((s: any) =>
+          ["talk_to_expert_counselors", "talk-to-expert-counselors", "talkToExpertCounselors", "section_5", "section5"].includes(s.sectionApiId)
+        );
+
+        // If we find mentors in Section 5 or Section 4, use them.
+        // Fallback to Section 4 if Section 5 is just a form.
+        let sectionToUse = section5;
+        if (!sectionToUse?.values?.mentors && !sectionToUse?.values?.counselors) {
+          sectionToUse = data?.content?.find((s: any) =>
+            ["expert_counselors", "expert-counselors", "expertCounselors", "section_4", "section4"].includes(s.sectionApiId)
+          );
+        }
+
+        if (sectionToUse && sectionToUse.values) {
+          const v = sectionToUse.values;
+          // Look for any field that might be an array of mentors
+          const mentorKey = Object.keys(v).find(k => k.toLowerCase().includes("mentor") || k.toLowerCase().includes("counselor"));
+          if (mentorKey && Array.isArray(v[mentorKey])) {
+            const mList = v[mentorKey].map((m: any) => ({
+              name: m.name || m.title || "Expert",
+              role: m.role || m.designation || "Counselor",
+              image: m.image || m.photo || "/Section 5.png",
+              stats: m.stats || "500+ successful admissions",
+              nextAvailable: m.nextAvailable || "Tomorrow, 10:00 AM",
+              expertise: Array.isArray(m.expertise) ? m.expertise : ["MBA Programs", "University Selection"]
+            }));
+            setMentors(mList);
+            return;
+          }
+        }
+
+        // Final fallback if no data found in CMS
+        setMentors([
+          {
+            name: "Aditya",
+            role: "Global Education Consultant",
+            image: "/Image (Rahul Mehta).png", // using an existing image
+            stats: "500+ successful admissions",
+            nextAvailable: "Tomorrow, 10:00 AM",
+            expertise: ["MBA Programs", "University Selection", "Career Guidance"]
+          },
+          {
+            name: "Priya Sharma",
+            role: "Senior Education Counselor",
+            image: "/Image (Dr. Priya Sharma).png",
+            stats: "1200+ successful admissions",
+            nextAvailable: "Today, 4:00 PM",
+            expertise: ["Tech Programs", "Study Abroad", "Career Growth"]
+          }
+        ]);
+      } catch (err) {
+        console.error("Failed to fetch mentors", err);
+      }
+    };
+
     fetchProfile();
     fetchShortlist();
+    fetchMentors();
   }, []);
 
   const handleRemoveShortlist = async (providerId: string) => {
@@ -336,10 +505,10 @@ export default function ProfilePage() {
 
       if (response.ok) {
         const data = await response.json();
-        const success = await handleUpdateProfile({ 
+        const success = await handleUpdateProfile({
           profilePhoto: data.url,
           // @ts-ignore
-          profilePhotoPublicId: data.publicId 
+          profilePhotoPublicId: data.publicId
         } as any);
 
         if (success) {
@@ -358,10 +527,10 @@ export default function ProfilePage() {
 
   const handlePhotoRemove = async () => {
     const toastId = toast.loading("Removing photo...");
-    const success = await handleUpdateProfile({ 
+    const success = await handleUpdateProfile({
       profilePhoto: "",
       // @ts-ignore
-      profilePhotoPublicId: "" 
+      profilePhotoPublicId: ""
     } as any);
 
     if (success) {
@@ -384,7 +553,7 @@ export default function ProfilePage() {
         {/* ── Left Sidebar ──────────────────────────────────────────────── */}
         <aside className="w-full md:w-72 flex-shrink-0 flex flex-col gap-6 px-2 md:px-0 relative pt-5 md:pt-0">
           {/* Profile card */}
-          <div className="bg-white rounded-xl overflow-hidden shadow-2xl shadow-purple-200/40 flex flex-col border border-gray-100/50">
+          <div className="bg-[#FFFFFF] rounded-xl overflow-hidden shadow flex flex-col border border-[#E5E7EB] ">
             {/* Top Section: Purple Background */}
             <div className="bg-[#7C3AED] p-6 pb-8 flex flex-col items-center text-white text-center relative">
               {/* Settings Icon Mobile */}
@@ -488,6 +657,9 @@ export default function ProfilePage() {
             </div>
           </div>
 
+          {/* Mentor Carousel Card */}
+          <MentorCarouselCard mentors={mentors} />
+
           {/* Help card (Desktop only, mobile version moved to bottom of content) */}
           <div className="hidden md:flex bg-gradient-to-br from-[#AD46FF] to-[#4F39F6] rounded-xl p-5  text-white flex-col items-center text-center shadow-lg shadow-purple-900/10">
             <h3 className="font-extrabold text-base leading-tight mb-2">Need Help Deciding?</h3>
@@ -501,6 +673,7 @@ export default function ProfilePage() {
               Talk to an Expert
             </Link>
           </div>
+
         </aside>
 
         {/* ── Main Content ───────────────────────────────────────────────── */}
