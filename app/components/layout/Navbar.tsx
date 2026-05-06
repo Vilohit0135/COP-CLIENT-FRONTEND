@@ -333,7 +333,7 @@ export default function Navbar() {
         @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
         .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
         .nav-glass {
-          background: linear-gradient(90deg, rgba(110, 65, 185, 0.88) 0%, rgba(125, 80, 210, 0.88) 55%, rgba(95, 45, 185, 0.88) 100%);
+          background: linear-gradient(90deg, rgba(130, 85, 200, 0.75) 0%, rgba(145, 105, 225, 0.75) 55%, rgba(115, 65, 200, 0.75) 100%);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(10px);
           border: 1px solid rgba(255, 255, 255, 0.25);
