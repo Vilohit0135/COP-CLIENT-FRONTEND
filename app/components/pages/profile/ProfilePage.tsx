@@ -6,8 +6,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { getPageContent } from "@/app/lib/api";
 import { SectionContent } from "@/app/lib/types";
-import { CheckCircle, Clock, Star, MessageSquare, Calendar } from "lucide-react";
+import { CheckCircle, Clock, Star, MessageSquare, } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { IconCalendarEventFilled } from '@tabler/icons-react'
 
 // ── Dummy data ────────────────────────────────────────────────────────────────
 const dummyUser = {
@@ -99,6 +100,22 @@ function CalendarIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" strokeWidth={1.8} viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+    </svg>
+  );
+}
+
+function ChevronLeftIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
     </svg>
   );
 }
@@ -812,7 +829,7 @@ function PersonalInfoPanel({ userData, onUpdate }: { userData: UserData, onUpdat
           <Field label="Last Name" value={data.lastName} editMode={editMode} onChange={(v) => handleChange("lastName", v)} placeholder="Enter your last name" />
         </div>
         <div className="mt-6">
-          <Field
+          <DateField
             label="Date of Birth"
             value={data.dateOfBirth}
             editMode={editMode}
@@ -929,6 +946,254 @@ function Field({
           <p className={`text-sm font-semibold ${isEmpty ? "text-gray-300 italic" : "text-gray-800"}`}>
             {isEmpty ? "Not provided" : value}
           </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Date Picker Components ───────────────────────────────────────────────────
+
+function DateField({
+  label,
+  value,
+  editMode,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  editMode: boolean;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setShowCalendar(false);
+      }
+    }
+    if (showCalendar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showCalendar]);
+
+  const isEmpty = !value || value.trim() === "";
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <p className="text-xs text-gray-400 font-medium mb-1">{label}</p>
+      {editMode ? (
+        <>
+          <button
+            type="button"
+            onClick={() => setShowCalendar(!showCalendar)}
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 font-medium outline-none focus:border-[#6C3FC5] focus:ring-1 focus:ring-[#6C3FC5] transition-colors bg-white text-left flex items-center justify-between hover:border-gray-300"
+          >
+            <span className={isEmpty ? "text-gray-300" : "text-gray-800"}>
+              {isEmpty ? (placeholder ?? "Select date") : value}
+            </span>
+            <CalIcon className="w-4 h-4 text-gray-400" />
+          </button>
+
+          <AnimatePresence>
+            {showCalendar && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 5, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className="absolute left-0 top-full z-[100] mt-1"
+              >
+                <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 min-w-[280px]">
+                  <Calendar
+                    selectedDate={value}
+                    onSelect={(d) => {
+                      onChange(d);
+                      setShowCalendar(false);
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      ) : (
+        <div className="flex items-center gap-1.5">
+          <p className={`text-sm font-semibold ${isEmpty ? "text-gray-300 italic" : "text-gray-800"}`}>
+            {isEmpty ? "Not provided" : value}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Calendar({
+  selectedDate,
+  onSelect,
+}: {
+  selectedDate: string;
+  onSelect: (date: string) => void;
+}) {
+  const [viewDate, setViewDate] = useState(() => {
+    const d = new Date(selectedDate);
+    return isNaN(d.getTime()) ? new Date() : d;
+  });
+
+  const [viewMode, setViewMode] = useState<"days" | "months" | "years">("days");
+
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const daysInMonth = (month: number, year: number) => new Date(year, month + 1, 0).getDate();
+  const firstDayOfMonth = (month: number, year: number) => new Date(year, month, 1).getDay();
+
+  const handlePrev = () => {
+    if (viewMode === "days") {
+      setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+    } else if (viewMode === "years") {
+      setViewDate(new Date(viewDate.getFullYear() - 12, 0, 1));
+    }
+  };
+
+  const handleNext = () => {
+    if (viewMode === "days") {
+      setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+    } else if (viewMode === "years") {
+      setViewDate(new Date(viewDate.getFullYear() + 12, 0, 1));
+    }
+  };
+
+  const isSelected = (day: number) => {
+    const d = new Date(selectedDate);
+    return !isNaN(d.getTime()) &&
+      d.getDate() === day &&
+      d.getMonth() === viewDate.getMonth() &&
+      d.getFullYear() === viewDate.getFullYear();
+  };
+
+  const formatDate = (day: number) => {
+    const d = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
+    return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  };
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 12 }, (_, i) => {
+    const startYear = Math.floor(viewDate.getFullYear() / 12) * 12;
+    return startYear + i;
+  });
+
+  return (
+    <div className="w-full">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() => {
+            if (viewMode === "days") setViewMode("months");
+            else if (viewMode === "months") setViewMode("years");
+            else setViewMode("days");
+          }}
+          className="text-sm font-bold text-gray-800 hover:text-[#6C3FC5] transition-colors flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-gray-50"
+        >
+          {viewMode === "days" && `${months[viewDate.getMonth()]} ${viewDate.getFullYear()}`}
+          {viewMode === "months" && `${viewDate.getFullYear()}`}
+          {viewMode === "years" && `${years[0]} - ${years[11]}`}
+        </button>
+        <div className="flex items-center gap-1">
+          <button onClick={handlePrev} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
+            <ChevronLeftIcon className="w-4 h-4" />
+          </button>
+          <button onClick={handleNext} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
+            <ChevronRightIcon className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {viewMode === "days" && (
+        <>
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
+              <div key={d} className="text-[10px] font-bold text-gray-400 text-center uppercase py-1">
+                {d}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-1">
+            {Array.from({ length: firstDayOfMonth(viewDate.getMonth(), viewDate.getFullYear()) }).map((_, i) => (
+              <div key={`empty-${i}`} />
+            ))}
+            {Array.from({ length: daysInMonth(viewDate.getMonth(), viewDate.getFullYear()) }).map((_, i) => {
+              const day = i + 1;
+              const active = isSelected(day);
+              return (
+                <button
+                  key={day}
+                  onClick={() => onSelect(formatDate(day))}
+                  className={`
+                    w-8 h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all
+                    ${active
+                      ? "bg-[#6C3FC5] text-white shadow-lg shadow-purple-200 scale-110"
+                      : "text-gray-700 hover:bg-purple-50 hover:text-[#6C3FC5]"
+                    }
+                  `}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {viewMode === "months" && (
+        <div className="grid grid-cols-3 gap-2">
+          {months.map((m, i) => (
+            <button
+              key={m}
+              onClick={() => {
+                setViewDate(new Date(viewDate.getFullYear(), i, 1));
+                setViewMode("days");
+              }}
+              className={`
+                py-2 rounded-xl text-xs font-bold transition-all
+                ${viewDate.getMonth() === i
+                  ? "bg-[#6C3FC5] text-white shadow-md"
+                  : "text-gray-700 hover:bg-purple-50 hover:text-[#6C3FC5]"
+                }
+              `}
+            >
+              {m.slice(0, 3)}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {viewMode === "years" && (
+        <div className="grid grid-cols-3 gap-2">
+          {years.map((y) => (
+            <button
+              key={y}
+              onClick={() => {
+                setViewDate(new Date(y, viewDate.getMonth(), 1));
+                setViewMode("months");
+              }}
+              className={`
+                py-2 rounded-xl text-xs font-bold transition-all
+                ${viewDate.getFullYear() === y
+                  ? "bg-[#6C3FC5] text-white shadow-md"
+                  : "text-gray-700 hover:bg-purple-50 hover:text-[#6C3FC5]"
+                }
+              `}
+            >
+              {y}
+            </button>
+          ))}
         </div>
       )}
     </div>
