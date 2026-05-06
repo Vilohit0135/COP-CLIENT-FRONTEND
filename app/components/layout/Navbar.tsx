@@ -329,15 +329,15 @@ export default function Navbar() {
         .promo-wrapper{overflow:hidden;width:100%;}
         .promo-track{display:flex;align-items:center;gap:2.5rem;width:max-content}
         .promo-content{display:flex;gap:15rem;align-items:center;padding:0;flex-shrink:0}
-        .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(14px, 1.2vw, 18px); line-height:1; color: #fff; white-space:nowrap}
+        .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(11px, 0.9vw, 13px); line-height:1; color: #fff; white-space:nowrap}
         @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
         .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
         .nav-glass {
-          background: linear-gradient(90deg, rgba(157, 111, 221, 0.65) 0%, rgba(168, 132, 244, 0.65) 55%, rgba(139, 92, 246, 0.65) 100%);
+          background: linear-gradient(90deg, rgba(110, 65, 185, 0.88) 0%, rgba(125, 80, 210, 0.88) 55%, rgba(95, 45, 185, 0.88) 100%);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          box-shadow: 0 8px 32px rgba(157, 111, 221, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          box-shadow: 0 8px 32px rgba(80, 30, 160, 0.3);
           border-radius: 1.5rem;
         }
         @media (max-width: 768px) {
@@ -585,7 +585,7 @@ export default function Navbar() {
 
         {/* Drawer Content */}
         <div
-          className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col transition-transform duration-500 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden transition-transform duration-500 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
           style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
           data-lenis-prevent
         >
