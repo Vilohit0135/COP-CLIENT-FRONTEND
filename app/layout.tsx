@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "600", "700"],
   variable: "--font-inter",
   display: "swap",
   preload: true,
@@ -20,10 +20,10 @@ const inter = Inter({
 
 const nunito = Nunito({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "600", "700"],
   variable: "--font-nunito",
   display: "swap",
-  preload: true,
+  preload: false,
 });
 
 export default function RootLayout({
@@ -37,10 +37,10 @@ export default function RootLayout({
       className={`h-full antialiased ${inter.variable} ${nunito.variable}`}
     >
       <head>
-        <link rel="preconnect" href="https://cop-backend-js0.onrender.com" />
-        <link rel="dns-prefetch" href="https://cop-backend-js0.onrender.com" />
+        {/* Backend fetches run server-side (Vercel→Render); browsers never connect directly.
+            Preconnecting to onrender.com wastes browser connection budget. */}
         <link rel="dns-prefetch" href="https://encrypted-tbn0.gstatic.com" />
-        <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
+        <link rel="preconnect" href="https://upload.wikimedia.org" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://i.pinimg.com" />
       </head>
       <body className="min-h-full flex flex-col">

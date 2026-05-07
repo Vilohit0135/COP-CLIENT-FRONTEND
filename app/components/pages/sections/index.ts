@@ -1,5 +1,6 @@
 import { ComponentType } from "react";
 import { SectionContent } from "@/app/lib/types";
+import dynamic from "next/dynamic";
 import * as HeroModule from "../homepage/Hero";
 import * as AboutModule from "../homepage/About";
 import * as TopUniversitiesModule from "../homepage/TopUniversities";
@@ -8,16 +9,20 @@ import * as Section4Module from "../homepage/Section4";
 import * as Section5Module from "../homepage/Section5";
 import * as Section6Module from "../homepage/Section6";
 import * as Section7Module from "../homepage/Section7";
-import * as Section8Module from "../homepage/Section8";
-import * as Section9Module from "../homepage/Section9";
-import * as Section10Module from "../homepage/Section10";
-
+// Section 8/9/10 are below the fold and heavy (Section8 includes framer-motion).
+// Dynamic import keeps them out of the initial JS bundle while still SSR-ing HTML.
 type SectionComponent = ComponentType<{ section: SectionContent }>;
-
 type SectionEntry = {
   Component: SectionComponent;
   usedFields?: string[];
 };
+
+const Section8Dynamic = dynamic(() => import("../homepage/Section8")) as SectionComponent;
+const Section9Dynamic = dynamic(() => import("../homepage/Section9")) as SectionComponent;
+const Section10Dynamic = dynamic(() => import("../homepage/Section10")) as SectionComponent;
+const section8UsedFields = ["Pill","Badge","pill","badge","Main Heading","Title","Main Title","heading","Below Main Heading","below main heading","Subtitle","Subheading","Description","First Card","first card","Card 1","card1","Second Card","second card","Card 2","card2","Third Card","third card","Card 3","card3","Fourth Card","fourth card","Card 4","card4","Fifth Card","fifth card","Card 5","card5","Sixth Card","sixth card","Card 6","card6","Seventh Card","seventh card","Card 7","card7","Eighth Card","eighth card","Card 8","card8"];
+const section9UsedFields = ["Pill","pill","Badge","badge","Main Heading","main heading","Title","title","heading","Below Main Heading","below main heading","Subtitle","subtitle","Description","description","First Article","first article","Article 1","article1","article_1","Second Article","second article","Article 2","article2","article_2","Third Article","third article","Article 3","article3","article_3"];
+const section10UsedFields = ["Pill","pill","Badge","badge","Main Heading","main heading","heading","Title","title","Below Main Heading","below main heading","Subtitle","subtitle","Description","description"];
 
 const sectionRegistry: Record<string, SectionEntry> = {
   hero_section: {
@@ -191,104 +196,32 @@ const sectionRegistry: Record<string, SectionEntry> = {
     usedFields: Section7Module.usedFields,
   },
   // Student Testimonials Section
-  student_testimonials: {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
-  "student-testimonials": {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
-  studentTestimonials: {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
-  testimonials: {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
-  section_8: {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
-  "section-8": {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
-  section8: {
-    Component: Section8Module.default,
-    usedFields: Section8Module.usedFields,
-  },
+  student_testimonials: { Component: Section8Dynamic, usedFields: section8UsedFields },
+  "student-testimonials": { Component: Section8Dynamic, usedFields: section8UsedFields },
+  studentTestimonials: { Component: Section8Dynamic, usedFields: section8UsedFields },
+  testimonials: { Component: Section8Dynamic, usedFields: section8UsedFields },
+  section_8: { Component: Section8Dynamic, usedFields: section8UsedFields },
+  "section-8": { Component: Section8Dynamic, usedFields: section8UsedFields },
+  section8: { Component: Section8Dynamic, usedFields: section8UsedFields },
   // Blogs & Resources / Articles Section (Section 9)
-  blogs__resources: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  blogs_resources: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  "blogs-resources": {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  blogs_and_resources: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  blogsresources: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  articles: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  section_9: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  "section-9": {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
-  section9: {
-    Component: Section9Module.default,
-    usedFields: Section9Module.usedFields,
-  },
+  blogs__resources: { Component: Section9Dynamic, usedFields: section9UsedFields },
+  blogs_resources: { Component: Section9Dynamic, usedFields: section9UsedFields },
+  "blogs-resources": { Component: Section9Dynamic, usedFields: section9UsedFields },
+  blogs_and_resources: { Component: Section9Dynamic, usedFields: section9UsedFields },
+  blogsresources: { Component: Section9Dynamic, usedFields: section9UsedFields },
+  articles: { Component: Section9Dynamic, usedFields: section9UsedFields },
+  section_9: { Component: Section9Dynamic, usedFields: section9UsedFields },
+  "section-9": { Component: Section9Dynamic, usedFields: section9UsedFields },
+  section9: { Component: Section9Dynamic, usedFields: section9UsedFields },
   // Frequently Asked Questions Section
-  frequently_asked_questions: {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  "frequently-asked-questions": {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  frequentlyAskedQuestions: {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  "FrequentlyAskedQuestions": {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  faq: {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  section_10: {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  "section-10": {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
-  section10: {
-    Component: Section10Module.default,
-    usedFields: Section10Module.usedFields,
-  },
+  frequently_asked_questions: { Component: Section10Dynamic, usedFields: section10UsedFields },
+  "frequently-asked-questions": { Component: Section10Dynamic, usedFields: section10UsedFields },
+  frequentlyAskedQuestions: { Component: Section10Dynamic, usedFields: section10UsedFields },
+  "FrequentlyAskedQuestions": { Component: Section10Dynamic, usedFields: section10UsedFields },
+  faq: { Component: Section10Dynamic, usedFields: section10UsedFields },
+  section_10: { Component: Section10Dynamic, usedFields: section10UsedFields },
+  "section-10": { Component: Section10Dynamic, usedFields: section10UsedFields },
+  section10: { Component: Section10Dynamic, usedFields: section10UsedFields },
 };
 
 export default sectionRegistry;
