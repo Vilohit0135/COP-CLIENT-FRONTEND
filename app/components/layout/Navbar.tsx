@@ -189,6 +189,7 @@ export default function Navbar() {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [marqueeVars, setMarqueeVars] = useState<{ distance: string; duration: string }>({ distance: '0px', duration: '14s' });
+  const [repeatCount, setRepeatCount] = useState(2);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -310,6 +311,8 @@ export default function Navbar() {
       const distancePx = Math.round(w + gapPx);
       const speed = 80;
       const duration = Math.max(8, Math.round(distancePx / speed)) + 's';
+      const viewportW = window.innerWidth || 1200;
+      setRepeatCount(Math.max(Math.ceil((viewportW * 2) / distancePx) + 1, 2));
       setMarqueeVars({ distance: `${distancePx}px`, duration });
     });
     ro.observe(contentEl);
@@ -354,12 +357,11 @@ export default function Navbar() {
               <div style={{ overflow: "hidden" }}>
                 <div className="promo-wrapper">
                   <div ref={trackRef} className={`promo-track${marqueeVars.distance !== "0px" ? " promo-animate" : ""}`} style={{ ['--marquee-distance' as any]: marqueeVars.distance, ['--marquee-duration' as any]: marqueeVars.duration } as React.CSSProperties}>
-                    <div ref={contentRef} className="promo-content" aria-hidden={false}>
-                      <div className="promo-item">{promoText}</div>
-                    </div>
-                    <div className="promo-content" aria-hidden={true}>
-                      <div className="promo-item">{promoText}</div>
-                    </div>
+                    {Array.from({ length: repeatCount }, (_, i) => (
+                      <div key={i} ref={i === 0 ? contentRef : undefined} className="promo-content" aria-hidden={i !== 0}>
+                        <div className="promo-item">{promoText}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
