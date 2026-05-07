@@ -38,6 +38,40 @@ export function organizationSchema() {
       url: `${SITE_URL}/logo.webp`,
     },
     sameAs: [] as string[],
+    address: [
+      {
+        "@type": "PostalAddress",
+        streetAddress: "123 Education Hub, Sector 5",
+        addressLocality: "Bengaluru",
+        addressRegion: "Karnataka",
+        postalCode: "560001",
+        addressCountry: "IN",
+      },
+      {
+        "@type": "PostalAddress",
+        streetAddress: "456 Tech Campus Drive",
+        addressLocality: "San Francisco",
+        addressRegion: "CA",
+        postalCode: "94105",
+        addressCountry: "US",
+      },
+    ],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+91-80-1234-5678",
+        contactType: "customer support",
+        areaServed: "IN",
+        availableLanguage: ["en", "hi"],
+      },
+      {
+        "@type": "ContactPoint",
+        telephone: "+1-415-123-4567",
+        contactType: "customer support",
+        areaServed: "US",
+        availableLanguage: ["en"],
+      },
+    ],
   };
 }
 

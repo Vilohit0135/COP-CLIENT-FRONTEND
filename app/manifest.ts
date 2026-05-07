@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "CollegeProgram — Online Degree Programs from Top Universities",
+    name: "CollegeProgram — Online Degrees from Top Universities",
     short_name: "CollegeProgram",
     description:
       "Discover online degree programs, universities, and courses. Compare options, talk to expert counselors, and find your perfect program.",

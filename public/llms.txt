@@ -1,0 +1,30 @@
+# CollegeProgram
+
+> CollegeProgram is an online education discovery platform helping students find and enroll in online degree programs (UG, PG, MBA, certifications) from accredited Indian and global universities. We compare courses, fees, rankings, and admissions, and provide expert counselor guidance.
+
+## Key pages
+
+- [Home](https://cop-client-nine.vercel.app/): overview, featured universities, top programs, FAQs.
+- [Universities](https://cop-client-nine.vercel.app/universities): directory of partner universities (IGNOU, NMIMS, Manipal, Amity, Symbiosis, Chandigarh, BITS Pilani, Sharda, ICFAI, UPES, Jain, LPU, OP Jindal, Bharati Vidyapeeth, SMU, VGU, Dr. D.Y. Patil).
+- [Online Courses](https://cop-client-nine.vercel.app/online-courses): browse by degree type (UG, PG, MBA, certifications).
+- [Explore Programs](https://cop-client-nine.vercel.app/explore-programs): filter programs by specialization, fees, duration.
+- [Compare Universities](https://cop-client-nine.vercel.app/compareUniversities): side-by-side comparison of programs and providers.
+- [Articles](https://cop-client-nine.vercel.app/articles): editorial content on online education, MBA admissions, balancing work and study, university rankings.
+- [Talk to Experts](https://cop-client-nine.vercel.app/talk-to-experts): book a free counselor session.
+
+## Topics covered
+
+- Online degree programs from accredited universities (UGC, NAAC, AICTE)
+- MBA, MCA, BCA, BBA, MA, MSc, BA, BSc, certifications
+- Specializations: Data Science, AI, Project Management, Finance, HR, Marketing, IT
+- Fees, EMI options, scholarships, placement support
+- Admission processes, eligibility, intake periods
+- University rankings and reviews
+
+## Sitemap
+
+[XML sitemap](https://cop-client-nine.vercel.app/sitemap.xml)
+
+## Contact
+
+- India offices and US offices listed at [Talk to Experts](https://cop-client-nine.vercel.app/talk-to-experts)

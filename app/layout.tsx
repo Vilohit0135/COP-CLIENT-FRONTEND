@@ -11,7 +11,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://cop-client-nine.ve
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "CollegeProgram — Online Degree Programs from Top Universities",
+    default: "CollegeProgram — Online Degrees from Top Universities",
     template: "%s | CollegeProgram",
   },
   description:
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "CollegeProgram",
-    title: "CollegeProgram — Online Degree Programs from Top Universities",
+    title: "CollegeProgram — Online Degrees from Top Universities",
     description:
       "Discover online degree programs from top universities. Compare courses, fees, and rankings, and talk to expert counselors to find your perfect program.",
     images: [
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "CollegeProgram — Online Degree Programs from Top Universities",
+    title: "CollegeProgram — Online Degrees from Top Universities",
     description:
       "Discover online degree programs from top universities. Compare courses, fees, and rankings, and talk to expert counselors.",
     images: ["/logo.webp"],
@@ -100,18 +100,10 @@ export default function RootLayout({
       className={`h-full antialiased ${inter.variable} ${nunito.variable}`}
     >
       <head>
-        {/* LCP hero image — preloaded so the browser fetches it before the React
-            tree mounts. Responsive imagesrcset matches the Hero <Image sizes>. */}
-        <link
-          rel="preload"
-          as="image"
-          href="/Margin.webp"
-          imageSrcSet="/Margin.webp"
-          imageSizes="(max-width: 640px) 95vw, (max-width: 1024px) 50vw, 548px"
-          fetchPriority="high"
-        />
-        {/* Backend fetches run server-side (Vercel→Render); browsers never connect directly.
-            Preconnecting to onrender.com wastes browser connection budget. */}
+        {/* Hero <Image priority> in Hero.tsx auto-generates its own correctly-sized
+            preload via /_next/image. Adding a manual preload here would download the
+            full-resolution Margin.webp in addition to the optimized version,
+            wasting bandwidth on the critical path. */}
         <link rel="dns-prefetch" href="https://encrypted-tbn0.gstatic.com" />
         <link rel="preconnect" href="https://upload.wikimedia.org" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://i.pinimg.com" />

@@ -2,7 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { IconMapPin, IconMail, IconPhone } from '@tabler/icons-react';
+import ObfuscatedEmail from "@/app/components/ObfuscatedEmail";
 
 // ---------- Types ----------
 interface FooterItem {
@@ -228,7 +230,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-8">
           <div className="flex flex-col">
             <div className="mb-6">
-              <img src="/logo.webp" alt="CollegeProgram logo" className="h-16 w-auto block -ml-3" />
+              <NextImage src="/logo.webp" alt="CollegeProgram logo" width={160} height={64} loading="lazy" className="h-16 w-auto block -ml-3" />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6">
               Discover a world of knowledge and opportunities
@@ -246,8 +248,12 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <IconMail stroke={2} color="#7C3AED" />
-                <span className="text-gray-400 text-sm">onlinecollegeprogram@gmail.com</span>
-
+                <ObfuscatedEmail
+                  user="onlinecollegeprogram"
+                  domain="gmail.com"
+                  className="text-gray-400 text-sm"
+                  asLink
+                />
               </div>
             </div>
           </div>
@@ -287,7 +293,7 @@ export default function Footer() {
                 { src: "/linkedin.webp", alt: "LinkedIn", href: "https://www.linkedin.com/" },
                 { src: "/facebook.webp", alt: "Facebook", href: "https://www.facebook.com/" },
                 { src: "/instagram.webp", alt: "Instagram", href: "https://www.instagram.com/" },
-                { src: "/gmail.webp", alt: "Email", href: "mailto:onlinecollegeprogram@gmail.com" }
+                { src: "/gmail.webp", alt: "Email", href: "/talk-to-experts" }
               ].map((icon, i) => (
                 <a
                   key={i}
@@ -297,7 +303,7 @@ export default function Footer() {
                   aria-label={`Visit our ${icon.alt}`}
                   className="opacity-60 hover:opacity-100 transition-opacity"
                 >
-                  <img src={icon.src} alt={`${icon.alt} icon`} aria-hidden="true" className="w-8 h-8" />
+                  <NextImage src={icon.src} alt={`${icon.alt} icon`} width={32} height={32} loading="lazy" className="w-8 h-8" />
                 </a>
               ))}
             </div>
@@ -351,7 +357,7 @@ export default function Footer() {
             <p className="flex items-center gap-2">
               Design & Developed by
               <Link href="https://www.supercx.co/" target="_blank" rel="noopener noreferrer">
-                <img src="/supercxLogo.webp" alt="SuperCX" className="h-6 w-auto hover:opacity-80 transition-opacity" />
+                <NextImage src="/supercxLogo.webp" alt="SuperCX" width={80} height={24} loading="lazy" className="h-6 w-auto hover:opacity-80 transition-opacity" />
               </Link>
             </p>
           </div>
