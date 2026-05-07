@@ -55,7 +55,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
       }}>
         {/* Image area */}
         <div style={{ height: 130, position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg,#F3E8FF 0%,#EEF2FF 100%)', flexShrink: 0 }}>
-          {p.thumbnail && <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
+          {p.thumbnail && <img src={p.thumbnail} alt={p.title} width={400} height={130} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4) 100%)' }} />
 
           {p.trending && (
@@ -168,7 +168,7 @@ export default function ProgramCard({ program: p, variant = "desktop", showTrend
       {/* Card image area */}
       <div style={{ height: 170, position: 'relative', borderTopLeftRadius: 20, borderTopRightRadius: 20, overflow: 'hidden', background: 'linear-gradient(180deg, #F3E8FF 0%, #EEF2FF 100%)' }}>
         {p.thumbnail ? (
-          <img src={p.thumbnail} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          <img src={p.thumbnail} alt={p.title} width={400} height={170} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         ) : null}
         {/* Dark gradient overlay for readability */}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.65) 100%)' }} />

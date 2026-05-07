@@ -302,24 +302,18 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!promoText) return;
-    function recalc() {
-      const contentEl = contentRef.current;
-      const trackEl = trackRef.current;
-      if (!contentEl || !trackEl) return;
-      const width = contentEl.getBoundingClientRect().width || 0;
-      // read computed gap on track (px)
-      const trackStyle = getComputedStyle(trackEl);
-      const gapPx = parseFloat(trackStyle.getPropertyValue('gap')) || 0;
-      // total translation distance: content width + gap between the two blocks
-      const distancePx = Math.round(width + gapPx);
-      // speed in px per second
-      const speed = 80; // adjust for desired pace
-      const duration = Math.max(8, Math.round((distancePx / speed))) + 's';
+    const contentEl = contentRef.current;
+    if (!contentEl) return;
+    const ro = new ResizeObserver((entries) => {
+      const w = Math.round(entries[0].contentRect.width) || 0;
+      const gapPx = 40; // matches gap:2.5rem in .promo-track (~40px)
+      const distancePx = Math.round(w + gapPx);
+      const speed = 80;
+      const duration = Math.max(8, Math.round(distancePx / speed)) + 's';
       setMarqueeVars({ distance: `${distancePx}px`, duration });
-    }
-    recalc();
-    window.addEventListener('resize', recalc);
-    return () => window.removeEventListener('resize', recalc);
+    });
+    ro.observe(contentEl);
+    return () => ro.disconnect();
   }, [promoText]);
 
   const isHomepage = pathname === "/";
@@ -332,7 +326,7 @@ export default function Navbar() {
         .promo-content{display:flex;gap:15rem;align-items:center;padding:0;flex-shrink:0}
         .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: var(--font-nunito), sans-serif; font-size: clamp(11px, 0.9vw, 13px); line-height:1; color: #fff; white-space:nowrap}
         @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
-        .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
+        .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; will-change: transform; contain: layout style; }
         .nav-glass {
           background: linear-gradient(90deg, rgba(130, 85, 200, 0.75) 0%, rgba(145, 105, 225, 0.75) 55%, rgba(115, 65, 200, 0.75) 100%);
           backdrop-filter: blur(16px);

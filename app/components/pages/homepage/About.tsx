@@ -32,6 +32,10 @@ export default function About({ section }: AboutProps) {
           <img
             src={v["Image"]}
             alt={v["Title"] || "About image"}
+            width={768}
+            height={432}
+            loading="lazy"
+            decoding="async"
             className="mt-10 rounded-2xl shadow-lg mx-auto max-w-full md:max-w-2xl"
           />
         )}

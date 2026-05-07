@@ -19,32 +19,27 @@ export default function UpperWhiteBox({
 
   useEffect(() => {
     if (!universityLogos || universityLogos.length === 0) return;
+    let wrapperWidth = 0;
+    let contentWidth = 0;
     function recalc() {
-      const contentEl = contentRef.current;
-      const wrapperEl = wrapperRef.current;
-      if (!contentEl || !wrapperEl) return;
-      // width of a single content block
-      const contentWidth = Math.round(contentEl.getBoundingClientRect().width) || 0;
-      const wrapperWidth = Math.round(wrapperEl.getBoundingClientRect().width) || 0;
-
-      // ensure we have enough repeated blocks so that when one block scrolls out,
-      // the next block is immediately adjacent (no visible gap). We need enough
-      // total length so that contentWidth * repeats >= wrapperWidth + contentWidth
+      if (!contentWidth || !wrapperWidth) return;
       const minRepeats = Math.max(2, Math.ceil((wrapperWidth + contentWidth) / contentWidth));
       setRepeats(minRepeats);
-
       const speed = 80;
       const duration = Math.max(8, Math.round(contentWidth / speed)) + "s";
       setMarqueeVars({ distance: `${contentWidth}px`, duration });
     }
-    // run twice: first after paint, then after layout changes
-    const t = setTimeout(recalc, 10);
-    recalc();
-    window.addEventListener("resize", recalc);
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("resize", recalc);
-    };
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const w = Math.round(entry.contentRect.width);
+        if (entry.target === wrapperRef.current) wrapperWidth = w;
+        if (entry.target === contentRef.current) contentWidth = w;
+      }
+      recalc();
+    });
+    if (wrapperRef.current) ro.observe(wrapperRef.current);
+    if (contentRef.current) ro.observe(contentRef.current);
+    return () => ro.disconnect();
   }, [universityLogos]);
 
   return (
@@ -92,7 +87,7 @@ export default function UpperWhiteBox({
           .logo-img{max-width:100%;height:auto;display:block;background:transparent}
           .logo-img--nmims{padding:0.4rem;border-radius:4px}
           @keyframes logos-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--logos-marquee-distance))); } }
-          .logos-animate { animation: logos-marquee var(--logos-marquee-duration, 14s) linear infinite; }
+          .logos-animate { animation: logos-marquee var(--logos-marquee-duration, 14s) linear infinite; will-change: transform; contain: layout style; }
           .logos-wrapper:hover .logos-animate { animation-play-state: paused; }
         `}</style>
 
