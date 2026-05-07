@@ -70,7 +70,7 @@ export default async function TopUniversities({ section }: TopUniversitiesProps)
   let universityLogos: Array<{ name: string; logo: any; slug?: string }> = [];
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-    const res = await fetch(`${apiBase}/api/public/providers`, { cache: "no-store" });
+    const res = await fetch(`${apiBase}/api/public/providers`, { next: { revalidate: 60 } });
     if (res.ok) {
       const providers = await res.json();
       if (Array.isArray(providers) && providers.length > 0) {

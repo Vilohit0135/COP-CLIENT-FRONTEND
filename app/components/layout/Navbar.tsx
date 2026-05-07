@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Search as SearchIcon } from "lucide-react";
 
@@ -329,7 +330,7 @@ export default function Navbar() {
         .promo-wrapper{overflow:hidden;width:100%;}
         .promo-track{display:flex;align-items:center;gap:2.5rem;width:max-content}
         .promo-content{display:flex;gap:15rem;align-items:center;padding:0;flex-shrink:0}
-        .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: 'Nunito', sans-serif; font-size: clamp(11px, 0.9vw, 13px); line-height:1; color: #fff; white-space:nowrap}
+        .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: var(--font-nunito), sans-serif; font-size: clamp(11px, 0.9vw, 13px); line-height:1; color: #fff; white-space:nowrap}
         @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
         .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; }
         .nav-glass {
@@ -360,14 +361,10 @@ export default function Navbar() {
                 <div className="promo-wrapper">
                   <div ref={trackRef} className="promo-track promo-animate" style={{ ['--marquee-distance' as any]: marqueeVars.distance, ['--marquee-duration' as any]: marqueeVars.duration } as React.CSSProperties}>
                     <div ref={contentRef} className="promo-content" aria-hidden={false}>
-                      {[...Array(8)].map((_, i) => (
-                        <div key={i} className="promo-item">{promoText}</div>
-                      ))}
+                      <div className="promo-item">{promoText}</div>
                     </div>
                     <div className="promo-content" aria-hidden={true}>
-                      {[...Array(8)].map((_, i) => (
-                        <div key={i} className="promo-item">{promoText}</div>
-                      ))}
+                      <div className="promo-item">{promoText}</div>
                     </div>
                   </div>
                 </div>
@@ -380,7 +377,7 @@ export default function Navbar() {
       <div className="md:fixed md:px-7 md:py-2.5 w-full bg-[#A983F6] md:bg-transparent border-b md:border-none border-purple-400/30">
         <div className="nav-glass w-full mx-auto flex items-center justify-between px-4 h-16 md:h-[72px] text-white relative">
           <Link href="/" className="flex items-center gap-1 flex-shrink-0">
-            <img src="/logo.webp" alt="CollegeProgram/logo" className="h-16 md:h-16 w-auto object-contain mt-1 md:mt-0 pt-1" />
+            <NextImage src="/logo.webp" alt="CollegeProgram" width={160} height={64} className="h-16 md:h-16 w-auto object-contain mt-1 md:mt-0 pt-1" priority />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -394,7 +391,7 @@ export default function Navbar() {
                 onClick={() => setDropdownOpen((v) => !v)}
                 className={`flex items-center gap-1 font-semibold text-[13px] leading-[19.5px] transition cursor-pointer px-3 py-2 rounded-lg ${pathname.startsWith('/explore-programs') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
                   }`}
-                style={{ fontFamily: "'Nunito', sans-serif" }}
+                style={{ fontFamily: "var(--font-nunito), sans-serif" }}
               >
                 Explore Programs
                 <svg
@@ -438,7 +435,7 @@ export default function Navbar() {
               href="/online-courses"
               className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg ${pathname.startsWith('/online-courses') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
                 }`}
-              style={{ fontFamily: "'Nunito', sans-serif" }}
+              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               Online Courses
             </Link>
@@ -447,7 +444,7 @@ export default function Navbar() {
               href="/universities"
               className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg ${pathname.startsWith('/universities') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
                 }`}
-              style={{ fontFamily: "'Nunito', sans-serif" }}
+              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               Top Universities
             </Link>
@@ -505,7 +502,7 @@ export default function Navbar() {
                 ? 'bg-white/30 border-white text-white shadow-sm'
                 : 'bg-white/10 border-white/40 hover:bg-white/20 text-white'
                 }`}
-              style={{ fontFamily: "'Nunito', sans-serif" }}
+              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -519,7 +516,7 @@ export default function Navbar() {
                 ? 'bg-orange-600 text-white ring-2 ring-white/50'
                 : 'bg-orange-500 hover:bg-orange-600 text-white'
                 }`}
-              style={{ fontFamily: "'Nunito', sans-serif" }}
+              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -592,7 +589,7 @@ export default function Navbar() {
           {/* Header */}
           <div className="px-6 py-5 flex items-center justify-between border-b border-purple-100 bg-[#A983F6] backdrop-blur-sm sticky top-0 z-10">
             <div className="flex flex-col">
-              <img src="/logo.webp" alt="Logo" className="h-14 w-auto" />
+              <NextImage src="/logo.webp" alt="CollegeProgram" width={140} height={56} className="h-14 w-auto" />
             </div>
             <button
               onClick={() => setIsMenuOpen(false)}

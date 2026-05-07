@@ -78,7 +78,7 @@ export default function UpperWhiteBox({
         </h2>
       )}
 
-      <div style={{ overflow: "hidden", width: "100%" }}>
+      <div style={{ overflow: "hidden", width: "100%", minHeight: "clamp(72px, 9vw, 120px)" }}>
         <style>{`
           .logos-wrapper{overflow:hidden;width:100%;}
           /* no gap on the outer track so duplicated blocks sit flush */
@@ -140,6 +140,10 @@ export default function UpperWhiteBox({
                       <img
                         src={logoCandidate}
                         alt={fieldKey}
+                        width={220}
+                        height={120}
+                        loading="lazy"
+                        decoding="async"
                         className={isNmims ? "logo-img logo-img--nmims" : "logo-img"}
                         style={{
                           height,

@@ -139,7 +139,10 @@ export default function Hero({ section }: HeroProps) {
                   >
                     <img
                       src="/SVG%20(2).webp"
-                      alt="icon"
+                      alt=""
+                      aria-hidden="true"
+                      width={22}
+                      height={22}
                       className="object-contain flex-shrink-0"
                       style={{ width: "clamp(14px, 2.4vw, 22px)", height: "clamp(14px, 2.4vw, 22px)" }}
                     />
@@ -255,7 +258,7 @@ export default function Hero({ section }: HeroProps) {
                   { icon: '/Container (49).webp', label: statStudents, sub: 'Enrolled' },
                 ].map((stat, i) => (
                   <div key={i} className="flex flex-col items-center lg:flex-row lg:items-start gap-1.5 sm:gap-2 text-center lg:text-left" style={{ flex: 1, minWidth: 0 }}>
-                    <img src={stat.icon} alt="icon" className="flex-shrink-0" style={{ width: 'clamp(24px, 5vw, 36px)', height: 'clamp(24px, 5vw, 36px)', objectFit: 'contain' }} />
+                    <img src={stat.icon} alt="" aria-hidden="true" width={36} height={36} loading="lazy" className="flex-shrink-0" style={{ width: 'clamp(24px, 5vw, 36px)', height: 'clamp(24px, 5vw, 36px)', objectFit: 'contain' }} />
                     <div style={{ minWidth: 0 }}>
                       {(() => {
                         const lbl = String(stat.label || "").trim();
@@ -317,7 +320,7 @@ export default function Hero({ section }: HeroProps) {
               <div className="mt-6 lg:mt-8 flex items-center gap-2 lg:gap-4 w-full justify-center lg:justify-start">
                 {['/Stats.webp', '/Container (43).webp', '/Container (44).webp', '/Container (45).webp'].map((src, i) => (
                   <div key={i} className="flex-shrink-0" style={{ height: 'clamp(28px, 5vw, 44px)', flex: 1, maxWidth: 150 }}>
-                    <img src={src} alt="badge" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <img src={src} alt="" aria-hidden="true" width={150} height={44} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                   </div>
                 ))}
               </div>
@@ -395,12 +398,12 @@ export default function Hero({ section }: HeroProps) {
                   >
                     <img
                       src="/Container (51).webp"
-                      alt="online course icon"
-                      style={{
-                        width: "52px",
-                        height: "52px",
-                        objectFit: "contain",
-                      }}
+                      alt=""
+                      aria-hidden="true"
+                      width={52}
+                      height={52}
+                      loading="lazy"
+                      style={{ width: "52px", height: "52px", objectFit: "contain" }}
                     />
                   </div>
 

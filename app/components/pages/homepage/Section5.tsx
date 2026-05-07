@@ -2,7 +2,8 @@
 
 import { SectionContent } from "@/app/lib/types";
 import { richTextToPlain } from "./tuUtils";
-import TalkToExpertsForm from "../../shared/TalkToExpertsForm";
+import dynamic from "next/dynamic";
+const TalkToExpertsForm = dynamic(() => import("../../shared/TalkToExpertsForm"), { ssr: false });
 
 interface Section5Props {
   section: SectionContent;
