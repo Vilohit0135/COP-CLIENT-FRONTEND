@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Nunito } from "next/font/google";
 import "./globals.css";
 import Layout from "./components/pages/sections/Layout";
-import dynamic from "next/dynamic";
+import OAuthProvider from "./components/providers/OAuthProvider";
 import { Toaster } from "react-hot-toast";
 import SmoothScroll from "./components/providers/SmoothScroll";
-
-const OAuthProvider = dynamic(() => import("./components/providers/OAuthProvider"), { ssr: false });
 
 export const metadata: Metadata = {
   title: "CollegeProgram",
