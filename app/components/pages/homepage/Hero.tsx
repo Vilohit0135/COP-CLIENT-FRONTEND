@@ -240,9 +240,8 @@ export default function Hero({ section }: HeroProps) {
                   alt="Hero"
                   width={1100}
                   height={1331}
-                  priority
-                  fetchPriority="high"
-                  sizes="(max-width: 640px) 95vw, 100vw"
+                  loading="lazy"
+                  sizes="95vw"
                   style={{ width: '100%', height: 'auto', display: 'block' }}
                 />
               </div>
@@ -420,7 +419,7 @@ export default function Hero({ section }: HeroProps) {
                         fontWeight: 400,
                         lineHeight: "24px",
                         letterSpacing: "0px",
-                        color: "#9CA3AF",
+                        color: "#6B7280",
                       }}
                     >
                       Online Courses

@@ -36,6 +36,13 @@ export default function RootLayout({
       lang="en"
       className={`h-full antialiased ${inter.variable} ${nunito.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://cop-backend-js0.onrender.com" />
+        <link rel="dns-prefetch" href="https://cop-backend-js0.onrender.com" />
+        <link rel="dns-prefetch" href="https://encrypted-tbn0.gstatic.com" />
+        <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
+        <link rel="dns-prefetch" href="https://i.pinimg.com" />
+      </head>
       <body className="min-h-full flex flex-col">
         <SmoothScroll>
           <Layout>

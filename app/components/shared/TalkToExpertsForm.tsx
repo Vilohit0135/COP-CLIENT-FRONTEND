@@ -127,7 +127,7 @@ export default function TalkToExpertsForm({
           }}
         >
           {Icon && <Icon size={16} style={{ position: "absolute", left: "12px", color: "#9CA3AF" }} />}
-          <span style={{ color: value ? "#374151" : "#9CA3AF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          <span style={{ color: value ? "#374151" : "#6B7280", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
             {value || placeholder}
           </span>
           <ChevronDown size={16} style={{ color: "#6B7280", transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "none" }} />
@@ -533,7 +533,7 @@ export default function TalkToExpertsForm({
         </button>
 
         {/* No Spam Calls badge */}
-        <div style={{ height: "32px", borderRadius: "8px", backgroundColor: "#10B981", border: "1px solid #059669", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+        <div style={{ height: "32px", borderRadius: "8px", backgroundColor: "#047857", border: "1px solid #065F46", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
           <Shield size={14} color="#FFFFFF" />
           <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>No Spam Calls</span>
         </div>
