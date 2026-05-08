@@ -214,13 +214,11 @@ export default function Section3Client({ courseGroups }: Props) {
       </div>
 
       {/* Course Cards — Mobile focus-center slider */}
-      <div ref={containerRef} className="md:hidden mt-4 relative" style={{ overflow: 'hidden' }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <div ref={containerRef} className="md:hidden mt-4 relative overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div
           onTransitionEnd={handleTransitionEnd}
+          className={`flex gap-3 ${animated ? "transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]" : ""}`}
           style={{
-            display: 'flex',
-            gap: 12,
-            transition: animated ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none',
             transform: `translateX(${translatePx}px)`,
           }}
         >
@@ -254,16 +252,7 @@ export default function Section3Client({ courseGroups }: Props) {
               onClick={() => { setAnimated(true); setOffset(idx + 1); }}
               aria-label={`Go to slide ${idx + 1}`}
               aria-current={idx === realIndex ? "true" : undefined}
-              style={{
-                width: idx === realIndex ? 20 : 8,
-                height: 8,
-                borderRadius: 99,
-                background: idx === realIndex ? '#7C3AED' : '#D1D5DB',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-              }}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer border-none p-0 ${idx === realIndex ? "w-5 bg-[#7C3AED]" : "w-2 bg-[#D1D5DB]"}`}
             />
           ))}
         </div>
@@ -299,21 +288,7 @@ export default function Section3Client({ courseGroups }: Props) {
       <div className="mt-12 flex justify-center">
         <Link
           href="/online-courses"
-          className="text-white font-semibold transition-all duration-200 inline-flex items-center justify-center hover:opacity-90 hover:scale-[1.02]"
-          style={{
-            minWidth: "220px",
-            maxWidth: "90vw",
-            minHeight: "52px",
-            padding: "12px 24px",
-            borderRadius: "14px",
-            background: "linear-gradient(135deg, #4F39F6 0%, #9810FA 100%)",
-            boxShadow: "0 4px 4px rgba(0, 0, 0, 0.25)",
-            textDecoration: "none",
-            fontFamily: "Inter",
-            fontSize: "clamp(14px, 3.2vw, 16px)",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
+          className="text-white font-semibold transition-all duration-200 inline-flex items-center justify-center hover:opacity-90 hover:scale-[1.02] min-w-[220px] max-w-[90vw] min-h-[52px] py-3 px-6 rounded-[14px] bg-gradient-to-br from-[#4F39F6] to-[#9810FA] shadow-[0_4px_4px_rgba(0, 0, 0, 0.25)] no-underline font-['Inter'] text-[clamp(14px,3.2vw,16px)] cursor-pointer whitespace-nowrap"
         >
           View All {activeGroup?.degreeType?.name ?? "Courses"}
         </Link>

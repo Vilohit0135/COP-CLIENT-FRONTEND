@@ -44,36 +44,17 @@ export default function UpperWhiteBox({
 
   return (
     <div
-      className="w-full bg-white"
-      style={{
-        padding: "clamp(1.25rem, 3.5vw, 2.5rem) clamp(0.75rem, 3vw, 1.5rem)",
-        minHeight: "160px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        borderTopLeftRadius: 12,
-        borderTopRightRadius: 12,
-        overflow: "hidden",
-      }}
+      className="w-full bg-white p-[clamp(1.25rem,3.5vw,2.5rem)_clamp(0.75rem,3vw,1.5rem)] min-h-[160px] flex flex-col items-center justify-start rounded-t-xl overflow-hidden"
     >
       {title && (
         <h2
-          style={{
-            fontSize: "clamp(22px, 5vw, 36px)",
-            fontWeight: 700,
-            lineHeight: "1.2",
-            letterSpacing: "0px",
-            color: "#101828",
-            marginBottom: "20px",
-            textAlign: "center",
-          }}
+          className="text-[clamp(22px, 5vw, 36px)] font-bold leading-[1.2] tracking-normal text-[#101828] mb-5 text-center"
         >
           {title}
         </h2>
       )}
 
-      <div style={{ overflow: "hidden", width: "100%", minHeight: "clamp(72px, 9vw, 120px)" }}>
+      <div className="overflow-hidden w-full min-h-[clamp(72px, 9vw, 120px)]">
         <style>{`
           .logos-wrapper{overflow:hidden;width:100%;}
           /* no gap on the outer track so duplicated blocks sit flush */
@@ -93,11 +74,7 @@ export default function UpperWhiteBox({
 
         {universityLogos.length === 0 ? (
           <div
-            style={{
-              color: "#9CA3AF",
-              fontSize: "16px",
-              fontWeight: 500,
-            }}
+            className="text-[#9CA3AF] text-base font-medium"
           >
             Add university logos to CMS
           </div>
@@ -139,12 +116,9 @@ export default function UpperWhiteBox({
                         height={120}
                         loading="lazy"
                         decoding="async"
-                        className={isNmims ? "logo-img logo-img--nmims" : "logo-img"}
+                        className={`${isNmims ? "logo-img logo-img--nmims" : "logo-img"} w-auto object-contain block`}
                         style={{
                           height,
-                          width: "auto",
-                          objectFit: "contain",
-                          display: "block",
                         }}
                         onError={(e) => {
                           const el = e.currentTarget as HTMLImageElement;

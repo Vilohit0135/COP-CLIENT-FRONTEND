@@ -99,119 +99,47 @@ export default function Section10({ section, questionsSection }: Section10Props)
 
         {/* Pill */}
         <span
-          style={{
-            background: "#EEF2FF",
-            color: "#4F39F6",
-            fontFamily: "Inter, Arial, Helvetica, sans-serif",
-            fontSize: "clamp(11px, 2.6vw, 14px)",
-            fontWeight: 700,
-            lineHeight: "20px",
-            letterSpacing: "0.7px",
-            textTransform: "uppercase",
-            padding: "10px 22px",
-            minHeight: 44,
-            maxWidth: "100%",
-            whiteSpace: "nowrap",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 9999,
-          }}
+          className="bg-[#EEF2FF] text-[#4F39F6] font-['Inter',_Arial,_Helvetica,_sans-serif] text-[clamp(11px,2.6vw,14px)] font-bold leading-5 tracking-[0.7px] uppercase py-2.5 px-[22px] min-h-[44px] max-w-full whitespace-nowrap inline-flex items-center justify-center rounded-full"
         >
           {pill}
         </span>
 
         {/* Main Heading */}
         <h2
-          style={{
-            fontFamily: "Inter, Arial, Helvetica, sans-serif",
-            fontWeight: 700,
-            fontSize: "clamp(22px, 5.5vw, 36px)",
-            lineHeight: "1.2",
-            letterSpacing: "0px",
-            color: "#101828",
-            textAlign: "center",
-            marginTop: 16,
-            marginBottom: 0,
-          }}
+          className="font-['Inter',_Arial,_Helvetica,_sans-serif] font-bold text-[clamp(22px,5.5vw,36px)] leading-[1.2] tracking-normal text-[#101828] text-center mt-4 mb-0"
         >
           {mainHeading}
         </h2>
 
         {/* Below Heading */}
         <p
-          style={{
-            fontFamily: "Inter, Arial, Helvetica, sans-serif",
-            fontWeight: 400,
-            fontSize: "clamp(14px, 4vw, 20px)",
-            lineHeight: "28px",
-            letterSpacing: "0px",
-            color: "#4A5565",
-            textAlign: "center",
-            marginTop: 8,
-            marginBottom: 0,
-          }}
+          className="font-['Inter',_Arial,_Helvetica,_sans-serif] font-normal text-[clamp(14px,4vw,20px)] leading-7 tracking-normal text-[#4A5565] text-center mt-2 mb-0"
         >
           {belowHeading}
         </p>
 
         {/* FAQ Accordion */}
         <div
-          style={{
-            width: "100%",
-            marginTop: 40,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
+          className="w-full mt-10 flex flex-col gap-4"
         >
           {visibleFaqs.map((faq, idx) => (
             <div
               key={idx}
-              style={{
-                border: "1px solid #E5E7EB",
-                borderRadius: 12,
-                background: "#FFFFFF",
-                overflow: "hidden",
-              }}
+              className="border border-[#E5E7EB] rounded-xl bg-white overflow-hidden"
             >
               <button
                 aria-expanded={openIndex === idx}
-                className="hover:bg-gray-50 transition-colors duration-200"
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "16px clamp(14px, 4vw, 24px)",
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  gap: 8,
-                }}
+                className="hover:bg-gray-50 transition-colors duration-200 w-full flex items-center justify-between p-4 px-[clamp(14px,4vw,24px)] bg-transparent border-none cursor-pointer text-left gap-2"
                 onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
               >
                 <span
-                  style={{
-                    fontFamily: "Inter, Arial, Helvetica, sans-serif",
-                    fontWeight: 500,
-                    fontSize: "clamp(14px, 3.5vw, 16px)",
-                    lineHeight: "24px",
-                    color: "#101828",
-                    flex: 1,
-                    minWidth: 0,
-                  }}
+                  className="font-['Inter',_Arial,_Helvetica,_sans-serif] font-medium text-[clamp(14px,3.5vw,16px)] leading-6 text-[#101828] flex-1 min-w-0"
                 >
                   {faq.question}
                 </span>
                 <ChevronDown
+                  className="text-[#4F39F6] w-5 h-5 shrink-0 transition-transform duration-200"
                   style={{
-                    color: "#4F39F6",
-                    width: 20,
-                    height: 20,
-                    flexShrink: 0,
-                    transition: "transform 0.2s",
                     transform: openIndex === idx ? "rotate(180deg)" : "rotate(0deg)",
                   }}
                 />
@@ -219,14 +147,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
 
               {openIndex === idx && (
                 <div
-                  style={{
-                    padding: "0 clamp(14px, 4vw, 24px) 16px clamp(14px, 4vw, 24px)",
-                    fontFamily: "Inter, Arial, Helvetica, sans-serif",
-                    fontWeight: 400,
-                    fontSize: 14,
-                    lineHeight: "22px",
-                    color: "#4A5565",
-                  }}
+                  className="p-0 px-[clamp(14px,4vw,24px)] pb-4 font-['Inter',_Arial,_Helvetica,_sans-serif] font-normal text-sm leading-[22px] text-[#4A5565]"
                 >
                   {faq.answer}
                 </div>
@@ -237,32 +158,10 @@ export default function Section10({ section, questionsSection }: Section10Props)
 
         {/* View More Questions Button — only shown when CMS has >4 questions */}
         {hasMore && (
-        <div style={{ width: "100%", display: "flex", justifyContent: "center", marginTop: 24 }} className="sm:justify-end">
+        <div className="w-full flex justify-center mt-6 sm:justify-end">
           <button
-            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200 min-w-[200px] max-w-[90vw] min-h-[48px] py-3 px-6 rounded-xl bg-gradient-to-r from-[#9810FA] to-[#8200DB] shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.10),0px_4px_6px_-1px_rgba(0,0,0,0.10)] font-['Inter',_Arial,_Helvetica,_sans-serif] font-semibold text-[clamp(15px,3.5vw,18px)] leading-6 tracking-normal text-white border-none cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
             onClick={() => setShowAll((prev) => !prev)}
-            style={{
-              minWidth: 200,
-              maxWidth: "90vw",
-              minHeight: 48,
-              padding: "12px 24px",
-              borderRadius: 10,
-              background: "linear-gradient(to right, #9810FA, #8200DB)",
-              boxShadow:
-                "0px 2px 4px -2px rgba(0,0,0,0.10), 0px 4px 6px -1px rgba(0,0,0,0.10)",
-              fontFamily: "Inter, Arial, Helvetica, sans-serif",
-              fontWeight: 600,
-              fontSize: "clamp(15px, 3.5vw, 18px)",
-              lineHeight: "24px",
-              letterSpacing: "0px",
-              color: "#FFFFFF",
-              border: "none",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              whiteSpace: "nowrap",
-            }}
           >
             {showAll ? "Show Less" : "View More Questions"}
           </button>

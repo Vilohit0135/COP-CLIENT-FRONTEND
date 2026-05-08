@@ -148,30 +148,13 @@ export default function Section9({ section }: Section9Props) {
     : DEFAULT_ARTICLES;
 
   return (
-    <section style={{ width: "100%", paddingTop: "clamp(32px,6vw,64px)", paddingBottom: "clamp(32px,6vw,64px)" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 24px" }}>
+    <section className="w-full py-[clamp(32px,6vw,64px)]">
+      <div className="max-w-[1280px] mx-auto px-6">
 
         {/* Pill */}
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+        <div className="flex justify-center mb-5">
           <span
-            style={{
-              background: "#EEF2FF",
-              color: "#4F39F6",
-              fontFamily: "Inter",
-              fontSize: "clamp(11px, 2.6vw, 14px)",
-              fontWeight: 700,
-              lineHeight: "20px",
-              letterSpacing: "0.7px",
-              textTransform: "uppercase",
-              padding: "10px 22px",
-              minHeight: 44,
-              maxWidth: "100%",
-              whiteSpace: "nowrap",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 9999,
-            }}
+            className="bg-[#EEF2FF] text-[#4F39F6] font-['Inter'] text-[clamp(11px, 2.6vw, 14px)] font-bold leading-5 tracking-[0.7px] uppercase py-2.5 px-[22px] min-h-[44px] max-w-full whitespace-nowrap inline-flex items-center justify-center rounded-full"
           >
             {pill}
           </span>
@@ -179,32 +162,14 @@ export default function Section9({ section }: Section9Props) {
 
         {/* Main Heading */}
         <h2
-          style={{
-            fontFamily: "Inter",
-            fontSize: "clamp(22px,5vw,36px)",
-            fontWeight: 700,
-            lineHeight: "1.2",
-            letterSpacing: "0px",
-            color: "#101828",
-            textAlign: "center",
-            margin: "0 0 12px 0",
-          }}
+          className="font-['Inter'] text-[clamp(22px,5vw,36px)] font-bold leading-[1.2] tracking-normal text-[#101828] text-center mb-3"
         >
           {mainHeading}
         </h2>
 
         {/* Below Heading */}
         <p
-          style={{
-            fontFamily: "Inter",
-            fontSize: "clamp(14px, 4vw, 20px)",
-            fontWeight: 400,
-            lineHeight: "28px",
-            letterSpacing: "0px",
-            color: "#4A5565",
-            textAlign: "center",
-            margin: "0 0 48px 0",
-          }}
+          className="font-['Inter'] text-[clamp(14px, 4vw, 20px)] font-normal leading-7 tracking-normal text-[#4A5565] text-center mb-12"
         >
           {belowHeading}
         </p>
@@ -214,35 +179,20 @@ export default function Section9({ section }: Section9Props) {
           {articles.map((article, idx) => (
             <div
               key={`m9-${idx}`}
-              className="bg-[#FFFFFF] flex flex-col h-full overflow-hidden"
-              style={{ minHeight: 360, borderRadius: 20 }}
+              className="bg-[#FFFFFF] flex flex-col h-full overflow-hidden min-h-[360px] rounded-[20px]"
             >
-              <div style={{ position: 'relative', width: '100%', height: 160, flexShrink: 0 }}>
-                <Image src="/Blogs.webp" alt={article.title} fill sizes="280px" style={{ objectFit: 'cover' }} />
-                <span style={{
-                  position: 'absolute',
-                  top: 12,
-                  left: 12,
-                  background: 'rgba(79, 57, 246, 0.9)',
-                  backdropFilter: 'blur(8px)',
-                  color: '#fff',
-                  fontFamily: 'Inter',
-                  fontSize: 10,
-                  fontWeight: 700,
-                  padding: '4px 12px',
-                  borderRadius: 9999,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>{article.category}</span>
+              <div className="relative w-full h-40 shrink-0">
+                <Image src="/Blogs.webp" alt={article.title} fill sizes="280px" className="object-cover" />
+                <span className="absolute top-3 left-3 bg-[#4F39F6]/90 backdrop-blur-md text-white font-['Inter'] text-[10px] font-bold py-1 px-3 rounded-full uppercase tracking-wider">{article.category}</span>
               </div>
-              <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
-                <div style={{ fontFamily: 'Inter', fontSize: 11, color: '#64748B', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div className="p-5 flex flex-col gap-2.5 flex-1">
+                <div className="font-['Inter'] text-[11px] text-[#64748B] font-medium flex items-center gap-1.5">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                   {article.date} · {article.readTime}
                 </div>
-                <h3 style={{ fontFamily: 'Inter', fontSize: 16, fontWeight: 700, color: '#101828', lineHeight: '22px', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.title}</h3>
-                <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#6B7280', lineHeight: '19px', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{article.description}</p>
-                <Link href={`/articles/${article.slug}`} className="hover:opacity-70 transition-opacity duration-200 mt-auto pt-2" style={{ fontFamily: 'Inter', fontSize: 13, fontWeight: 700, color: '#4F39F6', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>Read More <span style={{ fontSize: 16 }}>→</span></Link>
+                <h3 className="font-['Inter'] text-base font-bold text-[#101828] leading-[22px] m-0 line-clamp-2">{article.title}</h3>
+                <p className="font-['Inter'] text-[13px] text-[#6B7280] leading-[19px] m-0 line-clamp-2">{article.description}</p>
+                <Link href={`/articles/${article.slug}`} className="hover:opacity-70 transition-opacity duration-200 mt-auto pt-2 font-['Inter'] text-[13px] font-bold text-[#4F39F6] no-underline flex items-center gap-1 cursor-pointer">Read More <span className="text-base">→</span></Link>
               </div>
             </div>
           ))}
@@ -250,32 +200,21 @@ export default function Section9({ section }: Section9Props) {
 
         {/* Desktop: Cards Grid — 2 cols on tablet, 4 cols on desktop */}
         <div
-          className="hidden md:grid md:grid-cols-2 lg:grid-cols-4"
-          style={{
-            gap: "clamp(16px, 2.5vw, 24px)",
-            marginBottom: "48px",
-          }}
+          className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-[clamp(16px,2.5vw,24px)] mb-12"
         >
           {articles.map((article, idx) => (
             <div
               key={idx}
-              className="rounded-xl sha"
-              style={{
-                background: "#FFFFFF",
-                border: "1px solid #E5E7EB",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-              }}
+              className="rounded-xl bg-white border border-[#E5E7EB] overflow-hidden flex flex-col"
             >
               {/* Image with category badge overlay */}
-              <div style={{ position: "relative", width: "100%", height: "160px", flexShrink: 0 }}>
+              <div className="relative w-full h-40 shrink-0">
                 <Image
                   src="/Blogs.webp"
                   alt={article.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  style={{ objectFit: "cover" }}
+                  className="object-cover"
                 />
                 <TrendingBadge
                   icon={null}
@@ -286,26 +225,14 @@ export default function Section9({ section }: Section9Props) {
               </div>
 
               {/* Card content */}
-              <div style={{ padding: "16px 20px 20px", display: "flex", flexDirection: "column", flex: 1 }}>
+              <div className="p-4 px-5 pb-5 flex flex-col flex-1">
 
                 {/* Date + read time */}
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    marginBottom: "10px",
-                  }}
+                  className="flex items-center gap-3.5 mb-2.5"
                 >
                   <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      fontFamily: "Inter",
-                      fontSize: 12,
-                      color: "#6B7280",
-                    }}
+                    className="flex items-center gap-1 font-['Inter'] text-[12px] text-[#6B7280]"
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -316,14 +243,7 @@ export default function Section9({ section }: Section9Props) {
                     {article.date}
                   </span>
                   <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      fontFamily: "Inter",
-                      fontSize: 12,
-                      color: "#6B7280",
-                    }}
+                    className="flex items-center gap-1 font-['Inter'] text-[12px] text-[#6B7280]"
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <circle cx="12" cy="12" r="10" />
@@ -335,68 +255,29 @@ export default function Section9({ section }: Section9Props) {
 
                 {/* Title */}
                 <h3
-                  style={{
-                    fontFamily: "Inter",
-                    fontSize: 16,
-                    fontWeight: 700,
-                    lineHeight: "22px",
-                    color: "#101828",
-                    margin: "0 0 8px 0",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
+                  className="font-['Inter'] text-base font-bold leading-[22px] text-[#101828] mb-2 line-clamp-2"
                 >
                   {article.title}
                 </h3>
 
                 {/* Description */}
                 <p
-                  style={{
-                    fontFamily: "Inter",
-                    fontSize: 13,
-                    fontWeight: 400,
-                    lineHeight: "20px",
-                    color: "#6B7280",
-                    margin: "0 0 16px 0",
-                    flex: 1,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
+                  className="font-['Inter'] text-[13px] font-normal leading-5 text-[#6B7280] mb-4 flex-1 line-clamp-2"
                 >
                   {article.description}
                 </p>
 
                 {/* Footer: Author + Read link */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div className="flex justify-between items-center">
                   <span
-                    style={{
-                      fontFamily: "Inter",
-                      fontSize: 13,
-                      fontWeight: 400,
-                      color: "#6B7280",
-                    }}
+                    className="font-['Inter'] text-[13px] font-normal text-[#6B7280]"
                   >
                     By{" "}
-                    <strong style={{ color: "#101828", fontWeight: 600 }}>{article.author}</strong>
+                    <strong className="text-[#101828] font-semibold">{article.author}</strong>
                   </span>
                   <Link
                     href={`/articles/${article.slug || "the-future-of-business-education"}`}
-                    className="hover:opacity-70 transition-opacity duration-200"
-                    style={{
-                      fontFamily: "Inter",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: "#4F39F6",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      cursor: "pointer",
-                    }}
+                    className="hover:opacity-70 transition-opacity duration-200 font-['Inter'] text-[13px] font-semibold text-[#4F39F6] no-underline flex items-center gap-1 cursor-pointer"
                   >
                     Read &#8594;
                   </Link>
@@ -407,30 +288,10 @@ export default function Section9({ section }: Section9Props) {
         </div>
 
         {/* View All Articles Button */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="flex justify-center">
           <Link
             href="/articles"
-            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
-            style={{
-              minWidth: 220,
-              maxWidth: "90vw",
-              minHeight: 52,
-              padding: "12px 24px",
-              borderRadius: "14px",
-              background: "linear-gradient(135deg, #4F39F6 0%, #9810FA 100%)",
-              boxShadow: "0 4px 4px rgba(0,0,0,0.25)",
-              fontFamily: "Inter",
-              fontSize: "clamp(14px, 3.2vw, 16px)",
-              fontWeight: 600,
-              color: "#FFFFFF",
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200 min-w-[220px] max-w-[90vw] min-h-[52px] py-3 px-6 rounded-[14px] bg-gradient-to-br from-[#4F39F6] to-[#9810FA] shadow-[0_4px_4px_rgba(0,0,0,0.25)] font-['Inter'] text-[clamp(14px, 3.2vw, 16px)] font-semibold text-white no-underline inline-flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
             View All Articles &#8594;
           </Link>

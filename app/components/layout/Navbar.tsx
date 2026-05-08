@@ -356,13 +356,21 @@ export default function Navbar() {
             border-radius: 0;
           }
         }
+        .expert-glow {
+          box-shadow: 0 0 15px rgba(249, 115, 22, 0.8), 0 0 30px rgba(249, 115, 22, 0.5);
+          transition: all 0.3s ease;
+        }
+        .expert-glow:hover {
+          box-shadow: 0 0 25px rgba(249, 115, 22, 0.9), 0 0 50px rgba(249, 115, 22, 0.5);
+          transform: translateY(-1px);
+        }
       `}</style>
 
       {isHomepage && (
         <div className="bg-[#7C3AED] text-white text-sm py-2">
-          <div className="w-full mx-auto overflow-hidden" style={{ position: "relative" }}>
+          <div className="w-full mx-auto overflow-hidden relative">
             {promoText ? (
-              <div style={{ overflow: "hidden" }}>
+              <div className="overflow-hidden">
                 <div className="promo-wrapper">
                   <div ref={trackRef} className={`promo-track${marqueeVars.distance !== "0px" ? " promo-animate" : ""}`} style={{ ['--marquee-distance' as any]: marqueeVars.distance, ['--marquee-duration' as any]: marqueeVars.duration } as React.CSSProperties}>
                     {Array.from({ length: repeatCount }, (_, i) => (
@@ -395,9 +403,8 @@ export default function Navbar() {
                 onClick={() => setDropdownOpen((v) => !v)}
                 aria-expanded={dropdownOpen}
                 aria-haspopup="menu"
-                className={`flex items-center gap-1 font-semibold text-[13px] leading-[19.5px] transition cursor-pointer px-3 py-2 rounded-lg ${pathname.startsWith('/explore-programs') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
+                className={`flex items-center gap-1 font-semibold text-[13px] leading-[19.5px] transition cursor-pointer px-3 py-2 rounded-lg font-['Nunito',_sans-serif] ${pathname.startsWith('/explore-programs') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
                   }`}
-                style={{ fontFamily: "var(--font-nunito), sans-serif" }}
               >
                 Explore Programs
                 <svg
@@ -439,18 +446,16 @@ export default function Navbar() {
 
             <Link
               href="/online-courses"
-              className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg ${pathname.startsWith('/online-courses') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
+              className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg font-['Nunito',_sans-serif] ${pathname.startsWith('/online-courses') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
                 }`}
-              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               Online Courses
             </Link>
 
             <Link
               href="/universities"
-              className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg ${pathname.startsWith('/universities') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
+              className={`font-semibold text-[13px] leading-[19.5px] transition px-3 py-2 rounded-lg font-['Nunito',_sans-serif] ${pathname.startsWith('/universities') ? 'bg-white/25 text-white shadow-sm' : 'text-white hover:bg-white/10'
                 }`}
-              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               Top Universities
             </Link>
@@ -505,11 +510,10 @@ export default function Navbar() {
 
             <Link
               href="/compareUniversities"
-              className={`hidden sm:flex items-center gap-2 rounded-lg border transition px-3 py-1.5 text-[13px] leading-[19.5px] font-semibold ${pathname.startsWith('/compareUniversities')
+              className={`hidden sm:flex items-center gap-2 rounded-lg border transition px-3 py-1.5 text-[13px] leading-[19.5px] font-semibold font-['Nunito',_sans-serif] ${pathname.startsWith('/compareUniversities')
                 ? 'bg-white/30 border-white text-white shadow-sm'
                 : 'bg-white/10 border-white/40 hover:bg-white/20 text-white'
                 }`}
-              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -519,11 +523,10 @@ export default function Navbar() {
 
             <Link
               href="/talk-to-experts"
-              className={`hidden sm:flex items-center gap-2 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow ${pathname.startsWith('/talk-to-experts')
+              className={`hidden sm:flex items-center gap-2 transition px-4 py-2 rounded-lg text-[13px] leading-[19.5px] font-bold shadow expert-glow font-['Nunito',_sans-serif] ${pathname.startsWith('/talk-to-experts')
                 ? 'bg-orange-600 text-white ring-2 ring-white/50'
                 : 'bg-orange-500 hover:bg-orange-600 text-white'
                 }`}
-              style={{ fontFamily: "var(--font-nunito), sans-serif" }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -589,8 +592,7 @@ export default function Navbar() {
 
         {/* Drawer Content */}
         <div
-          className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden transition-transform duration-500 transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
-          style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
+          className={`absolute top-0 right-0 bottom-0 w-[85%] max-w-[340px] bg-[#FDFCFE] shadow-[-20px_0_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden transition-transform duration-500 ease-in-out transform ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
           data-lenis-prevent
         >
           {/* Header */}
@@ -723,7 +725,7 @@ export default function Navbar() {
           <div className="px-6 py-5 border-t border-purple-100 bg-white/50 space-y-3">
             <Link
               href="/talk-to-experts"
-              className="flex items-center justify-center gap-3 w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-black text-sm uppercase tracking-[1px] shadow-[0_10px_20px_-5px_rgba(249,115,22,0.4)] active:scale-95 transition-all"
+              className="flex items-center justify-center gap-3 w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-black text-sm uppercase tracking-[1px] shadow-[0_10px_20px_-5px_rgba(249,115,22,0.4)] expert-glow active:scale-95 transition-all"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />

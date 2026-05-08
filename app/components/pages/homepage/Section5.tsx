@@ -52,73 +52,67 @@ export default function Section5({ section }: Section5Props) {
 
   // ─── description paragraph (reused twice) ────────────────────────────────────
   const DescPara = () => (
-    <p style={{
-      fontFamily: "Inter", fontSize: "clamp(15px, 3.5vw, 18px)", fontWeight: 400, lineHeight: 1.55,
-      color: "#4A5565", maxWidth: "546px", marginBottom: "20px"
-    }}>
+    <p className="font-['Inter'] text-[clamp(15px,3.5vw,18px)] font-normal leading-[1.55] text-[#4A5565] max-w-[546px] mb-5">
       {richTextToPlain(desc)}
     </p>
   );
 
   return (
-    <section ref={sectionRef} id="contact-experts" style={{ width: "100%", backgroundColor: "#FFFFFF", padding: "clamp(40px, 6vw, 60px) 0" }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 clamp(16px, 4vw, 24px)" }}>
+    <section ref={sectionRef} id="contact-experts" className="w-full bg-white py-[clamp(40px,6vw,60px)]">
+      <div className="max-w-[1280px] mx-auto px-[clamp(16px,4vw,24px)]">
 
         {/* ── MOBILE VERSION (hidden on lg and up) ── */}
-        <div className="lg:hidden" style={{ textAlign: "center" }}>
-          <h2 style={{ fontFamily: "Inter", fontSize: "clamp(24px, 6vw, 32px)", fontWeight: 700, lineHeight: 1.2, color: "#101828", marginBottom: "16px" }}>{title}</h2>
+        <div className="lg:hidden text-center">
+          <h2 className="font-['Inter'] text-[clamp(24px,6vw,32px)] font-bold leading-[1.2] text-[#101828] mb-4">{title}</h2>
           <DescPara />
-          <div style={{ marginTop: "24px", textAlign: "left" }}>
+          <div className="mt-6 text-left">
             {formVisible && <TalkToExpertsForm source="homepage_section5" isHomePage={true} programs={programs} />}
           </div>
         </div>
 
         {/* ── DESKTOP VERSION (hidden on md and down) ── */}
-        <div className="hidden lg:flex" style={{ gap: "clamp(32px, 5vw, 64px)", alignItems: "flex-start" }}>
+        <div className="hidden lg:flex gap-[clamp(32px,5vw,64px)] items-start">
 
           {/* ── LEFT SIDE ── */}
-          <div style={{ flex: 1, minWidth: "300px" }}>
-            <h2 style={{
-              fontFamily: "Inter", fontSize: "clamp(32px, 4vw, 48px)", fontWeight: 700,
-              lineHeight: 1.2, color: "#101828", marginBottom: "16px"
-            }}>
+          <div className="flex-1 min-w-[300px]">
+            <h2 className="font-['Inter'] text-[clamp(32px,4vw,48px)] font-bold leading-[1.2] text-[#101828] mb-4">
               {title}
             </h2>
             <DescPara />
 
-            <p style={{ fontFamily: "Inter", fontSize: "16px", fontWeight: 700, color: "#101828", marginBottom: "12px" }}>Our office</p>
-            <div style={{ marginBottom: "16px", borderRadius: "8px", overflow: "hidden" }}>
-              <img src={officeImg} alt="Our office" width={546} height={364} loading="lazy" decoding="async" style={{ width: "100%", height: "auto", borderRadius: "8px", display: "block" }} />
+            <p className="font-['Inter'] text-base font-bold text-[#101828] mb-3">Our office</p>
+            <div className="mb-4 rounded-lg overflow-hidden">
+              <img src={officeImg} alt="Our office" width={546} height={364} loading="lazy" decoding="async" className="w-full h-auto rounded-lg block" />
             </div>
 
-            <div style={{ display: "flex", gap: "clamp(24px, 4vw, 48px)", flexWrap: "wrap" }}>
+            <div className="flex gap-[clamp(24px,4vw,48px)] flex-wrap">
               {/* India */}
               <div>
-                <p style={{ fontFamily: "Inter", fontSize: "14px", fontWeight: 600, color: "#101828", marginBottom: "8px" }}>India</p>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "8px" }}>
-                  <img src="/Icon.webp" alt="Office address" width={16} height={16} loading="lazy" decoding="async" style={{ width: "16px", height: "16px", marginTop: "2px", flexShrink: 0 }} />
-                  <p style={{ fontFamily: "Inter", fontSize: "14px", lineHeight: "20px", color: "#4A5565", whiteSpace: "pre-line", margin: 0 }}>
+                <p className="font-['Inter'] text-sm font-semibold text-[#101828] mb-2">India</p>
+                <div className="flex items-start gap-1.5 mb-2">
+                  <img src="/Icon.webp" alt="Office address" width={16} height={16} loading="lazy" decoding="async" className="w-4 h-4 mt-0.5 shrink-0" />
+                  <p className="font-['Inter'] text-sm leading-5 text-[#4A5565] whitespace-pre-line m-0">
                     {indiaAddr}
                   </p>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <img src="/Icon (2).webp" alt="Phone contact" width={16} height={16} loading="lazy" decoding="async" style={{ width: "16px", height: "16px", flexShrink: 0 }} />
-                  <p style={{ fontFamily: "Inter", fontSize: "14px", lineHeight: "20px", color: "#4A5565", margin: 0 }}>{indiaPhone}</p>
+                <div className="flex items-center gap-1.5">
+                  <img src="/Icon (2).webp" alt="Phone contact" width={16} height={16} loading="lazy" decoding="async" className="w-4 h-4 shrink-0" />
+                  <p className="font-['Inter'] text-sm leading-5 text-[#4A5565] m-0">{indiaPhone}</p>
                 </div>
               </div>
 
               {/* USA */}
               <div>
-                <p style={{ fontFamily: "Inter", fontSize: "14px", fontWeight: 600, color: "#101828", marginBottom: "8px" }}>United States</p>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", marginBottom: "8px" }}>
-                  <img src="/Icon.webp" alt="Office address" width={16} height={16} loading="lazy" decoding="async" style={{ width: "16px", height: "16px", marginTop: "2px", flexShrink: 0 }} />
-                  <p style={{ fontFamily: "Inter", fontSize: "14px", lineHeight: "20px", color: "#4A5565", whiteSpace: "pre-line", margin: 0 }}>
+                <p className="font-['Inter'] text-sm font-semibold text-[#101828] mb-2">United States</p>
+                <div className="flex items-start gap-1.5 mb-2">
+                  <img src="/Icon.webp" alt="Office address" width={16} height={16} loading="lazy" decoding="async" className="w-4 h-4 mt-0.5 shrink-0" />
+                  <p className="font-['Inter'] text-sm leading-5 text-[#4A5565] whitespace-pre-line m-0">
                     {usaAddr}
                   </p>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <img src="/Icon (2).webp" alt="Phone contact" width={16} height={16} loading="lazy" decoding="async" style={{ width: "16px", height: "16px", flexShrink: 0 }} />
-                  <p style={{ fontFamily: "Inter", fontSize: "14px", lineHeight: "20px", color: "#4A5565", margin: 0 }}>{usaPhone}</p>
+                <div className="flex items-center gap-1.5">
+                  <img src="/Icon (2).webp" alt="Phone contact" width={16} height={16} loading="lazy" decoding="async" className="w-4 h-4 shrink-0" />
+                  <p className="font-['Inter'] text-sm leading-5 text-[#4A5565] m-0">{usaPhone}</p>
                 </div>
               </div>
             </div>

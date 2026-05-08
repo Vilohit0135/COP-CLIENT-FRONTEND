@@ -310,8 +310,7 @@ export default function Footer() {
           </div>
         </div>
         <div
-          className="absolute inset-0 opacity-5 pointer-events-none bg-cover bg-center"
-          style={{ backgroundImage: "url('/footerBg.webp')" }}
+          className="absolute inset-0 opacity-5 pointer-events-none bg-cover bg-center bg-[url('/footerBg.webp')]"
         />
         <div className="border-t border-gray-800 mb-8" />
 
