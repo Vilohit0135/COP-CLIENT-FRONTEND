@@ -93,7 +93,7 @@ export default function Section10({ section, questionsSection }: Section10Props)
     .slice(0, 20);
 
   return (
-    <section className="w-full bg-white py-16 px-4">
+    <section className="w-full bg-white py-8 md:py-16 px-4">
       {faqsForSchema.length > 0 && <JsonLd data={faqSchema(faqsForSchema)} />}
       <div className="max-w-6xl mx-auto flex flex-col items-center">
 

@@ -263,7 +263,7 @@ export default function Section3Client({ courseGroups }: Props) {
       </div>
 
       {/* View All CTA */}
-      <div className="mt-12 flex justify-center">
+      <div className="mt-8 md:mt-12 flex justify-center">
         <Link
           href="/online-courses"
           className="text-white font-semibold transition-all duration-200 inline-flex items-center justify-center hover:opacity-90 hover:scale-[1.02] min-w-[220px] max-w-[90vw] min-h-[52px] py-3 px-6 rounded-[14px] bg-gradient-to-br from-[#4F39F6] to-[#9810FA] shadow-[0_4px_4px_rgba(0, 0, 0, 0.25)] no-underline font-['Inter'] text-[clamp(14px,3.2vw,16px)] cursor-pointer whitespace-nowrap"

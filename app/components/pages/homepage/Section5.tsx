@@ -58,7 +58,7 @@ export default function Section5({ section }: Section5Props) {
   );
 
   return (
-    <section ref={sectionRef} id="contact-experts" className="w-full bg-white py-[clamp(40px,6vw,60px)]">
+    <section ref={sectionRef} id="contact-experts" className="w-full bg-white md:py-[clamp(40px,6vw,60px)] pb-[clamp(40px,6vw,60px)]">
       <div className="max-w-[1280px] mx-auto px-[clamp(16px,4vw,24px)]">
 
         {/* ── MOBILE VERSION (hidden on lg and up) ── */}

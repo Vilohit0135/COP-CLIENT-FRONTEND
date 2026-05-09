@@ -143,7 +143,7 @@ export default function Section4({ section }: Section4Props) {
   const maxPage = Math.max(0, counselors.length - 3);
 
   return (
-    <section className="w-full bg-white py-10 md:py-16 -mt-6 md:-mt-12">
+    <section className="w-full bg-white pt-8 md:py-16 -mt-4 md:-mt-12">
       <div className="max-w-7xl mx-auto px-6">
         {/* Badge (pill) */}
         <div className="flex justify-center mb-6">

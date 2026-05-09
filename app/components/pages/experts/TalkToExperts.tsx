@@ -40,7 +40,7 @@ export default function TalkToExperts() {
         {/* 2. GET IN TOUCH FORM */}
         <div className="py-2.5 px-4">
           <div className="bg-white rounded-2xl p-5 px-4 mb-2.5">
-             <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-5">
               <h2 className="text-xl font-bold text-[#101828] m-0">Get In Touch</h2>
               <span className="bg-[#DCFCE7] text-[#16A34A] text-[12px] font-semibold py-1 px-2.5 rounded-[20px] flex items-center gap-1">
                 <span className="w-[7px] h-[7px] rounded-full bg-[#16A34A] inline-block" />

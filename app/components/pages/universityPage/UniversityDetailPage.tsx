@@ -978,25 +978,39 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
 
             {/* Stats Section */}
             {(provider.comparison?.placementRate || provider.comparison?.averageSalary || (provider.placementPartners && provider.placementPartners.length > 0)) && (
-              <section className="mb-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
-                    <TrendingUp className="w-5 h-5" color="#6366F1" />
-                  </div>
+              <section className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <TrendingUp className="w-5 h-5 text-[#6366F1]" strokeWidth={2} />
                   <h2 className="text-lg font-bold text-gray-900">How your life will change?</h2>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="flex flex-wrap gap-4">
                   {[
-                    ...(provider.comparison?.placementRate ? [{ value: `${provider.comparison.placementRate}%`, label: "Placement Rate", color: "bg-purple-600" }] : []),
-                    ...(provider.comparison?.averageSalary ? [{ value: `₹${(provider.comparison.averageSalary / 100000).toFixed(1)}L`, label: "Avg. Salary", color: "bg-orange-500" }] : []),
-                    ...(provider.placementPartners ? [{ value: `${provider.placementPartners.length}+`, label: "Hiring Partners", color: "bg-blue-600" }] : []),
-                    ...(provider.comparison?.totalSeatsAvailable ? [{ value: `${(provider.comparison.totalSeatsAvailable / 1000).toFixed(0)}k+`, label: "Active Learners", color: "bg-emerald-600" }] : []),
-                  ].map((stat, i) => (
-                    <div key={i} className={`${stat.color} text-white p-5 rounded-xl text-center`}>
-                      <h4 className="text-2xl font-extrabold mb-1">{stat.value}</h4>
-                      <p className="text-white/80 text-xs font-semibold">{stat.label}</p>
-                    </div>
-                  ))}
+                    ...(provider.comparison?.placementRate ? [{ value: `${provider.comparison.placementRate}%`, label: "Placement Rate", colorTheme: "indigo", icon: TrendingUp }] : []),
+                    ...(provider.comparison?.averageSalary ? [{ value: `₹${(provider.comparison.averageSalary / 100000).toFixed(1)}L`, label: "Avg. Salary", colorTheme: "orange", icon: CircleDollarSign }] : []),
+                    ...(provider.placementPartners ? [{ value: `${provider.placementPartners.length}+`, label: "Hiring Partners", colorTheme: "blue", icon: Users }] : []),
+                    ...(provider.comparison?.totalSeatsAvailable ? [{ value: `${(provider.comparison.totalSeatsAvailable / 1000).toFixed(0)}k+`, label: "Active Learners", colorTheme: "emerald", icon: GraduationCap }] : []),
+                  ].map((stat, i) => {
+                    const themes: Record<string, { bg: string, border: string, text: string, icon: string }> = {
+                      indigo: { bg: "bg-[#F8F9FF]", border: "border-[#E0E7FF]", text: "text-indigo-600", icon: "text-indigo-500" },
+                      orange: { bg: "bg-[#FFF7ED]", border: "border-[#FFEDD5]", text: "text-orange-600", icon: "text-orange-500" },
+                      blue: { bg: "bg-[#EFF6FF]", border: "border-[#DBEAFE]", text: "text-blue-600", icon: "text-blue-500" },
+                      emerald: { bg: "bg-[#F0FDF4]", border: "border-[#DCFCE7]", text: "text-emerald-600", icon: "text-emerald-500" }
+                    };
+                    const theme = themes[stat.colorTheme];
+                    const IconComponent = stat.icon;
+                    
+                    return (
+                      <div key={i} className={`flex-1 min-w-[140px] ${theme.bg} rounded-2xl p-4 flex flex-col items-center text-center gap-2 border ${theme.border}`}>
+                        <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border ${theme.border}`}>
+                          <IconComponent className={`w-5 h-5 ${theme.icon}`} />
+                        </div>
+                        <div>
+                          <div className={`text-xl font-black ${theme.text}`}>{stat.value}</div>
+                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{stat.label}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </section>
             )}

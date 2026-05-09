@@ -74,7 +74,7 @@ export default function Section7({ section }: Section7Props) {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Mobile: heading + horizontal slider for all 7 boxes */}
         <div className="lg:hidden">

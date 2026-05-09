@@ -116,7 +116,7 @@ export default function Section6({ section }: Section6Props) {
 
 
   return (
-    <section ref={sectionRef} className="w-full bg-white py-10 md:py-16">
+    <section ref={sectionRef} className="w-full bg-white py-8 md:py-16">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div
           className={`text-center mb-8 md:mb-12 transition-[opacity,transform] duration-400 ease-in-out ${isAnimating ? "opacity-0 translate-y-[10px]" : "opacity-100 translate-y-0"}`}

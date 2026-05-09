@@ -54,7 +54,7 @@ export default async function Section3({ section }: Section3Props) {
   }
 
   return (
-    <section className="w-full bg-white py-10 md:py-16">
+    <section className="w-full bg-white py-8 md:py-16">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         {title && (
@@ -72,7 +72,7 @@ export default async function Section3({ section }: Section3Props) {
             {descriptionFirst}
             {descriptionSecond && (
               <>
-                <br />
+                <br className="hidden md:block" />
                 {descriptionSecond}
               </>
             )}
