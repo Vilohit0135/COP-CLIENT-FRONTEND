@@ -103,8 +103,18 @@ export default function UniversityCard({
         </button>
 
         {/* Location Badge */}
-        <div className="absolute bottom-4 right-4 bg-emerald-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg">
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+        <div 
+          className="absolute bottom-4 right-4 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5"
+          style={{
+            background: "linear-gradient(90deg, rgba(4, 120, 87, 0.45) 0%, rgba(5, 150, 105, 0.45) 55%, rgba(6, 95, 70, 0.45) 100%)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.25)",
+            boxShadow: "0 4px 16px rgba(4, 120, 87, 0.3)",
+            textShadow: "0 1px 2px rgba(0,0,0,0.2)"
+          }}
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.2))" }}><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
           {university.comparison?.location || "India"}
         </div>
 

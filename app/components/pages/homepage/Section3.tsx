@@ -54,19 +54,12 @@ export default async function Section3({ section }: Section3Props) {
   }
 
   return (
-    <section className="w-full bg-white py-10 md:py-16">
+    <section className="w-full bg-white py-8 md:py-16">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         {title && (
           <h2 
-            className="text-center"
-            style={{
-              fontFamily: "Inter",
-              fontSize: "clamp(24px, 5vw, 48px)",
-              fontWeight: 700,
-              color: "#101828",
-              lineHeight: "1.2",
-            }}
+            className="text-center font-['Inter'] text-[clamp(24px,5vw,48px)] font-bold text-[#101828] leading-[1.2]"
           >
             {title}
           </h2>
@@ -74,19 +67,12 @@ export default async function Section3({ section }: Section3Props) {
 
         {descriptionFirst && (
           <p
-            className="mt-4 text-center px-2"
-            style={{
-              fontFamily: "Inter",
-              fontSize: "clamp(14px,3vw,18px)",
-              fontWeight: 400,
-              color: "#4A5565",
-              lineHeight: "28px",
-            }}
+            className="mt-4 text-center px-2 font-['Inter'] text-[clamp(14px,3vw,18px)] font-normal text-[#4A5565] leading-7"
           >
             {descriptionFirst}
             {descriptionSecond && (
               <>
-                <br />
+                <br className="hidden md:block" />
                 {descriptionSecond}
               </>
             )}

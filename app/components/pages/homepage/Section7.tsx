@@ -74,7 +74,7 @@ export default function Section7({ section }: Section7Props) {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-8 md:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Mobile: heading + horizontal slider for all 7 boxes */}
         <div className="lg:hidden">
@@ -84,26 +84,14 @@ export default function Section7({ section }: Section7Props) {
             {boxFields.map((box, idx) => (
               <div
                 key={`m7-${idx}`}
-                className="snap-start flex-none"
-                style={{ 
-                  width: 220, 
-                  minHeight: 180, 
-                  borderRadius: 20, 
-                  border: '1px solid #F1F5F9', 
-                  backgroundColor: '#fff', 
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)',
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  padding: '24px 20px', 
-                  gap: 16 
-                }}
+                className="snap-start flex-none w-[220px] min-h-[180px] rounded-[20px] border border-[#F1F5F9] bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] flex flex-col p-6 px-5 gap-4"
               >
-                <div style={{ width: 48, height: 48, borderRadius: 12, background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div className="w-12 h-12 rounded-xl bg-[#F5F3FF] flex items-center justify-center shrink-0">
                   <Image src={box.icon} alt={`${box.heading || "Feature"} icon`} aria-hidden="true" width={24} height={24} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#111827', lineHeight: '20px', marginBottom: 6 }}>{box.heading}</h3>
-                  <p style={{ fontSize: 12, lineHeight: '18px', color: '#4B5563', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{box.content}</p>
+                  <h3 className="text-[15px] font-bold text-[#111827] leading-5 mb-1.5">{box.heading}</h3>
+                  <p className="text-[12px] leading-[18px] text-[#4B5563] line-clamp-3">{box.content}</p>
                 </div>
               </div>
             ))}

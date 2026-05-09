@@ -143,36 +143,15 @@ export default function Section4({ section }: Section4Props) {
   const maxPage = Math.max(0, counselors.length - 3);
 
   return (
-    <section className="w-full bg-white py-10 md:py-16 -mt-6 md:-mt-12">
+    <section className="w-full bg-white pt-8 md:py-16 -mt-4 md:-mt-12">
       <div className="max-w-7xl mx-auto px-6">
         {/* Badge (pill) */}
         <div className="flex justify-center mb-6">
           <div
-            style={{
-              maxWidth: "100%",
-              minHeight: "44px",
-              padding: "10px 20px",
-              backgroundColor: "#EEF2FF",
-              borderRadius: 9999,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            className="max-w-full min-h-[44px] py-[10px] px-5 bg-[#EEF2FF] rounded-full inline-flex items-center justify-center"
           >
             <div
-              style={{
-                fontFamily: "Inter",
-                fontWeight: 700,
-                fontSize: "clamp(11px, 2.6vw, 14px)",
-                lineHeight: "20px",
-                letterSpacing: "0.7px",
-                color: "#4F39F6",
-                textTransform: "uppercase",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
+              className="font-['Inter'] font-bold text-[clamp(11px,2.6vw,14px)] leading-5 tracking-[0.7px] text-[#4F39F6] uppercase whitespace-nowrap text-center overflow-hidden text-ellipsis"
             >
               {badge}
             </div>
@@ -181,30 +160,14 @@ export default function Section4({ section }: Section4Props) {
 
         {/* Title */}
         <h2
-          className="text-center mb-4"
-          style={{
-            fontFamily: "Inter",
-            fontSize: "clamp(22px, 5.5vw, 36px)",
-            fontWeight: 700,
-            color: "#101828",
-            lineHeight: "1.2",
-          }}
+          className="text-center mb-4 font-['Inter'] text-[clamp(22px,5.5vw,36px)] font-bold text-[#101828] leading-[1.2]"
         >
           {title}
         </h2>
 
         {/* Subtitle */}
         <p
-          className="text-center mb-8 md:mb-16 mx-auto px-4"
-          style={{
-            fontFamily: "Inter",
-            maxWidth: "672px",
-            width: "100%",
-            fontSize: "clamp(15px, 3vw, 20px)",
-            fontWeight: 400,
-            color: "#4A5565",
-            lineHeight: "28px",
-          }}
+          className="text-center mb-8 md:mb-16 mx-auto px-4 font-['Inter'] max-w-[672px] w-full text-[clamp(15px,3vw,20px)] font-normal text-[#4A5565] leading-7"
         >
           {subtitle}
         </p>
@@ -223,21 +186,19 @@ export default function Section4({ section }: Section4Props) {
         {/* Counselor Cards Grid — Desktop (horizontal slider) */}
         <div className="hidden md:block">
           {/* Overflow-hidden viewport; inner flex row slides via translateX */}
-          <div ref={desktopSliderRef} style={{ overflow: 'hidden', width: '100%' }}>
+          <div ref={desktopSliderRef} className="overflow-hidden w-full">
             <div
+              className="flex gap-8 transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
               style={{
-                display: 'flex',
-                gap: GAP_DESKTOP + 'px',
-                transition: 'transform 0.6s cubic-bezier(0.4,0,0.2,1)',
                 transform: cardW > 0 ? `translateX(-${sliderPage * (cardW + GAP_DESKTOP)}px)` : 'none',
               }}
             >
               {counselors.map((counselor) => (
                 <div
                   key={counselor.id}
+                  className="min-w-0"
                   style={{
                     flex: `0 0 ${cardW > 0 ? cardW + 'px' : 'calc(33.33% - 22px)'}`,
-                    minWidth: 0,
                   }}
                 >
                   <CounselorCard counselor={counselor} isMobile={false} />
@@ -251,19 +212,7 @@ export default function Section4({ section }: Section4Props) {
             <div className="flex justify-center mt-8 mb-12">
               <button
                 onClick={() => setSliderPage(p => p < maxPage ? p + 1 : 0)}
-                className="bg-gradient-to-br from-[#4F39F6] to-[#9810FA] rounded-xl"
-                style={{
-                  height: 48,
-                  padding: '0 32px',
-                  color: '#FFFFFF',
-                  fontFamily: 'Inter',
-                  fontWeight: 600,
-                  fontSize: 16,
-                  border: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0px 4px 6px -1px rgba(0,0,0,0.10)',
-                  transition: 'opacity 0.2s',
-                }}
+                className="bg-gradient-to-br from-[#4F39F6] to-[#9810FA] rounded-xl h-12 px-8 text-white font-['Inter'] font-semibold text-base border-none cursor-pointer shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.10)] transition-opacity duration-200"
               >
                 {sliderPage < maxPage ? buttonText : 'View Less'}
               </button>

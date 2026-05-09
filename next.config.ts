@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "logo.clearbit.com" },
       { protocol: "https", hostname: "i.pinimg.com" },
+      { protocol: "https", hostname: "bits-pilani-wilp.ac.in" },
     ],
   },
   async headers() {

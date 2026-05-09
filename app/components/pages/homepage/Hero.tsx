@@ -109,8 +109,7 @@ export default function Hero({ section }: HeroProps) {
           <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16">
             {/* Left column: text */}
             <div
-              className="w-full lg:w-1/2 text-center lg:text-left relative px-4 lg:px-0"
-              style={{ animation: "heroFadeUp 0.55s ease-out both" }}
+              className="w-full lg:w-1/2 text-center lg:text-left relative px-4 lg:px-0 animate-[heroFadeUp_0.55s_ease-out_both]"
             >
               {/* Privacy matters pill - text based (match CMS field if present) */}
               {(() => {
@@ -120,18 +119,7 @@ export default function Hero({ section }: HeroProps) {
 
                 return (
                   <div
-                    className="mb-3 sm:mb-6 inline-flex items-center rounded-full max-w-full"
-                    style={{
-                      background: "linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)",
-                      color: "white",
-                      paddingLeft: "clamp(8px, 2.4vw, 18px)",
-                      paddingRight: "clamp(10px, 3vw, 22px)",
-                      paddingTop: "clamp(5px, 0.8vw, 8px)",
-                      paddingBottom: "clamp(5px, 0.8vw, 8px)",
-                      gap: "clamp(6px, 1.2vw, 12px)",
-                      alignItems: "center",
-                      display: "inline-flex",
-                    }}
+                    className="mb-3 sm:mb-6 inline-flex items-center rounded-full max-w-full bg-gradient-to-br from-[#7C3AED] to-[#C026D3] text-white pl-[clamp(8px,2.4vw,18px)] pr-[clamp(10px,3vw,22px)] pt-[clamp(5px,0.8vw,8px)] pb-[clamp(5px,0.8vw,8px)] gap-[clamp(6px,1.2vw,12px)]"
                   >
                     <img
                       src="/SVG%20(2).webp"
@@ -139,20 +127,11 @@ export default function Hero({ section }: HeroProps) {
                       aria-hidden="true"
                       width={22}
                       height={22}
-                      className="object-contain flex-shrink-0"
-                      style={{ width: "clamp(14px, 2.4vw, 22px)", height: "clamp(14px, 2.4vw, 22px)" }}
+                      className="object-contain flex-shrink-0 w-[clamp(14px,2.4vw,22px)] h-[clamp(14px,2.4vw,22px)]"
                     />
                     <span
                       title={privacyText}
-                      style={{
-                        fontSize: "clamp(10px, 2.8vw, 18px)",
-                        fontWeight: 600,
-                        lineHeight: 1.3,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        minWidth: 0,
-                      }}
+                      className="text-[clamp(10px,2.8vw,18px)] font-semibold leading-[1.3] whitespace-nowrap overflow-hidden text-ellipsis min-w-0"
                     >
                       {privacyText}
                     </span>
@@ -161,17 +140,7 @@ export default function Hero({ section }: HeroProps) {
               })()}
 
               {title && (
-                <h1 style={{
-                  maxWidth: "min(720px, 100%)",
-                  whiteSpace: "normal",
-                  fontSize: "clamp(32px, 5vw, 56px)",
-                  fontWeight: "600",
-                  lineHeight: "1.4",
-                  letterSpacing: "0.02em",
-                  color: "#161C2D",
-                  fontFamily: "'edupath-streethemes', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  marginTop: "0.5rem"
-                }}>
+                <h1 className="max-w-[min(720px,100%)] whitespace-normal text-[clamp(32px,5vw,56px)] font-semibold leading-[1.4] tracking-[0.02em] text-[#161C2D] font-['edupath-streethemes',-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif] mt-2">
                   {(() => {
                     const words = title.split(/\s+/);
                     return words.map((word: string, idx: number) => {
@@ -182,23 +151,10 @@ export default function Hero({ section }: HeroProps) {
                           {isSecondWord ? (
                             <>
                               <span
-                                style={{
-                                  display: "inline-block",
-                                  margin: "0 clamp(2px, 0.5vw, 6px)",
-                                  transform: "skewY(-5deg)",
-                                  background: "linear-gradient(135deg, #7C3AED 0%, #C026D3 100%)",
-                                  padding: "0",
-                                }}
+                                className="inline-block mx-[clamp(2px,0.5vw,6px)] -skew-y-[5deg] bg-gradient-to-br from-[#7C3AED] to-[#C026D3] p-0"
                               >
                                 <span
-                                  style={{
-                                    display: "inline-block",
-                                    padding: "clamp(4px, 1vw, 8px) clamp(10px, 2vw, 16px)",
-                                    color: "white",
-                                    transform: "skewY(5deg)",
-                                    fontStyle: "italic",
-                                    fontWeight: 700,
-                                  }}
+                                  className="inline-block py-[clamp(4px,1vw,8px)] px-[clamp(10px,2vw,16px)] text-white skew-y-[5deg] italic font-bold"
                                 >
                                   {word}
                                 </span>
@@ -222,15 +178,7 @@ export default function Hero({ section }: HeroProps) {
 
               {description && (
                 <p
-                  className="mx-auto lg:mx-0"
-                  style={{
-                    marginTop: "clamp(1.5rem, 3vw, 2rem)",
-                    fontSize: "clamp(16px, 2vw, 18px)",
-                    color: "#6A7282",
-                    maxWidth: "38rem",
-                    lineHeight: "1.6",
-                    letterSpacing: "0.01em"
-                  }}>
+                  className="mx-auto lg:mx-0 mt-[clamp(1.5rem,3vw,2rem)] text-[clamp(16px,2vw,18px)] text-[#6A7282] max-w-[38rem] leading-[1.6] tracking-[0.01em]">
                   {description}
                 </p>
               )}
@@ -245,7 +193,7 @@ export default function Hero({ section }: HeroProps) {
                   priority
                   fetchPriority="high"
                   sizes="95vw"
-                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                  className="w-full h-auto block"
                 />
               </div>
 
@@ -257,7 +205,7 @@ export default function Hero({ section }: HeroProps) {
                   { icon: '/Container (49).webp', label: statStudents, sub: 'Enrolled' },
                 ].map((stat, i) => (
                   <div key={i} className="flex flex-col items-center lg:flex-row lg:items-start gap-1.5 sm:gap-2 text-center lg:text-left" style={{ flex: 1, minWidth: 0 }}>
-                    <img src={stat.icon} alt={`${stat.label || "Statistic"} icon`} aria-hidden="true" width={36} height={36} loading="lazy" className="flex-shrink-0" style={{ width: 'clamp(24px, 5vw, 36px)', height: 'clamp(24px, 5vw, 36px)', objectFit: 'contain' }} />
+                    <img src={stat.icon} alt={`${stat.label || "Statistic"} icon`} aria-hidden="true" width={36} height={36} loading="lazy" className="flex-shrink-0 w-[clamp(24px,5vw,36px)] h-[clamp(24px,5vw,36px)] object-contain" />
                     <div style={{ minWidth: 0 }}>
                       {(() => {
                         const lbl = String(stat.label || "").trim();
@@ -295,11 +243,11 @@ export default function Hero({ section }: HeroProps) {
 
                         return (
                           <>
-                            <div style={{ fontSize: 'clamp(12px, 3.2vw, 15px)', fontWeight: 700, color: '#161C2D', lineHeight: '1.05', whiteSpace: 'nowrap' }}>{numberPart}</div>
+                            <div className="text-[clamp(12px,3.2vw,15px)] font-bold text-[#161C2D] leading-[1.05] whitespace-nowrap">{numberPart}</div>
                             {textPart ? (
-                              <div style={{ fontSize: 'clamp(11px, 2.8vw, 13px)', fontWeight: 700, color: '#161C2D', lineHeight: '1.2' }}>{textPart}</div>
+                              <div className="text-[clamp(11px,2.8vw,13px)] font-bold text-[#161C2D] leading-[1.2]">{textPart}</div>
                             ) : null}
-                            <div style={{ fontSize: 'clamp(9px, 2.4vw, 11px)', color: '#6A7282', marginTop: 'clamp(3px, 1vw, 6px)' }}>{stat.sub}</div>
+                            <div className="text-[clamp(9px,2.4vw,11px)] text-[#6A7282] mt-[clamp(3px,1vw,6px)]">{stat.sub}</div>
                           </>
                         );
                       })()}
@@ -310,7 +258,7 @@ export default function Hero({ section }: HeroProps) {
 
               {/* Trusted badge */}
               {trustedText && (
-                <div className="mt-6 lg:mt-8 text-sm text-gray-600" style={{ color: "#6A7282", fontWeight: "500", fontSize: "clamp(13px, 1.5vw, 15px)", lineHeight: "1.5" }}>
+                <div className="mt-6 lg:mt-8 text-[clamp(13px,1.5vw,15px)] text-[#6A7282] font-medium leading-[1.5]">
                   {trustedText}
                 </div>
               )}
@@ -323,8 +271,8 @@ export default function Hero({ section }: HeroProps) {
                   { src: '/Container (44).webp', alt: 'Verified providers badge' },
                   { src: '/Container (45).webp', alt: 'Industry recognition badge' },
                 ].map((b, i) => (
-                  <div key={i} className="flex-shrink-0" style={{ height: 'clamp(28px, 5vw, 44px)', flex: 1, maxWidth: 150 }}>
-                    <img src={b.src} alt={b.alt} aria-hidden="true" width={150} height={44} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <div key={i} className="flex-shrink-0 h-[clamp(28px,5vw,44px)] flex-1 max-w-[150px]">
+                    <img src={b.src} alt={b.alt} aria-hidden="true" width={150} height={44} loading="lazy" className="w-full h-full object-contain" />
                   </div>
                 ))}
               </div>
@@ -332,8 +280,7 @@ export default function Hero({ section }: HeroProps) {
 
             {/* Right column: image + decorative circle + overlays — hidden on mobile */}
             <div
-              className="hidden lg:flex w-full lg:w-1/2 items-start justify-center relative"
-              style={{ paddingLeft: "0", paddingRight: "clamp(0px, 2vw, 32px)", minHeight: "400px", animation: "heroFadeRight 0.6s ease-out 0.1s both" }}>
+              className="hidden lg:flex w-full lg:w-1/2 items-start justify-center relative pl-0 pr-[clamp(0px,2vw,32px)] min-h-[400px] animate-[heroFadeRight_0.6s_ease-out_0.1s_both]">
               {/* Decorative purple circle - responsive */}
               {/* <motion.div initial={{ scale: 0.85 }} className="absolute rounded-full bg-gradient-to-br from-purple-300 to-purple-600 opacity-30 -z-10" style={{
                 width: "clamp(300px, 50vw, 600px)",
@@ -352,51 +299,17 @@ export default function Hero({ section }: HeroProps) {
                 priority
                 fetchPriority="high"
                 sizes="(max-width: 640px) 95vw, (max-width: 1024px) 50vw, 548px"
-                className="relative z-10 rounded-2xl object-cover"
-                style={{
-                  boxShadow: "none",
-                  backgroundColor: "transparent",
-                  width: "clamp(300px, 80vw, 548px)",
-                  height: "auto",
-                  aspectRatio: "548/663.42"
-                }}
+                className="relative z-10 rounded-2xl object-cover shadow-none bg-transparent w-[clamp(300px,80vw,548px)] h-auto aspect-[548/663.42]"
               />
 
               {/* Small top-right badge - Online Course Box - CMS driven - responsive */}
               {onlineCourseText && (
                 <div
-                  className="absolute rounded-lg"
-                  style={{
-                    width: "auto",
-                    height: "auto",
-                    padding: "clamp(8px, 1.5vw, 12px)",
-                    backgroundColor: "white",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "flex-start",
-                    gap: "clamp(10px, 1.5vw, 14px)",
-                    borderRadius: "8px",
-                    zIndex: "20",
-                    top: "clamp(30px, 8vw, 80px)",
-                    right: "clamp(-30px, -5vw, -50px)",
-                    border: "1px solid #E5E7EB",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                  }}
+                  className="absolute rounded-lg w-auto h-auto p-[clamp(8px,1.5vw,12px)] bg-white flex items-start justify-start gap-[clamp(10px,1.5vw,14px)] z-20 top-[clamp(30px,8vw,80px)] right-[clamp(-30px,-5vw,-50px)] border border-[#E5E7EB] shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
                 >
                   {/* Icon - circular badge */}
                   <div
-                    style={{
-                      width: "56px",
-                      height: "56px",
-                      minWidth: "56px",
-                      minHeight: "56px",
-                      borderRadius: "9999px",
-                      backgroundColor: "rgba(124, 58, 237, 0.05)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
+                    className="w-14 h-14 min-w-[56px] min-h-[56px] rounded-full bg-[rgba(124,58,237,0.05)] flex items-center justify-center shrink-0"
                   >
                     <img
                       src="/Container (51).webp"
@@ -405,43 +318,23 @@ export default function Hero({ section }: HeroProps) {
                       width={52}
                       height={52}
                       loading="lazy"
-                      style={{ width: "52px", height: "52px", objectFit: "contain" }}
+                      className="w-[52px] h-[52px] object-contain"
                     />
                   </div>
 
                   {/* Text content - stacked vertically */}
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      justifyContent: "center",
-                      gap: "4px",
-                    }}
+                    className="flex flex-col items-start justify-center gap-1"
                   >
                     {/* Label */}
                     <div
-                      style={{
-                        fontFamily: "Inter",
-                        fontSize: "15px",
-                        fontWeight: 400,
-                        lineHeight: "24px",
-                        letterSpacing: "0px",
-                        color: "#6B7280",
-                      }}
+                      className="font-['Inter'] text-[15px] font-normal leading-6 tracking-normal text-[#6B7280]"
                     >
                       Online Courses
                     </div>
                     {/* CMS Value */}
                     <div
-                      style={{
-                        fontFamily: "Inter",
-                        fontSize: "20px",
-                        fontWeight: 700,
-                        lineHeight: "28px",
-                        letterSpacing: "0px",
-                        color: "#161C2D",
-                      }}
+                      className="font-['Inter'] text-xl font-bold leading-7 tracking-normal text-[#161C2D]"
                     >
                       {onlineCourseText}
                     </div>

@@ -116,21 +116,16 @@ export default function Section6({ section }: Section6Props) {
 
 
   return (
-    <section ref={sectionRef} className="w-full bg-white py-10 md:py-16">
+    <section ref={sectionRef} className="w-full bg-white py-8 md:py-16">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div
-          className="text-center mb-8 md:mb-12"
-          style={{
-            opacity: isAnimating ? 0 : 1,
-            transform: isAnimating ? 'translateY(10px)' : 'translateY(0)',
-            transition: 'opacity 0.4s ease, transform 0.4s ease'
-          }}
+          className={`text-center mb-8 md:mb-12 transition-[opacity,transform] duration-400 ease-in-out ${isAnimating ? "opacity-0 translate-y-[10px]" : "opacity-100 translate-y-0"}`}
         >
           <div className="inline-block mb-4">
-            <span style={{ background: '#EEF2FF', color: '#4F39F6', fontFamily: 'Inter', fontSize: 14, fontWeight: 700, lineHeight: '20px', letterSpacing: '0.7px', textTransform: 'uppercase', padding: '0 20px', height: 48, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 9999 }}>{pill}</span>
+            <span className="bg-[#EEF2FF] text-[#4F39F6] font-['Inter'] text-sm font-bold leading-5 tracking-[0.7px] uppercase px-5 h-12 inline-flex items-center justify-center rounded-full">{pill}</span>
           </div>
-          {currentTitle && <h2 style={{ fontFamily: 'Inter', fontSize: 'clamp(22px,5vw,36px)', fontWeight: 800, color: '#101828', lineHeight: '1.2', marginBottom: 8 }}>{currentTitle}</h2>}
-          {subtitle && <p style={{ fontFamily: 'Inter', fontSize: 'clamp(13px,3vw,16px)', fontWeight: 400, color: '#6A7282', lineHeight: '24px' }}>{subtitle}</p>}
+          {currentTitle && <h2 className="font-['Inter'] text-[clamp(22px,5vw,36px)] font-extrabold text-[#101828] leading-[1.2] mb-2">{currentTitle}</h2>}
+          {subtitle && <p className="font-['Inter'] text-[clamp(13px,3vw,16px)] font-normal text-[#6A7282] leading-6">{subtitle}</p>}
         </div>
 
         <ProgramSliderGrid
@@ -142,32 +137,12 @@ export default function Section6({ section }: Section6Props) {
       </div>{/* end fade wrapper */}
 
       <div className="text-center mt-12">
-        <Link href="/explore-programs?type=all" style={{ textDecoration: 'none' }}>
+        <Link href="/explore-programs?type=all" className="no-underline">
           <button
-            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200"
-            style={{
-              minWidth: 240,
-              maxWidth: '90vw',
-              minHeight: 52,
-              borderRadius: 14,
-              background: 'linear-gradient(135deg,#4F39F6 0%,#9810FA 100%)',
-              color: '#FFFFFF',
-              fontWeight: 600,
-              fontSize: 'clamp(14px, 3.2vw, 16px)',
-              lineHeight: '24px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-              border: 'none',
-              padding: '12px 24px',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-            }}
+            className="hover:opacity-90 hover:scale-[1.02] transition-all duration-200 min-w-[240px] max-w-[90vw] min-h-[52px] rounded-[14px] bg-gradient-to-br from-[#4F39F6] to-[#9810FA] text-white font-semibold text-[clamp(14px,3.2vw,16px)] leading-6 inline-flex items-center justify-center gap-2.5 shadow-[0px_4px_4px_rgba(0,0,0,0.25)] border-none py-3 px-6 cursor-pointer whitespace-nowrap"
           >
             <span>Browse All {totalPrograms !== null ? `${totalPrograms}+` : "2000+"} Programs</span>
-            <img src="/Icon%20(3).webp" alt="Browse arrow icon" aria-hidden="true" width={20} height={20} loading="lazy" decoding="async" style={{ width: 20, height: 20 }} />
+            <img src="/Icon%20(3).webp" alt="Browse arrow icon" aria-hidden="true" width={20} height={20} loading="lazy" decoding="async" className="w-5 h-5" />
           </button>
         </Link>
       </div>

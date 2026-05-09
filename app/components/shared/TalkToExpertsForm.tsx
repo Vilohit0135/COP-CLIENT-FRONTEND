@@ -14,8 +14,8 @@ interface TalkToExpertsFormProps {
   hideHeader?: boolean;
 }
 
-export default function TalkToExpertsForm({ 
-  source, 
+export default function TalkToExpertsForm({
+  source,
   initialMessage = "Talk to Experts Request",
   programs = ["MBA & Management Programs", "Tech & Data Science", "International Programs"],
   isHomePage = false,
@@ -47,7 +47,7 @@ export default function TalkToExpertsForm({
           // Extract names from grouped courses
           const allCourses = data.flatMap((group: any) => group.courses?.map((c: any) => c.name) || []);
           const uniqueCourses = Array.from(new Set(allCourses)).filter(Boolean) as string[];
-          
+
           if (uniqueCourses.length > 0) {
             setCourseOptions([...uniqueCourses, "Others"]);
           } else {
@@ -79,34 +79,34 @@ export default function TalkToExpertsForm({
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const CustomSelect = ({ 
-    label, 
-    value, 
-    options, 
-    onChange, 
-    placeholder, 
-    required = false, 
+  const CustomSelect = ({
+    label,
+    value,
+    options,
+    onChange,
+    placeholder,
+    required = false,
     id,
     icon: Icon
-  }: { 
-    label: string, 
-    value: string, 
-    options: string[], 
-    onChange: (val: string) => void, 
-    placeholder: string, 
+  }: {
+    label: string,
+    value: string,
+    options: string[],
+    onChange: (val: string) => void,
+    placeholder: string,
     required?: boolean,
     id: string,
     icon?: any
   }) => {
     const isOpen = activeDropdown === id;
-    const filteredOptions = options.filter(opt => 
+    const filteredOptions = options.filter(opt =>
       opt.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
       <div className="custom-select-container" style={{ position: "relative" }}>
         <label style={labelStyle}>{label} {required && <span style={{ color: "#EF4444" }}>*</span>}</label>
-        <div 
+        <div
           onClick={() => {
             if (isOpen) {
               setActiveDropdown(null);
@@ -115,11 +115,11 @@ export default function TalkToExpertsForm({
               setSearchTerm("");
             }
           }}
-          style={{ 
-            ...inputStyle, 
-            cursor: "pointer", 
-            display: "flex", 
-            alignItems: "center", 
+          style={{
+            ...inputStyle,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
             justifyContent: "space-between",
             paddingLeft: Icon ? "38px" : "16px",
             borderColor: isOpen ? "#9810FA" : "#D1D5DB",
@@ -134,15 +134,15 @@ export default function TalkToExpertsForm({
         </div>
 
         {isOpen && (
-          <div style={{ 
-            position: "absolute", 
-            top: "calc(100% + 4px)", 
-            left: 0, 
-            right: 0, 
-            backgroundColor: "#FFFFFF", 
-            border: "1px solid #E5E7EB", 
-            borderRadius: "8px", 
-            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", 
+          <div style={{
+            position: "absolute",
+            top: "calc(100% + 4px)",
+            left: 0,
+            right: 0,
+            backgroundColor: "#FFFFFF",
+            border: "1px solid #E5E7EB",
+            borderRadius: "8px",
+            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
             zIndex: 50,
             maxHeight: "280px",
             display: "flex",
@@ -158,10 +158,10 @@ export default function TalkToExpertsForm({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
-                  style={{ 
-                    width: "100%", 
-                    padding: "8px 12px", 
-                    borderRadius: "6px", 
+                  style={{
+                    width: "100%",
+                    padding: "8px 12px",
+                    borderRadius: "6px",
                     border: "1px solid #E5E7EB",
                     fontSize: "13px",
                     outline: "none",
@@ -173,17 +173,17 @@ export default function TalkToExpertsForm({
             <div style={{ overflowY: "auto", flex: 1 }}>
               {filteredOptions.length > 0 ? (
                 filteredOptions.map((opt, i) => (
-                  <div 
+                  <div
                     key={i}
                     onClick={(e) => {
                       e.stopPropagation();
                       onChange(opt);
                       setActiveDropdown(null);
                     }}
-                    style={{ 
-                      padding: "10px 16px", 
-                      fontSize: "14px", 
-                      color: "#374151", 
+                    style={{
+                      padding: "10px 16px",
+                      fontSize: "14px",
+                      color: "#374151",
                       cursor: "pointer",
                       backgroundColor: value === opt ? "#F9FAFB" : "transparent",
                       fontWeight: value === opt ? 600 : 400,
@@ -464,7 +464,7 @@ export default function TalkToExpertsForm({
         )}
 
         {/* Program of Interest */}
-        <CustomSelect 
+        <CustomSelect
           id="program"
           label="Program of Interest"
           placeholder="Select Program"
@@ -475,7 +475,7 @@ export default function TalkToExpertsForm({
         />
 
         {/* Preferred Time to Call */}
-        <CustomSelect 
+        <CustomSelect
           id="time"
           label="Preferred Time to Call"
           placeholder="Select time slot"
@@ -534,9 +534,21 @@ export default function TalkToExpertsForm({
         </button>
 
         {/* No Spam Calls badge */}
-        <div style={{ height: "32px", borderRadius: "8px", backgroundColor: "#047857", border: "1px solid #065F46", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+        <div style={{
+          height: "32px",
+          borderRadius: "8px",
+          background: "linear-gradient(90deg, rgba(4, 120, 87, 0.75) 0%, rgba(5, 150, 105, 0.75) 55%, rgba(6, 95, 70, 0.75) 100%)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(10px)",
+          border: "1px solid rgba(255, 255, 255, 0.25)",
+          boxShadow: "0 4px 16px rgba(4, 120, 87, 0.3)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "6px"
+        }}>
           <Shield size={14} color="#FFFFFF" />
-          <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF" }}>No Spam Calls</span>
+          <span style={{ fontFamily: "Inter", fontSize: "13px", fontWeight: 500, color: "#FFFFFF", textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}>No Spam Calls</span>
         </div>
 
         {/* Terms text */}

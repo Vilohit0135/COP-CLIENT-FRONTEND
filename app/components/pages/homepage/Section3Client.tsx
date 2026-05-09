@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import AutoSlider from "./AutoSlider";
-import { BookOpen, Award, FileText, Briefcase, FlaskConical, GraduationCap } from "lucide-react";
+import { BookOpen, Award, FileText, Briefcase, FlaskConical, GraduationCap, Monitor, Globe } from "lucide-react";
 import CourseCard from "./CourseCard";
 
 interface CourseItem {
@@ -40,6 +40,13 @@ function DegreeIcon({ slug, cls = 'w-5 h-5 text-purple-600' }: { slug: string; c
   if (slug.includes("cert")) return <FileText className={cls} />;
   if (slug.includes("exec")) return <Briefcase className={cls} />;
   if (slug.includes("doc") || slug.includes("phd")) return <FlaskConical className={cls} />;
+  return <GraduationCap className={cls} />;
+}
+
+function getCourseIcon(name: string, cls = "w-6 h-6") {
+  if (name.includes("MBA")) return <Briefcase className={cls} />;
+  if (name.includes("MCA")) return <Monitor className={cls} />;
+  if (name.includes("BBA")) return <Globe className={cls} />;
   return <GraduationCap className={cls} />;
 }
 
@@ -180,28 +187,20 @@ export default function Section3Client({ courseGroups }: Props) {
               )}
             </div>
 
-            {/* Mobile Tabs: Limit 2 */}
-            <div className="flex md:hidden items-center gap-2 bg-[#FFFFFF] border border-[#F3F4F6] rounded-full px-2 py-1.5 overflow-x-auto scrollbar-hide shadow-sm">
-              {courseGroups.slice(0, 2).map((group) => (
+            {/* Mobile Tabs: Scrollable */}
+            <div className="flex md:hidden items-center gap-2 overflow-x-auto scrollbar-hide px-2 py-1">
+              {courseGroups.map((group) => (
                 <button
                   key={group.degreeType.slug}
                   onClick={() => setActiveTab(group.degreeType.slug)}
-                  className={`px-4 py-2 text-xs font-medium rounded-full cursor-pointer whitespace-nowrap transition-all ${activeTab === group.degreeType.slug
-                    ? "bg-purple-600 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  className={`px-5 py-2.5 text-xs font-bold rounded-full cursor-pointer whitespace-nowrap transition-all shadow-sm border ${activeTab === group.degreeType.slug
+                    ? "bg-purple-600 text-white border-purple-600 shadow-purple-100"
+                    : "bg-white text-gray-600 border-gray-100 hover:bg-gray-50"
                     }`}
                 >
                   {group.degreeType.name}
                 </button>
               ))}
-              {courseGroups.length > 2 && (
-                <Link
-                  href="/online-courses"
-                  className="px-3 py-1.5 text-xs font-bold text-purple-600 bg-purple-50 rounded-full border border-purple-100 whitespace-nowrap cursor-pointer hover:bg-purple-100 transition-colors"
-                >
-                  {courseGroups.length - 2}+
-                </Link>
-              )}
             </div>
           </div>
 
@@ -213,58 +212,26 @@ export default function Section3Client({ courseGroups }: Props) {
         </div>
       </div>
 
-      {/* Course Cards — Mobile focus-center slider */}
-      <div ref={containerRef} className="md:hidden mt-4 relative" style={{ overflow: 'hidden' }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-        <div
-          onTransitionEnd={handleTransitionEnd}
-          style={{
-            display: 'flex',
-            gap: 12,
-            transition: animated ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)' : 'none',
-            transform: `translateX(${translatePx}px)`,
-          }}
-        >
-          {extendedCourses.map((course, idx) => {
-            const isActive = idx === offset;
-            const isEmpty = !course._id;
-            return (
-              <CourseCard
-                key={idx}
-                course={course as any}
-                isActive={isActive}
-                isMobile={true}
-                isEmpty={isEmpty}
-                animated={animated}
-                onClick={() => {
-                  if (!isActive) {
-                    const diff = idx - offset;
-                    if (Math.abs(diff) === 1) { setAnimated(true); setOffset(offset + diff); }
-                  }
-                }}
-              />
-            );
-          })}
-        </div>
-
-        {/* Dot indicators */}
-        <div className="flex justify-center gap-2 mt-5">
-          {effectiveCourses.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => { setAnimated(true); setOffset(idx + 1); }}
-              aria-label={`Go to slide ${idx + 1}`}
-              aria-current={idx === realIndex ? "true" : undefined}
-              style={{
-                width: idx === realIndex ? 20 : 8,
-                height: 8,
-                borderRadius: 99,
-                background: idx === realIndex ? '#7C3AED' : '#D1D5DB',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-              }}
-            />
+      {/* Course Cards — Mobile Icon Grid */}
+      <div className="md:hidden mt-6 px-4">
+        <div className="grid grid-cols-2 gap-3">
+          {activeGroup?.courses?.map((course) => (
+            <Link
+              key={course._id}
+              href={`/online-courses/${course.slug}`}
+              className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all text-center gap-3 active:scale-95"
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border ${course.name.includes('MBA') ? 'bg-blue-50 border-blue-100 text-blue-600' :
+                course.name.includes('MCA') ? 'bg-emerald-50 border-emerald-100 text-emerald-600' :
+                  course.name.includes('BBA') ? 'bg-orange-50 border-orange-100 text-orange-600' :
+                    'bg-purple-50 border-purple-100 text-purple-600'
+                }`}>
+                {getCourseIcon(course.name)}
+              </div>
+              <h3 className="text-[13px] font-bold text-gray-900 leading-tight">
+                {course.name}
+              </h3>
+            </Link>
           ))}
         </div>
       </div>
@@ -296,24 +263,10 @@ export default function Section3Client({ courseGroups }: Props) {
       </div>
 
       {/* View All CTA */}
-      <div className="mt-12 flex justify-center">
+      <div className="mt-8 md:mt-12 flex justify-center">
         <Link
           href="/online-courses"
-          className="text-white font-semibold transition-all duration-200 inline-flex items-center justify-center hover:opacity-90 hover:scale-[1.02]"
-          style={{
-            minWidth: "220px",
-            maxWidth: "90vw",
-            minHeight: "52px",
-            padding: "12px 24px",
-            borderRadius: "14px",
-            background: "linear-gradient(135deg, #4F39F6 0%, #9810FA 100%)",
-            boxShadow: "0 4px 4px rgba(0, 0, 0, 0.25)",
-            textDecoration: "none",
-            fontFamily: "Inter",
-            fontSize: "clamp(14px, 3.2vw, 16px)",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
+          className="text-white font-semibold transition-all duration-200 inline-flex items-center justify-center hover:opacity-90 hover:scale-[1.02] min-w-[220px] max-w-[90vw] min-h-[52px] py-3 px-6 rounded-[14px] bg-gradient-to-br from-[#4F39F6] to-[#9810FA] shadow-[0_4px_4px_rgba(0, 0, 0, 0.25)] no-underline font-['Inter'] text-[clamp(14px,3.2vw,16px)] cursor-pointer whitespace-nowrap"
         >
           View All {activeGroup?.degreeType?.name ?? "Courses"}
         </Link>
