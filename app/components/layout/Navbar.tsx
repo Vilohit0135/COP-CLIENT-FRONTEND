@@ -230,7 +230,7 @@ export default function Navbar() {
           }
         }
         if (uniquePromos.size > 0) {
-          setPromoText(Array.from(uniquePromos).join(" \u00A0\u00A0\u00A0 \u2022 \u00A0\u00A0\u00A0 "));
+          setPromoText(Array.from(uniquePromos).join(" \u00A0\u00A0 \u2022 \u00A0\u00A0 "));
         }
       })
       .catch((err) => {
@@ -315,9 +315,9 @@ export default function Navbar() {
     if (!contentEl) return;
     const ro = new ResizeObserver((entries) => {
       const w = Math.round(entries[0].contentRect.width) || 0;
-      const gapPx = 40; // matches gap:2.5rem in .promo-track (~40px)
+      const gapPx = 24; // matches gap:1.5rem in .promo-track (~24px)
       const distancePx = Math.round(w + gapPx);
-      const speed = 80;
+      const speed = 110;
       const duration = Math.max(8, Math.round(distancePx / speed)) + 's';
       const viewportW = window.innerWidth || 1200;
       setRepeatCount(Math.max(Math.ceil((viewportW * 2) / distancePx) + 1, 2));
@@ -334,8 +334,8 @@ export default function Navbar() {
       <header className="sticky top-0 z-50">
       <style>{`
         .promo-wrapper{overflow:hidden;width:100%;}
-        .promo-track{display:flex;align-items:center;gap:2.5rem;width:max-content}
-        .promo-content{display:flex;gap:15rem;align-items:center;padding:0;flex-shrink:0}
+        .promo-track{display:flex;align-items:center;gap:1.5rem;width:max-content}
+        .promo-content{display:flex;gap:2rem;align-items:center;padding:0;flex-shrink:0}
         .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: var(--font-nunito), sans-serif; font-size: clamp(11px, 0.9vw, 13px); line-height:1; color: #fff; white-space:nowrap}
         @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
         .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; will-change: transform; contain: layout style; }
