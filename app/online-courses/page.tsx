@@ -1,7 +1,7 @@
 import { getDegreeTypes, getCourses } from "@/app/lib/api";
 import OnlineCoursesPage from "@/app/components/pages/onlineCoursesPage";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "All Online Courses | COP-CMS",

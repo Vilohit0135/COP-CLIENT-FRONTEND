@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
+  staticPageGenerationTimeout: 180,
   experimental: {
     optimizePackageImports: [
       "@tabler/icons-react",

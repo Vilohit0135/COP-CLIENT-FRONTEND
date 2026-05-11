@@ -3,7 +3,7 @@ import { PageResponse, SectionContent } from "@/app/lib/types";
 // import SectionRenderer from "@/app/components/SectionRenderer";
 import Homepage from "@/app/components/pages/homepage";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 function mergeWithPlaceholders(data: PageResponse) {
   const sections = data.page?.sections || [];
