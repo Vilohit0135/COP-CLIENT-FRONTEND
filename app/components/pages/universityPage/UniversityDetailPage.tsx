@@ -14,7 +14,8 @@ import {
   Globe, CircleDollarSign, Clock, Monitor, Lock, ExternalLink,
   Heart,
   X,
-  AlertTriangle
+  AlertTriangle,
+  Building2
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -346,6 +347,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
     { id: "eligibility", label: "Eligibility" },
     { id: "admission", label: "Admission Process" },
     { id: "placements", label: "Placement & top recruiters" },
+    { id: "campuses", label: "Campuses" },
     { id: "reviews", label: "Review & Ratings" },
     { id: "faq", label: "FAQs" },
   ];
@@ -970,6 +972,31 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                   {provider.placementPartners.map((p, i) => (
                     <div key={i} className="h-12 w-24 relative">
                       <Image src={p.logo} alt={p.name} fill className="object-contain" />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Campuses Section */}
+            {(provider.campuses && provider.campuses.length > 0) && (
+              <section id="campuses" className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-6 scroll-mt-[160px] md:scroll-mt-24">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="w-8 h-8 flex items-center justify-center rounded-lg text-purple-600">
+                    <MapPin className="w-5 h-5" color="#6366F1" />
+                  </div>
+                  <h2 className="text-lg font-bold text-gray-900">Our Campuses</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {provider.campuses.map((campus: any, i: number) => (
+                    <div key={i} className="flex items-start gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:border-purple-200 transition-all group/campus">
+                      <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-purple-50 text-purple-600 shrink-0 group-hover/campus:bg-purple-100 transition-colors">
+                        <Building2 className="w-5 h-5" />
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="text-sm font-bold text-gray-900 leading-tight">{campus.city}</h4>
+                        <p className="text-xs text-gray-500 mt-1 font-medium">{campus.state}, {campus.country}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
