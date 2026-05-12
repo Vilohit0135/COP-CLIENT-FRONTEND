@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, Nunito } from "next/font/google";
 import "./globals.css";
 import Layout from "./components/pages/sections/Layout";
@@ -119,11 +120,13 @@ export default function RootLayout({
         <JsonLd data={websiteSchema()} />
       </head>
       <body className="min-h-full flex flex-col">
-        <SmoothScroll>
-          <Layout>
-            {children}
-          </Layout>
-        </SmoothScroll>
+        <Suspense fallback={null}>
+          <SmoothScroll>
+            <Layout>
+              {children}
+            </Layout>
+          </SmoothScroll>
+        </Suspense>
         <Toaster position="top-center" />
       </body>
     </html>
