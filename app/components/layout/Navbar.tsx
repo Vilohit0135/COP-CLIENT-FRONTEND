@@ -334,10 +334,10 @@ export default function Navbar() {
       <header className="sticky top-0 z-50">
       <style>{`
         .promo-wrapper{overflow:hidden;width:100%;}
-        .promo-track{display:flex;align-items:center;gap:1.5rem;width:max-content}
-        .promo-content{display:flex;gap:2rem;align-items:center;padding:0;flex-shrink:0}
+        .promo-track{display:flex;align-items:center;gap:6rem;width:max-content}
+        .promo-content{display:flex;gap:2.5rem;align-items:center;padding:0;flex-shrink:0}
         .promo-item{flex-shrink:0;display:inline-block;padding:0 1rem; font-family: var(--font-nunito), sans-serif; font-size: clamp(11px, 0.9vw, 13px); line-height:1; color: #fff; white-space:nowrap}
-        @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--marquee-distance))); } }
+        @keyframes promo-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-2 * var(--marquee-distance))); } }
         .promo-animate { animation: promo-marquee var(--marquee-duration, 14s) linear infinite; will-change: transform; contain: layout style; }
         .nav-glass {
           background: linear-gradient(90deg, rgba(130, 85, 200, 0.75) 0%, rgba(145, 105, 225, 0.75) 55%, rgba(115, 65, 200, 0.75) 100%);
