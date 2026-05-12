@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "logo.clearbit.com" },
       { protocol: "https", hostname: "i.pinimg.com" },
       { protocol: "https", hostname: "bits-pilani-wilp.ac.in" },
+      { protocol: "https", hostname: "images.openai.com" },
+      { protocol: "https", hostname: "oaidalleapiprodscus.blob.core.windows.net" },
     ],
   },
   async headers() {

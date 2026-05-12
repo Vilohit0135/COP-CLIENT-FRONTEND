@@ -469,7 +469,8 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
       <div className="pb-8">
         {/* Navigation Tabs - Adjusted for mobile sticky header */}
         <div className="sticky top-[70px] md:top-0 z-40 bg-white/80 backdrop-blur-xl border border-gray-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0 overflow-hidden ring-1 ring-black/[0.02]">
-          <div className="overflow-x-auto no-scrollbar flex items-center p-1.5 scroll-smooth">
+          {/* Desktop Version - Custom Scrollbar */}
+          <div className="hidden md:flex overflow-x-auto items-center p-1.5 pb-2 scroll-smooth [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-purple-50/30 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#7C3AED] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#6D28D9] [&::-webkit-scrollbar-button]:w-0 [&::-webkit-scrollbar-button]:h-0 [&::-webkit-scrollbar-button]:hidden [scrollbar-width:thin] [scrollbar-color:#7C3AED_transparent]">
             <div className="flex gap-1.5 min-w-max">
               {tabs.map((tab) => (
                 <button
@@ -482,7 +483,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                 >
                   {activeTab === tab.id && (
                     <motion.div
-                      layoutId="activeTabPill"
+                      layoutId="activeTabPillDesktop"
                       className="absolute inset-0 bg-purple-50 border border-purple-100/50 rounded-xl z-0"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
@@ -492,6 +493,32 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
               ))}
             </div>
           </div>
+
+          {/* Mobile Version - No Scrollbar */}
+          <div className="md:hidden overflow-x-auto no-scrollbar flex items-center p-1.5 scroll-smooth">
+            <div className="flex gap-1.5 min-w-max">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => scrollToSection(tab.id)}
+                  className={`relative px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all duration-300 rounded-2xl cursor-pointer group ${activeTab === tab.id
+                    ? "text-purple-700"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50/50"
+                    }`}
+                >
+                  {activeTab === tab.id && (
+                    <motion.div
+                      layoutId="activeTabPillMobile"
+                      className="absolute inset-0 bg-purple-50 border border-purple-100/50 rounded-xl z-0"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Mobile Scroll Indicators */}
           <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-white to-transparent pointer-events-none z-20 md:hidden" />
           <div className="absolute left-0 top-0 bottom-0 w-10 bg-gradient-to-r from-white to-transparent pointer-events-none z-20 md:hidden opacity-0" />

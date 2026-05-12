@@ -4,8 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-// ─── Dummy Data (replace with CMS fetch later) ────────────────────────────────
-
+// ─── Category icons ───────────────────────────────────────────────────────────
 // Default icons mapped by category name (case-insensitive match).
 // Anything unmapped uses the fallback icon.
 const CATEGORY_ICON_MAP: Record<string, string> = {
@@ -20,141 +19,6 @@ const CATEGORY_ICON_MAP: Record<string, string> = {
   "mba": "/Icon (4).webp",
 };
 const FALLBACK_ICON = "/Icon (4).webp";
-
-const ALL_ARTICLES = [
-  {
-    slug: "top-10-mba-specializations-2026",
-    category: "Career Guide",
-    date: "March 8, 2026",
-    readTime: "8 min read",
-    title: "Top 10 MBA Specializations in 2026: Which One is Right for You?",
-    description:
-      "Explore the most in-demand MBA specializations and discover which one aligns with your career goals and industry trends.",
-    author: "Dr. Priya Sharma",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "how-to-balance-work-and-online-learning",
-    category: "Study Tips",
-    date: "March 5, 2026",
-    readTime: "6 min read",
-    title: "How to Balance Work and Online Learning: 5 Proven Strategies",
-    description:
-      "Working professionals share their tips for successfully managing full-time jobs while pursuing online degrees.",
-    author: "Rahul Mehta",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "online-mba-admission-process-2026",
-    category: "Admission Guide",
-    date: "March 2, 2026",
-    readTime: "10 min read",
-    title: "Online MBA Admission Process 2026: Complete Step-by-Step Guide",
-    description:
-      "Everything you need to know about applying to top online MBA programs, from eligibility to entrance exams.",
-    author: "Anita Desai",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "top-10-mba-specializations-2026-b",
-    category: "Career Guide",
-    date: "March 8, 2026",
-    readTime: "8 min read",
-    title: "Top 10 MBA Specializations in 2026: Which One is Right for You?",
-    description:
-      "Explore the most in-demand MBA specializations and discover which one aligns with your career goals and industry trends.",
-    author: "Dr. Priya Sharma",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "how-to-balance-work-and-online-learning-b",
-    category: "Study Tips",
-    date: "March 5, 2026",
-    readTime: "6 min read",
-    title: "How to Balance Work and Online Learning: 5 Proven Strategies",
-    description:
-      "Working professionals share their tips for successfully managing full-time jobs while pursuing online degrees.",
-    author: "Rahul Mehta",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "online-mba-admission-process-2026-b",
-    category: "Admission Guide",
-    date: "March 2, 2026",
-    readTime: "10 min read",
-    title: "Online MBA Admission Process 2026: Complete Step-by-Step Guide",
-    description:
-      "Everything you need to know about applying to top online MBA programs, from eligibility to entrance exams.",
-    author: "Anita Desai",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "is-online-mba-worth-it-2026",
-    category: "Career Guide",
-    date: "February 28, 2026",
-    readTime: "7 min read",
-    title: "Is an Online MBA Worth It? Honest Review from 2026 Graduates",
-    description:
-      "We surveyed 200 online MBA graduates to bring you an unfiltered look at ROI, promotions, and career shifts.",
-    author: "Dr. Priya Sharma",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "5-best-note-taking-apps-2026",
-    category: "Study Tips",
-    date: "February 25, 2026",
-    readTime: "5 min read",
-    title: "5 Best Note-Taking Apps for Online Students in 2026",
-    description:
-      "Stay organized and ace your exams with these top-rated digital tools designed specifically for online learners.",
-    author: "Rahul Mehta",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "du-sol-admission-2026",
-    category: "Admission Guide",
-    date: "February 22, 2026",
-    readTime: "9 min read",
-    title: "Understanding DU-SOL Admission: Eligibility, Process & Fees",
-    description:
-      "A comprehensive guide to getting into Delhi University's School of Open Learning programs in 2026.",
-    author: "Anita Desai",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "top-companies-hiring-online-mba-2026",
-    category: "Career Guide",
-    date: "February 20, 2026",
-    readTime: "6 min read",
-    title: "Top Companies Hiring Online MBA Graduates in India – 2026 List",
-    description:
-      "Discover which top employers are actively recruiting candidates with online MBA degrees this year.",
-    author: "Dr. Priya Sharma",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "ai-ml-careers-online-mca",
-    category: "Technology",
-    date: "February 18, 2026",
-    readTime: "8 min read",
-    title: "AI & ML Careers: How to Get Started with an Online MCA",
-    description:
-      "A step-by-step roadmap for transitioning into Artificial Intelligence careers through online MCA programs.",
-    author: "Rahul Mehta",
-    image: "/Blogs.webp",
-  },
-  {
-    slug: "executive-education-vs-mba",
-    category: "Leadership",
-    date: "February 15, 2026",
-    readTime: "7 min read",
-    title: "Executive Education vs. MBA: Which Is Right for You?",
-    description:
-      "Breaking down the differences between short-term executive courses and full-degree MBA programs.",
-    author: "Anita Desai",
-    image: "/Blogs.webp",
-  },
-];
 
 export interface ArticleData {
   slug: string;
@@ -179,7 +43,7 @@ const ALL_LABEL = "All";
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function ArticlesPage({ cmsArticles, pageTitle, pageSubtitle }: ArticlesPageProps = {}) {
-  const sourceArticles: ArticleData[] = cmsArticles && cmsArticles.length > 0 ? cmsArticles : ALL_ARTICLES;
+  const sourceArticles: ArticleData[] = cmsArticles ?? [];
 
   // Build the sidebar categories dynamically from the article data so every
   // entry actually filters to at least one article.
@@ -501,7 +365,13 @@ export default function ArticlesPage({ cmsArticles, pageTitle, pageSubtitle }: A
                   fontSize: 14,
                 }}
               >
-                No articles found in <strong>{activeCategory}</strong>.
+                {sourceArticles.length === 0 ? (
+                  <>No articles available yet. Check back soon.</>
+                ) : (
+                  <>
+                    No articles found in <strong>{activeCategory}</strong>.
+                  </>
+                )}
               </div>
             ) : (
               <div className="articles-grid">

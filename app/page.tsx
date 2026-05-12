@@ -1,5 +1,6 @@
 import { getPageContent, getCoursesHomeSummary } from "@/app/lib/api";
 import { PageResponse, SectionContent } from "@/app/lib/types";
+import { getBlogList } from "@/app/lib/blogs";
 // import SectionRenderer from "@/app/components/SectionRenderer";
 import Homepage from "@/app/components/pages/homepage";
 
@@ -57,9 +58,15 @@ export default async function Home() {
   void getCoursesHomeSummary().catch(() => {});
 
   let data: PageResponse | null = null;
+  let blogs: Awaited<ReturnType<typeof getBlogList>>["articles"] = [];
 
   try {
-    data = await getPageContent("home-page");
+    const [homeData, blogData] = await Promise.all([
+      getPageContent("home-page"),
+      getBlogList().catch(() => ({ articles: [] })),
+    ]);
+    data = homeData;
+    blogs = blogData.articles;
   } catch (err) {
     console.error("Failed to load homepage:", err);
   }
@@ -145,5 +152,5 @@ export default async function Home() {
     });
   }
 
-  return <Homepage sections={sections} />;
+  return <Homepage sections={sections} blogs={blogs} />;
 }

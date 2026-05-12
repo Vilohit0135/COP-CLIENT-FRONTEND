@@ -6,80 +6,17 @@ import Image from "next/image";
 import Link from "next/link";
 import FocusCenterSlider from "./FocusCenterSlider";
 import TrendingBadge from "@/app/components/ui/TrendingBadge";
+import type { ArticleData } from "@/app/components/pages/articles/Articles";
 
 interface Section9Props {
   section: SectionContent;
+  blogs?: ArticleData[];
 }
 
-// Parse article textarea: split into title and description
-function parseArticle(raw: string): { title: string; description: string } {
-  const text = raw.trim();
-  if (!text) return { title: "", description: "" };
+const HOMEPAGE_BLOG_COUNT = 4;
+const FALLBACK_BLOG_IMAGE = "/Blogs.webp";
 
-  // Try newline split first
-  const newlineIdx = text.indexOf("\n");
-  if (newlineIdx > 0) {
-    return { title: text.slice(0, newlineIdx).trim(), description: text.slice(newlineIdx + 1).trim() };
-  }
-  // Split at "? " after at least 10 chars
-  const qIdx = text.indexOf("? ");
-  if (qIdx > 10) {
-    return { title: text.slice(0, qIdx + 1).trim(), description: text.slice(qIdx + 2).trim() };
-  }
-  // Split at first ". " after at least 30 chars
-  for (let i = 30; i < text.length - 1; i++) {
-    if (text[i] === "." && text[i + 1] === " ") {
-      return { title: text.slice(0, i + 1).trim(), description: text.slice(i + 2).trim() };
-    }
-  }
-  // Fallback: whole text is title
-  return { title: text, description: "" };
-}
-
-const DEFAULT_ARTICLES = [
-  {
-    slug: "top-10-mba-specializations-2026",
-    category: "Career Guide",
-    date: "March 8, 2026",
-    readTime: "8 min read",
-    title: "Top 10 MBA Specializations in 2026: Which One is Right for You?",
-    description:
-      "Explore the most in-demand MBA specializations and discover which one aligns with your career goals and industry trends.",
-    author: "Dr. Priya Sharma",
-  },
-  {
-    slug: "how-to-balance-work-and-online-learning",
-    category: "Study Tips",
-    date: "March 5, 2026",
-    readTime: "6 min read",
-    title: "How to Balance Work and Online Learning: 5 Proven Strategies",
-    description:
-      "Working professionals share their tips for successfully managing full-time jobs while pursuing online degrees.",
-    author: "Rahul Mehta",
-  },
-  {
-    slug: "online-mba-admission-process-2026",
-    category: "Admission Guide",
-    date: "March 2, 2026",
-    readTime: "10 min read",
-    title: "Online MBA Admission Process 2026: Complete Step-by-Step Guide",
-    description:
-      "Everything you need to know about applying to top online MBA programs, from eligibility to entrance exams.",
-    author: "Anita Desai",
-  },
-  {
-    slug: "best-online-universities-india-2026",
-    category: "University Guide",
-    date: "February 28, 2026",
-    readTime: "7 min read",
-    title: "Best Online Universities in India 2026: Rankings & Reviews",
-    description:
-      "A comprehensive ranking of India's top online universities based on faculty, placement support, and student satisfaction.",
-    author: "Anita Desai",
-  },
-];
-
-export default function Section9({ section }: Section9Props) {
+export default function Section9({ section, blogs }: Section9Props) {
   const v = section.values || {};
 
   const getFieldValue = (aliases: string[], fallback = ""): string => {
@@ -103,49 +40,28 @@ export default function Section9({ section }: Section9Props) {
     "Expert insights on education and career growth"
   );
 
-  // Known non-article fields to skip when scanning for article content
-  const NON_ARTICLE_KEYS = new Set([
-    "pill", "badge", "main heading", "title", "heading",
-    "below main heading", "subtitle", "description",
-  ]);
+  const articles = (blogs ?? []).slice(0, HOMEPAGE_BLOG_COUNT);
 
-  // First try explicit aliases, then fall back to scanning ALL string values
-  // in the section that aren't header fields — this way any field name works.
-  const articleAliasGroups = [
-    ["First Article", "first article", "Article 1", "article1", "article_1"],
-    ["Second Article", "second article", "Article 2", "article2", "article_2"],
-    ["Third Article", "third article", "Article 3", "article3", "article_3"],
-    ["Fourth Article", "fourth article", "Article 4", "article4", "article_4"],
-  ];
-
-  // Collect raw article strings: try aliases first, then pick up any remaining
-  // non-header textarea values in field order.
-  const aliasHits = articleAliasGroups.map((aliases) => getFieldValue(aliases, ""));
-  const anyAliasMatched = aliasHits.some(Boolean);
-
-  let rawArticleValues: string[];
-  if (anyAliasMatched) {
-    rawArticleValues = aliasHits;
-  } else {
-    // No alias matched — collect every non-empty string value whose key isn't a header field
-    rawArticleValues = Object.keys(v)
-      .filter((k) => !NON_ARTICLE_KEYS.has(k.toLowerCase()))
-      .map((k) => richTextToPlain(v[k]).trim())
-      .filter(Boolean)
-      .slice(0, 4);
+  // If the CMS has no blogs yet, hide the cards area entirely (keep the heading)
+  if (articles.length === 0) {
+    return (
+      <section className="w-full py-[clamp(32px,6vw,64px)]">
+        <div className="max-w-[1280px] mx-auto px-6 text-center">
+          <div className="flex justify-center mb-5">
+            <span className="bg-[#EEF2FF] text-[#4F39F6] font-['Inter'] text-[clamp(11px,2.6vw,14px)] font-bold leading-5 tracking-[0.7px] uppercase py-2.5 px-[22px] min-h-[44px] max-w-full whitespace-nowrap inline-flex items-center justify-center rounded-full">
+              {pill}
+            </span>
+          </div>
+          <h2 className="font-['Inter'] text-[clamp(22px,5vw,36px)] font-bold leading-[1.2] tracking-normal text-[#101828] text-center mb-3">
+            {mainHeading}
+          </h2>
+          <p className="font-['Inter'] text-[clamp(14px,4vw,20px)] font-normal leading-7 tracking-normal text-[#4A5565] text-center">
+            {belowHeading}
+          </p>
+        </div>
+      </section>
+    );
   }
-
-  const articles = rawArticleValues.length > 0
-    ? rawArticleValues.map((raw, i) => {
-      const parsed = parseArticle(raw);
-      const def = DEFAULT_ARTICLES[i] || DEFAULT_ARTICLES[0];
-      return {
-        ...def,
-        title: parsed.title || def.title,
-        description: parsed.description || def.description,
-      };
-    })
-    : DEFAULT_ARTICLES;
 
   return (
     <section className="w-full py-[clamp(32px,6vw,64px)]">
@@ -182,7 +98,7 @@ export default function Section9({ section }: Section9Props) {
               className="bg-[#FFFFFF] flex flex-col h-full overflow-hidden min-h-[360px] rounded-[20px]"
             >
               <div className="relative w-full h-40 shrink-0">
-                <Image src="/Blogs.webp" alt={article.title} fill sizes="280px" className="object-cover" />
+                <Image src={article.image || FALLBACK_BLOG_IMAGE} alt={article.title} fill sizes="280px" className="object-cover" />
                 <span className="absolute top-3 left-3 bg-[#4F39F6]/90 backdrop-blur-md text-white font-['Inter'] text-[10px] font-bold py-1 px-3 rounded-full uppercase tracking-wider">{article.category}</span>
               </div>
               <div className="p-5 flex flex-col gap-2.5 flex-1">
@@ -210,7 +126,7 @@ export default function Section9({ section }: Section9Props) {
               {/* Image with category badge overlay */}
               <div className="relative w-full h-40 shrink-0">
                 <Image
-                  src="/Blogs.webp"
+                  src={article.image || FALLBACK_BLOG_IMAGE}
                   alt={article.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
@@ -276,7 +192,7 @@ export default function Section9({ section }: Section9Props) {
                     <strong className="text-[#101828] font-semibold">{article.author}</strong>
                   </span>
                   <Link
-                    href={`/articles/${article.slug || "the-future-of-business-education"}`}
+                    href={`/articles/${article.slug}`}
                     className="hover:opacity-70 transition-opacity duration-200 font-['Inter'] text-[13px] font-semibold text-[#4F39F6] no-underline flex items-center gap-1 cursor-pointer"
                   >
                     Read &#8594;

@@ -5,6 +5,7 @@ import Section5 from "./Section5";
 import Section6 from "./Section6";
 import Section7 from "./Section7";
 import { SectionContent } from "@/app/lib/types";
+import type { ArticleData } from "@/app/components/pages/articles/Articles";
 
 // Below-the-fold sections — split into separate chunks so they don't bloat
 // the initial homepage bundle. Still SSRed for SEO.
@@ -14,9 +15,10 @@ const Section10 = dynamic(() => import("./Section10"));
 
 interface HomepageProps {
   sections: SectionContent[];
+  blogs?: ArticleData[];
 }
 
-export default function Homepage({ sections }: HomepageProps) {
+export default function Homepage({ sections, blogs }: HomepageProps) {
   // Pick out the hero section to render it explicitly at the top of the page.
   const heroIndex = sections.findIndex((s) => s.sectionApiId === "hero_section");
   const hero = heroIndex >= 0 ? sections[heroIndex] : null;
@@ -170,7 +172,7 @@ export default function Homepage({ sections }: HomepageProps) {
       {/* Section 9: Blogs & Resources - rendered explicitly below Student Testimonials */}
       {section9 ? (
         <div className="w-full">
-          <Section9 key={section9._id} section={section9} />
+          <Section9 key={section9._id} section={section9} blogs={blogs} />
         </div>
       ) : null}
 
