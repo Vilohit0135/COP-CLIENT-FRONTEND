@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { ArticleData } from "@/app/components/pages/articles/Articles";
 
-// ─── Dummy Article Data (replace with CMS fetch later) ────────────────────────
+// ─── Article Data Types (CMS-backed; falls back to dummy below) ──────────────
 
 export interface ArticleDetailData {
   slug: string;
@@ -29,120 +30,18 @@ export type ArticleBlock =
   | { type: "casestudy"; heading: string; description: string; bullets: string[] }
   | { type: "takeaways"; items: string[] };
 
-const DUMMY_ARTICLE: ArticleDetailData = {
-  slug: "the-future-of-business-education",
-  category: "Career Guide",
-  title: "The Future of Business Education in a Digital Age",
-  authorName: "Dr. Dinesh Jenkins",
-  authorRole: "Head of Partnerships",
-  authorAvatar: "/Image (Dr. Priya Sharma).webp",
-  date: "Oct 24, 2026",
-  readTime: "3 min read",
-  heroImage: "/Blogs.webp",
-  tags: ["TECHNOLOGY", "STRATEGY", "DIGITAL TRANSFORMATION"],
-  tableOfContents: [
-    { id: "paradigm-shift", label: "The Paradigm Shift" },
-    { id: "hybrid-learning", label: "Hybrid Learning Model" },
-    { id: "key-takeaways", label: "Key Takeaways" },
-  ],
-  body: [
-    {
-      type: "paragraph",
-      text: "The traditional marble-pillared halls of business schools are undergoing a quiet yet profound revolution. As the global economy pivots toward a digital-first reality, the curriculum that defined the 20th-century executive is being rewritten in real-time — the executive that defined the 20th-century executive is being rewritten in real-time.",
-    },
-    {
-      type: "h2",
-      id: "paradigm-shift",
-      text: "The Paradigm Shift in Executive Education",
-    },
-    {
-      type: "paragraph",
-      text: "For decades, the ideal proposition of a typical MBA was built on two pillars: access to a physical placement and the creation of legacy operations frameworks. Today, those pillars are being augmented by data literacy, algorithmic decision-making, and the ability to manage distributed global teams.",
-    },
-    {
-      type: "quote",
-      text: '"The modern business leader isn\'t just a manager of people; they are an orchestrator of digital ecosystems and human potential."',
-    },
-    {
-      type: "h2",
-      id: "hybrid-learning",
-      text: "The Rise of the Hybrid Scholar",
-    },
-    {
-      type: "paragraph",
-      text: "Today's emerging manager no longer keeps a clear boundary between academics and practice. By leveraging asynchronous technical seminars with synchronous high-stakes simulations, modern education is transforming the very professional-student binary we once took for granted.",
-    },
-    {
-      type: "casestudy",
-      heading: "Case Study: The Virtual Boardroom",
-      description:
-        "A thriving ed-tech company ran a stimulated boardroom session where students must respond, debate and present strategies in real-time, testing how well students can strategically navigate both technical and human critical needs.",
-      bullets: [
-        "Digital Fluency: Understanding the mechanics of AI and Cloud as is essential as understanding a P&L.",
-        "Agile Leadership: Shifting from rigid hierarchy to value-led spheres of influence.",
-        "Continuous Pedagogical Evolution: to maintain a lifelong subscription system, not a one-time degree.",
-      ],
-    },
-    {
-      type: "h3",
-      id: "key-takeaways",
-      text: "Key Takeaways",
-    },
-    {
-      type: "takeaways",
-      items: [
-        "Digital Fluency: Understanding the mechanics of AI and Cloud as is essential as understanding a P&L.",
-        "Agile Leadership: Shifting from rigid hierarchy to value-led spheres of influence.",
-        "Continuous Pedagogical Evolution: to maintain a lifelong subscription system, not a one-time degree.",
-      ],
-    },
-  ],
-};
-
-// Map slug → detail data. All unknown slugs fall back to DUMMY_ARTICLE.
-const ARTICLE_MAP: Record<string, ArticleDetailData> = {
-  [DUMMY_ARTICLE.slug]: DUMMY_ARTICLE,
-};
-
-// Related reading cards shown at the bottom
-const RELATED_ARTICLES = [
-  {
-    slug: "top-10-mba-specializations-2026",
-    category: "Career Guide",
-    date: "March 8, 2026",
-    readTime: "8 min read",
-    title: "Top 10 MBA Specializations in 2026: Which One is Right for You?",
-    description:
-      "Explore the most in-demand MBA specializations and discover which one aligns with your career goals and industry trends.",
-    author: "Dr. Priya Sharma",
-  },
-  {
-    slug: "how-to-balance-work-and-online-learning",
-    category: "Study Tips",
-    date: "March 5, 2026",
-    readTime: "6 min read",
-    title: "How to Balance Work and Online Learning: 5 Proven Strategies",
-    description:
-      "Working professionals share their tips for successfully managing full-time jobs while pursuing online degrees.",
-    author: "Rahul Mehta",
-  },
-  {
-    slug: "online-mba-admission-process-2026",
-    category: "Admission Guide",
-    date: "March 2, 2026",
-    readTime: "10 min read",
-    title: "Online MBA Admission Process 2026: Complete Step-by-Step Guide",
-    description:
-      "Everything you need to know about applying to top online MBA programs, from eligibility to entrance exams.",
-    author: "Anita Desai",
-  },
-];
-
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function ArticleDetailPage({ slug }: { slug: string }) {
+interface ArticleDetailPageProps {
+  article: ArticleDetailData;
+  relatedArticles?: ArticleData[];
+}
+
+export default function ArticleDetailPage({
+  article,
+  relatedArticles = [],
+}: ArticleDetailPageProps) {
   const router = useRouter();
-  const article = ARTICLE_MAP[slug] ?? DUMMY_ARTICLE;
 
   return (
     <div
@@ -313,32 +212,35 @@ export default function ArticleDetailPage({ slug }: { slug: string }) {
           ))}
 
           {/* Tags */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 32 }}>
-            {article.tags.map((tag) => (
-              <span
-                key={tag}
-                style={{
-                  fontFamily: "Inter",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "#374151",
-                  background: "#F3F4F6",
-                  border: "1px solid #E5E7EB",
-                  borderRadius: 9999,
-                  padding: "6px 16px",
-                  letterSpacing: "0.5px",
-                  textTransform: "uppercase",
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          {article.tags.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 32 }}>
+              {article.tags.map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    fontFamily: "Inter",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#374151",
+                    background: "#F3F4F6",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 9999,
+                    padding: "6px 16px",
+                    letterSpacing: "0.5px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </article>
 
         {/* ══ RIGHT — Sticky Sidebar (lg+ only; on smaller screens it stacks above) ══ */}
         <aside className="article-detail-sidebar">
           {/* Table of Contents */}
+          {article.tableOfContents.length > 0 && (
           <div
             style={{
               border: "1px solid #E5E7EB",
@@ -394,6 +296,7 @@ export default function ArticleDetailPage({ slug }: { slug: string }) {
               ))}
             </ol>
           </div>
+          )}
 
           {/* Share */}
           <div
@@ -444,6 +347,7 @@ export default function ArticleDetailPage({ slug }: { slug: string }) {
       </div>
 
       {/* ══ Related Reading ══ */}
+      {relatedArticles.length > 0 && (
       <div
         style={{
           width: "100%",
@@ -489,12 +393,13 @@ export default function ArticleDetailPage({ slug }: { slug: string }) {
 
           {/* Cards */}
           <div className="article-detail-related-grid">
-            {RELATED_ARTICLES.map((a) => (
+            {relatedArticles.map((a) => (
               <RelatedCard key={a.slug} article={a} />
             ))}
           </div>
         </div>
       </div>
+      )}
 
       {/* Layout CSS: stack on mobile/tablet, 2-col on lg+ */}
       <style jsx>{`
@@ -734,6 +639,7 @@ function RelatedCard({
     title: string;
     description: string;
     author: string;
+    image?: string;
   };
 }) {
   return (
@@ -751,7 +657,7 @@ function RelatedCard({
       {/* Image + badge */}
       <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", flexShrink: 0 }}>
         <Image
-          src="/Blogs.webp"
+          src={article.image || "/Blogs.webp"}
           alt={article.title}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
