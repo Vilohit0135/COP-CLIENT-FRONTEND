@@ -66,16 +66,19 @@ export const metadata: Metadata = {
       "Discover online degree programs from top universities. Compare courses, fees, and rankings, and talk to expert counselors.",
     images: ["/logo.webp"],
   },
-  // app/layout.tsx (Lines 69-73)
-
   icons: {
     icon: [
-      { url: "/favicon-v2.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-v2.png", sizes: "192x192", type: "image/png" }, // For Android/Web Apps
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: "/favicon-v2.png",
+    shortcut: "/favicon.ico",
     apple: [
-      { url: "/favicon-v2.png", sizes: "180x180", type: "image/png" }, // For iPhone/iPad Home Screen
+      { url: "/favicon-180.png", sizes: "180x180", type: "image/png" },
     ],
   },
 
