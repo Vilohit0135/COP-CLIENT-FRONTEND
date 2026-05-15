@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {!isAuthPage && <Navbar />}
-      <main className={`flex-1 ${!isAuthPage ? "md:pt-24 pb-24 md:pb-0" : ""}`}>{children}</main>
+      <main className={`flex-1 ${!isAuthPage ? "md:pt-24 md:pb-24 md:pb-0" : ""}`}>{children}</main>
       {!isAuthPage && <Footer />}
       {!isAuthPage && <MobileDock />}
     </>

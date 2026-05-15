@@ -208,6 +208,69 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
 
+  const tabs = React.useMemo(() => [
+    { id: "about", label: "About University", show: true },
+    { id: "rankings", label: "Rankings", show: provider?.rankings && provider.rankings.length > 0 },
+    { id: "programs", label: "Programs Offered", show: true },
+    { id: "eligibility", label: "Eligibility", show: true },
+    { id: "admission", label: "Admission Process", show: true },
+    { id: "placements", label: "Placement & recruiters", show: provider?.placementPartners && provider.placementPartners.length > 0 },
+    { id: "campuses", label: "Campuses", show: provider?.campuses && provider.campuses.length > 0 },
+    { id: "reviews", label: "Review & Ratings", show: true },
+    { id: "faq", label: "FAQs", show: provider?.faq && provider.faq.length > 0 },
+  ].filter(tab => tab.show), [provider]);
+
+  // Scroll Spy Logic
+  useEffect(() => {
+    if (loading) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-120px 0px -70% 0px',
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveTab(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    tabs.forEach((tab) => {
+      const section = document.getElementById(tab.id);
+      if (section) observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, [loading, tabs]);
+
+  // Auto-scroll active tab into view in the sticky header
+  useEffect(() => {
+    const activeBtnMobile = document.getElementById(`tab-btn-mobile-${activeTab}`);
+    const mobileContainer = document.getElementById('mobile-tabs-container');
+
+    if (activeBtnMobile && mobileContainer) {
+      const containerRect = mobileContainer.getBoundingClientRect();
+      const btnRect = activeBtnMobile.getBoundingClientRect();
+      const scrollLeft = btnRect.left - containerRect.left + mobileContainer.scrollLeft - (containerRect.width / 2) + (btnRect.width / 2);
+      mobileContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }
+
+    const activeBtnDesktop = document.getElementById(`tab-btn-desktop-${activeTab}`);
+    const desktopContainer = document.getElementById('desktop-tabs-container');
+
+    if (activeBtnDesktop && desktopContainer) {
+      const containerRect = desktopContainer.getBoundingClientRect();
+      const btnRect = activeBtnDesktop.getBoundingClientRect();
+      const scrollLeft = btnRect.left - containerRect.left + desktopContainer.scrollLeft - (containerRect.width / 2) + (btnRect.width / 2);
+      desktopContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }
+  }, [activeTab]);
+
   const categories = React.useMemo(() => {
     const uniqueDegrees = courses.reduce((acc: any[], current) => {
       const degree = current.degreeTypeId as any;
@@ -341,17 +404,6 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
   }
 
 
-  const tabs = [
-    { id: "about", label: "About University", show: true },
-    { id: "rankings", label: "Rankings", show: provider.rankings && provider.rankings.length > 0 },
-    { id: "programs", label: "Programs Offered", show: true },
-    { id: "eligibility", label: "Eligibility", show: true },
-    { id: "admission", label: "Admission Process", show: true },
-    { id: "placements", label: "Placement & recruiters", show: provider.placementPartners && provider.placementPartners.length > 0 },
-    { id: "campuses", label: "Campuses", show: provider.campuses && provider.campuses.length > 0 },
-    { id: "reviews", label: "Review & Ratings", show: true },
-    { id: "faq", label: "FAQs", show: provider.faq && provider.faq.length > 0 },
-  ].filter(tab => tab.show);
 
   const scrollToSection = (id: string) => {
     setActiveTab(id);
@@ -365,7 +417,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-4">
+    <div className="min-h-screen bg-[#FFFFFF] px-4 md:px-10 flex flex-col gap-4 md:gap-5 pt-4 md:pt-4 ">
       {/* Breadcrumb - Hidden on mobile for cleaner look */}
       <div className="hidden md:flex justify-between items-center">
         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -471,11 +523,15 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
         {/* Navigation Tabs - Adjusted for mobile sticky header */}
         <div className="sticky top-[70px] md:top-0 z-40 bg-white/80 backdrop-blur-xl border border-gray-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 lg:max-w-[calc(100%-360px)] mx-[-4px] md:mx-0 overflow-hidden ring-1 ring-black/[0.02]">
           {/* Desktop Version - Custom Scrollbar */}
-          <div className="hidden md:flex overflow-x-auto items-center p-1.5 pb-2 scroll-smooth [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-purple-50/30 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#7C3AED] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#6D28D9] [&::-webkit-scrollbar-button]:w-0 [&::-webkit-scrollbar-button]:h-0 [&::-webkit-scrollbar-button]:hidden [scrollbar-width:thin] [scrollbar-color:#7C3AED_transparent]">
+          <div
+            id="desktop-tabs-container"
+            className="hidden md:flex overflow-x-auto items-center p-1.5 pb-2 scroll-smooth [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-purple-50/30 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#7C3AED] [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-[#6D28D9] [&::-webkit-scrollbar-button]:w-0 [&::-webkit-scrollbar-button]:h-0 [&::-webkit-scrollbar-button]:hidden [scrollbar-width:thin] [scrollbar-color:#7C3AED_transparent]"
+          >
             <div className="flex gap-1.5 min-w-max">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
+                  id={`tab-btn-desktop-${tab.id}`}
                   onClick={() => scrollToSection(tab.id)}
                   className={`relative px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all duration-300 rounded-2xl cursor-pointer group ${activeTab === tab.id
                     ? "text-purple-700"
@@ -496,11 +552,15 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
           </div>
 
           {/* Mobile Version - No Scrollbar */}
-          <div className="md:hidden overflow-x-auto no-scrollbar flex items-center p-1.5 scroll-smooth">
+          <div
+            id="mobile-tabs-container"
+            className="md:hidden overflow-x-auto no-scrollbar flex items-center p-1.5 scroll-smooth"
+          >
             <div className="flex gap-1.5 min-w-max">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
+                  id={`tab-btn-mobile-${tab.id}`}
                   onClick={() => scrollToSection(tab.id)}
                   className={`relative px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all duration-300 rounded-2xl cursor-pointer group ${activeTab === tab.id
                     ? "text-purple-700"
@@ -1081,7 +1141,7 @@ export default function UniversityDetailPage({ id }: UniversityDetailPageProps) 
                     };
                     const theme = themes[stat.colorTheme];
                     const IconComponent = stat.icon;
-                    
+
                     return (
                       <div key={i} className={`flex-1 min-w-[140px] ${theme.bg} rounded-2xl p-4 flex flex-col items-center text-center gap-2 border ${theme.border}`}>
                         <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm border ${theme.border}`}>
